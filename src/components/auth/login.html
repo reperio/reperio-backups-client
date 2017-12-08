@@ -1,0 +1,24 @@
+<template>
+    <div>
+        <h1 class="r-login-header">Reper.io Backups</h1>
+    </div>
+    <div class="r-login-container">
+        <form class="form-signin form-horizontal" submit.delegate="submit()">
+            <div class="r-login-row">
+                <img src="../../assets/reperio-rAsset-31.png"/>
+            </div>
+            <div class="r-login-row ">
+                <input value.bind="email" class="r-login-form-row-control" placeholder="Username" required autofocus>
+            </div>
+            <div class="r-login-row">
+                <input value.bind="password" type="password" class="r-login-form-row-control" placeholder="Password" required>
+            </div>
+            <div class="r-login-row">
+                <button class="btn btn-primary r-login-sign-in" type="submit">Log On</button>
+            </div>
+            <div class="r-login-row">
+                <a href="javascript:void(0)" class="r-login-forgot-password">Forgot Password</a>
+            </div>
+        </form>
+    </div>
+</template>

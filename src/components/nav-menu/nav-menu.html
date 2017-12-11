@@ -1,48 +1,19 @@
 <template>
-    <div class="navbar navbar-default navbar-static-top" role="navigation">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#/" style="padding:10px">Reperio</a>
+    <div if.bind="isLoggedIn" class="r-nav-menu">
+        <div class="r-menu-header">
+            <img class="r-menu-header-icon" src="../../assets/reperio-rAsset-31.png"/>
+            <div class="r-menu-header-text">
+                <span>Reper.io Backups</span>
+            </div>
         </div>
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li>
-                    <a href="#/">Home</a>
-                </li>
-                <li if.bind="canSeeProfile">
-                    <a href="#/profile">Profile</a>
-                </li>
-                <li if.bind="canSeeExecutorProfiles">
-                    <a href="#/executorProfiles">Executor profiles</a>
-                </li>
-                <li if.bind="canSeeAdminMenu">
-                    <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">Admin <span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li if.bind="canSeeAdminUsers"><a href="#/users">Users</a></li>
-                        <li if.bind="canSeeAdminContacts"><a href="#/contacts">Contacts</a></li>
-                    </ul>
-                </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right" style="margin-right:0">
-                <li if.bind="!isLoggedIn">
-                    <a href="#/login">Login</a>
-                </li>
-                <li if.bind="isLoggedIn">
-                    <a href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown">
-                        <span>${loggedInUser.email}</span>
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="javascript:void(0)" click.delegate="logout()">Log out</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div><!--/.nav-collapse -->
+        <div>
+            <span class="r-menu-item">Status</span>
+        </div>
+        <div>
+            <span class="r-menu-item">History</span>
+        </div>
+        <div>
+            <span class="r-menu-item">Home</span>
+        </div>
     </div>
-
 </template>

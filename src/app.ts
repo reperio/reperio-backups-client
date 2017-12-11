@@ -6,11 +6,14 @@ import {autoinject} from 'aurelia-framework';
 import {HttpClientConfig} from "./config/httpClientConfig"
 import {AuthorizeRouterStep} from "./config/authorizeRouterStep"
 
+import { AuthService } from "./services/authService";
+
+
 @autoinject()
 export class App {
     router: Router;
 
-    constructor(private httpClientConfig: HttpClientConfig, eventAggregator: EventAggregator) {
+    constructor(private authService: AuthService, private httpClientConfig: HttpClientConfig, eventAggregator: EventAggregator) {
         httpClientConfig.configureHttpClient();
     }
 

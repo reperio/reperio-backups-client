@@ -13,10 +13,14 @@ export class Login {
         this.errors = [];
 
         const response = await this.authService.login(this.email, this.password);
-        if (response.status === 401) {
-            this.errors.push("Username and password did not match a valid user.");
-        } else if (response.status !== 200) {
-            this.errors.push("An unknown error occurred, please contact the system administrator.");
+        // if (response.status === 401) {
+        //     this.errors.push("Username and password did not match a valid user.");
+        // } else if (response.status !== 200) {
+        //     this.errors.push("An unknown error occurred, please contact the system administrator.");
+        // }
+
+        if (!response) {
+            this.errors.push("Incorrect username or password");
         }
     }
 }

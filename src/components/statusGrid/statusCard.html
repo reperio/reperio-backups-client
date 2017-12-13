@@ -1,0 +1,25 @@
+<template>
+    <div class="r-status-card ${ node.status == 'good' ? 'r-status-good' : node.status == 'warning' ? 'r-status-warning' : node.status == 'bad' ? 'r-status-bad' : ''}">
+        <div class="r-status-card-header">
+            <div class="r-status-card-hostname">${node.hostname}</div>
+            <div class="r-status-card-uuid">${node.uuid}</div>
+            <div class="r-status-card-ip-address">${node.ip_address}</div>
+        </div>
+        <div class="row r-status-card-charts">
+            <div class="col-xs-offset-1 col-xs-5">
+                <canvas class="diskChart" width="100%" height="100%"></canvas>
+            </div>
+            <div class="col-xs-5">
+                <canvas class="memChart" width="100%" height="100%"></canvas>
+            </div>
+        </div>
+        <div class="row r-status-card-details">  
+            <div class="col-xs-offset-1 col-xs-5">
+                <span>${node.datacenter}</span>
+            </div>
+            <div class="col-xs-5">
+                <span>${node.num_virtual_machines} Virtual Machine(s)</span>
+            </div>
+        </div>
+    </div>
+</template>

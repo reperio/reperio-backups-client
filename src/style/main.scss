@@ -11,18 +11,24 @@ body {
 }
 
 .r-banner {
-  height: 5%;
+  height: 5em;
   background-image: url("../assets/rio-slider-colorband1.png");
+  background-color: white;
   background-size: cover;
   background-position: center top;
+  top: 0;
+  position: fixed;
+  width: 100%;
+  z-index: 5;
 }
 
 .r-footer {
-  height: 4%;
+  height: 4em;
   background-color: $primary-color;
-  position:absolute;
+  position: fixed;
   bottom:0;
   width: 100%;
+  z-index: 5;
 }
 
 .r-login-header {
@@ -68,15 +74,22 @@ body {
   }
 }
 
+.r-main-window {
+  margin-top: 5em;
+}
+
 .r-nav-menu {
   background-color: $nav-menu-background;
-  height: 91%;
+  height: 91em;
   width: 200px;
   border-right: 1px solid $nav-menu-border;
   border-left: 1px solid $nav-menu-border;
+  float: left;
+  position: fixed;
+  z-index: 5;
 
   .r-menu-header {
-    border-bottom: 2px solid $nav-menu-border;  
+    border-bottom: 2px solid $nav-menu-border;
 
     .r-menu-header-text {
       text-align: left;
@@ -103,8 +116,70 @@ body {
 
   .r-menu-item {
     font-weight: bold;
-    font-size: 1.5em;
+    font-size: 2em;
     color: $primary-color;
     margin-left: 15px;
+  }
+}
+
+.r-status-grid {
+  margin-left: 200px;
+
+  .r-status-grid-header {
+    margin-left: 15px;
+    font-size: 4em;
+    color: $primary-color;
+  }
+
+  .r-status-card {
+    border: 1px solid $nav-menu-border;
+
+    margin-top: 2em;
+    text-align: center;
+
+    .r-status-card-header {
+      border-bottom: 1px solid $nav-menu-border;
+
+      .r-status-card-hostname {
+        font-size: 2em;
+        color: $primary-color;
+        font-weight: bold;
+      }
+
+      .r-status-card-uuid {
+        font-size: 1em;
+        color: $nav-menu-border;
+        font-weight: bold;
+      }
+
+      .r-status-card-ip-address {
+        font-size: 1em;
+        color: $nav-menu-border;
+        font-weight: bold;
+      }
+    }
+
+    .r-status-card-details {
+      margin-top: 0.25em;
+      font-size: 1em;
+      color: $nav-menu-border;
+      font-weight: bold;
+    }
+
+    .r-status-card-charts {
+      margin-top: 1em;
+    }
+  }
+
+  .r-status-good {
+    background-color: $status-card-good;
+  }
+
+  .r-status-warning {
+    background-color: $status-card-warning;
+  }
+
+  .r-status-bad {
+    background-color: $status-card-bad;
   }
 }

@@ -1,0 +1,13 @@
+<template>
+    <require from="./statusCard"></require>
+    <div class="r-status-grid">
+        <div class="row r-status-grid-header">
+            <h1>Status</h1>
+        </div>
+        <div class="row">
+            <div repeat.for="node of nodes" class="col-sm-12 col-md-4 col-lg-3">
+                <status-card node.bind="node"></status-card>
+            </div>
+        </div>
+    </div>
+</template>

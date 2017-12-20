@@ -1,0 +1,43 @@
+<template>
+    <div style="margin-left: 200px;">
+        <h3>Jobs</h3>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Schedule Id</th>
+                    <th>SDC Id</th>
+                    <th>Source Location</th>
+                    <th>Target Location</th>
+                    <th>ZFS Type</th>
+                    <th>ZFS Size</th>
+                    <th>Offset</th>
+                    <th>Source Host Id</th>
+                    <th>Target Host Id</th>
+                    <th>Last Execution</th>
+                    <th>Last Schedule</th>
+                    <th>Enabled</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr repeat.for="job of jobs">
+                    <td>${job.id}</td>
+                    <td>${job.name}</td>
+                    <td>${job.schedule_id}</td>
+                    <td>${job.sdc_vm_id}</td>
+                    <td>${job.source_location}</td>
+                    <td>${job.target_location}</td>
+                    <td>${job.zfs_type}</td>
+                    <td>${job.zfs_size}</td>
+                    <td>${job.offset}</td>
+                    <td>${job.source_host_id}</td>
+                    <td>${job.target_host_id}</td>
+                    <td>${job.last_execution}</td>
+                    <td>${job.last_schedule}</td>
+                    <td>${job.enabled}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</template>

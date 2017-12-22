@@ -123,7 +123,7 @@ body {
 }
 
 .r-status-grid {
-  margin-left: 200px;
+
 
   .r-status-grid-header {
     margin-left: 15px;
@@ -182,4 +182,9 @@ body {
   .r-status-bad {
     background-color: $status-card-bad;
   }
+}
+
+.r-main-window {
+  margin-left: 200px;
+  margin-bottom: 100px;
 }

@@ -15,81 +15,81 @@ export class AuthService {
 
     constructor(private http: HttpClient, private eventAggregator: EventAggregator, private router: Router) { }
 
-    // parseJwt(token: string): any {
-    //     const base64Url = token.split('.')[1];
-    //     const base64 = base64Url.replace('-', '+').replace('_', '/');
+    parseJwt(token: string): any {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace('-', '+').replace('_', '/');
 
-    //     return JSON.parse(window.atob(base64));
-    // }
+        return JSON.parse(window.atob(base64));
+    }
 
-    // saveToken(token: string) {
-    //     const oldLoggedInUser = this.getLoggedInUser();
-    //     const oldCurrentUser = this.getCurrentUser();
-    //     const oldLoggedInUserId = oldLoggedInUser == null ? null : oldLoggedInUser.id;
-    //     const oldCurrentUserId = oldCurrentUser == null ? null : oldCurrentUser.id;
+    saveToken(token: string) {
+        const oldLoggedInUser = this.getLoggedInUser();
+        const oldCurrentUser = this.getCurrentUser();
+        const oldLoggedInUserId = oldLoggedInUser == null ? null : oldLoggedInUser.id;
+        const oldCurrentUserId = oldCurrentUser == null ? null : oldCurrentUser.id;
 
-    //     window.localStorage.setItem("jwtToken", token);
-    //     this.loadToken();
+        window.localStorage.setItem("jwtToken", token);
+        this.loadToken();
 
-    //     const newLoggedInUser = this.getLoggedInUser();
-    //     const newCurrentUser = this.getCurrentUser();
-    //     const newLoggedInUserId = newLoggedInUser == null ? null : newLoggedInUser.id;
-    //     const newCurrentUserId = newCurrentUser == null ? null : newCurrentUser.id;
+        const newLoggedInUser = this.getLoggedInUser();
+        const newCurrentUser = this.getCurrentUser();
+        const newLoggedInUserId = newLoggedInUser == null ? null : newLoggedInUser.id;
+        const newCurrentUserId = newCurrentUser == null ? null : newCurrentUser.id;
 
 
-    //     const everythingIsNull = oldLoggedInUserId == null && oldCurrentUserId == null &&
-    //         newLoggedInUserId == null && newCurrentUserId == null;
+        const everythingIsNull = oldLoggedInUserId == null && oldCurrentUserId == null &&
+            newLoggedInUserId == null && newCurrentUserId == null;
 
-    //     if (!everythingIsNull && (oldLoggedInUserId !== newLoggedInUserId || oldCurrentUserId !== newCurrentUserId)) {
-    //         this.router.navigateToRoute("home");
-    //     }
-    // }
+        if (!everythingIsNull && (oldLoggedInUserId !== newLoggedInUserId || oldCurrentUserId !== newCurrentUserId)) {
+            this.router.navigateToRoute("home");
+        }
+    }
 
-    // getToken(): string {
-    //     return window.localStorage.getItem("jwtToken");
-    // }
+    getToken(): string {
+        return window.localStorage.getItem("jwtToken");
+    }
 
-    // isLoggedIn(): boolean {
-    //     return this.getLoggedInUser() != null;
-    // }
+    isLoggedIn(): boolean {
+        return this.getLoggedInUser() != null;
+    }
 
-    // getLoggedInUser(): User {
-    //     this.ensureTokenLoaded();
-    //     return this.loggedInUser;
-    // }
+    getLoggedInUser(): User {
+        this.ensureTokenLoaded();
+        return this.loggedInUser;
+    }
 
-    // getCurrentUser(): User {
-    //     this.ensureTokenLoaded();
-    //     return this.currentUser;
-    // }
+    getCurrentUser(): User {
+        this.ensureTokenLoaded();
+        return this.currentUser;
+    }
 
-    // logout() {
-    //     window.localStorage.removeItem("jwtToken");
-    //     this.loadToken();
-    // }
+    logout() {
+        window.localStorage.removeItem("jwtToken");
+        this.loadToken();
+    }
 
-    // ensureTokenLoaded(): void {
-    //     if (!this.isInitialized) {
-    //         this.loadToken();
-    //     }
-    // }
+    ensureTokenLoaded(): void {
+        if (!this.isInitialized) {
+            this.loadToken();
+        }
+    }
 
-    // private loadToken(): void {
-    //     this.isInitialized = true;
-    //     const token = this.getToken();
-    //     const parsedToken = token == null ? null : this.parseJwt(token);
-    //     if (parsedToken != null && Math.round((new Date()).getTime() / 1000) < parsedToken.exp) {
-    //         this.loggedInUser = parsedToken.loggedInUser;
-    //         this.currentUser = parsedToken.currentUser;
-    //         this.expirationDate = moment(parsedToken.exp * 1000).toDate();
-    //         this.eventAggregator.publish("authStateChanged");
-    //     } else {
-    //         this.loggedInUser = null;
-    //         this.currentUser = null;
-    //         this.expirationDate = null;
-    //         this.eventAggregator.publish("authStateChanged");
-    //     }
-    // }
+    private loadToken(): void {
+        this.isInitialized = true;
+        const token = this.getToken();
+        const parsedToken = token == null ? null : this.parseJwt(token);
+        if (parsedToken != null && Math.round((new Date()).getTime() / 1000) < parsedToken.exp) {
+            this.loggedInUser = parsedToken.loggedInUser;
+            this.currentUser = parsedToken.currentUser;
+            this.expirationDate = moment(parsedToken.exp * 1000).toDate();
+            this.eventAggregator.publish("authStateChanged");
+        } else {
+            this.loggedInUser = null;
+            this.currentUser = null;
+            this.expirationDate = null;
+            this.eventAggregator.publish("authStateChanged");
+        }
+    }
 
     // async login(email: string, password: string): Promise<any> {
     //     const postObject = {email, password};
@@ -107,39 +107,10 @@ export class AuthService {
     // }
 
     login (email: string, password: string) {
-        let user: User = {
-            id: 1,
-            username: "admin",
-            password: null,
-            first_name: "admin",
-            last_name: "user",
-            email: "admin@email.com"
-        };
-
-        this.loggedInUser = user;
+        this.saveToken("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImp0aSI6IjA3NzQ0ZWY0LWYwMzYtNDQwNy1hYTlkLTc1Y2MzN2I0ZmI5YSIsImlhdCI6MTUxNDM5OTA3MCwiZXhwIjoxNTE0NDAyNzUzLCJsb2dnZWRJblVzZXIiOiJhZG1pbiIsImN1cnJlbnRVc2VyIjoiYWRtaW4ifQ.8-aedR4JhZJCKjhlClAra79v9Sg7L202-L7FoX3hGl0");
         this.router.navigateToRoute("home");
         this.eventAggregator.publish("authStateChanged");
         
         return true;
-    }
-
-    getLoggedInUser() {
-        return this.loggedInUser;
-    }
-
-    getToken(): string {
-        return "";
-    }
-
-    saveToken(token: string) {
-
-    }
-
-    logout() {
-        this.loggedInUser = null;
-    }
-
-    isLoggedIn(): boolean {
-        return this.getLoggedInUser() != null;
     }
 }

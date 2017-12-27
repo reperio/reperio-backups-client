@@ -1,7 +1,7 @@
 <template>
     <div>
         <h3>Job History List</h3>
-        <table class="table">
+        <table class="table" aurelia-table="data.bind: historyEntries; display-data.bind: $displayData">
             <thead>
                 <tr>
                     <th>Job</th>
@@ -18,7 +18,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr repeat.for="history of historyEntries">
+                <tr repeat.for="history of $displayData">
                     <td>${history.job_history_job.name}</td>
                     <td>${history.id}</td>
                     <td>${history.start_date_time}</td>

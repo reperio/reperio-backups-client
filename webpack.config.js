@@ -28,7 +28,7 @@ const cssRules = [
 module.exports = ({production, server, extractCss, coverage} = {}) => ({
   resolve: {
     extensions: ['.ts', '.js'],
-    modules: [srcDir, 'node_modules'],
+    modules: [srcDir, 'node_modules']
   },
   entry: {
     app: ['aurelia-bootstrapper'],
@@ -36,8 +36,6 @@ module.exports = ({production, server, extractCss, coverage} = {}) => ({
       jquery: ["jquery"],
       bootstrap: ['bootstrap/dist/js/bootstrap'],
       lodash: ["lodash/lodash"],
-      aureliaKendoUiBridge: ["aurelia-kendoui-bridge"],
-      kendo: ["@progress/kendo-ui/js/kendo.all"],
       moment: ["moment"],
       toastr: ["toastr"]
   },

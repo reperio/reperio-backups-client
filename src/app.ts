@@ -22,9 +22,9 @@ export class App {
         config.map([
             { route: ['', 'home'], name: 'home', moduleId: PLATFORM.moduleName('./components/home'), nav: true, title: 'Home', settings: {requireAuth: true}  },
             { route: 'login', name: 'login', moduleId: PLATFORM.moduleName('./components/auth/login'), nav: true, title: 'Login', settings: {requireNoAuth: true} },
-            { route: 'jobs', name: 'jobs', moduleId: PLATFORM.moduleName('./components/views/jobView'), nav: true, title: 'Job List', settings: {requireAuth: true } },
+            { route: 'jobs', name: 'jobs', moduleId: PLATFORM.moduleName('./components/jobs/jobView'), nav: true, title: 'Job List', settings: {requireAuth: true } },
             { route: 'history', name: 'history', moduleId: PLATFORM.moduleName('./components/history/historyView'), nav: true, title: 'History', settings: {requireAuth: true} }
-        ]);
+         ]);
 
         config.addPipelineStep('authorize', AuthorizeRouterStep);
         this.router = router;

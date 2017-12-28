@@ -1,0 +1,36 @@
+<template>
+    <div>
+        <h3>Jobs</h3>
+        <table class="table">
+            <thead>
+                <tr class="row">
+                    <th class="col-md-2">Job</th>
+                    <th class="col-md-2">Source</th>
+                    <th class="col-md-2">Target</th>
+                    <th class="col-md-2">Virtual Machine</th>
+                    <th class="col-md-1">Schedule</th>
+                    <th class="col-md-1">Last Execution</th>
+                    <th class="col-md-1">Enabled</th>
+                    <th class="col-md-1"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="row" repeat.for="job of jobs">
+                    <td class="col-md-2">${job.name}</td>
+                    <td class="col-md-2">${job.job_source_host.name}</td>
+                    <td class="col-md-2">${job.job_target_host.name}</td>
+                    <td class="col-md-2">In progress</th>
+                    <td class="col-md-1">${job.job_schedule.name}</td>
+                    <td class="col-md-1">${job.last_execution}</td>
+                    <td class="col-md-1">
+                        <label class="switch">
+                            <input type="checkbox" checked.bind="job.enabled" change.delegate="update_job(job.id, job)">
+                            <span class="slider round"></span>
+                        </label>
+                    </td>
+                    <td class="col-md-1"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</template>

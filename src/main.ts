@@ -17,7 +17,8 @@ export function configure(aurelia: Aurelia) {
         config.settings.lock = true;
         config.settings.centerHorizontalOnly = true;
         config.settings.startingZIndex = 5;
-      });
+      })
+      .plugin(PLATFORM.moduleName('au-table'));
 
   // Uncomment the line below to enable animation.
   // aurelia.use.plugin(PLATFORM.moduleName('aurelia-animator-css'));

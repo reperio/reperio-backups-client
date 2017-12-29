@@ -1,0 +1,29 @@
+<template>
+    <div>
+        <h3>Job History List</h3>
+        <table class="table" aurelia-table="data.bind: historyEntries; display-data.bind: $displayData">
+            <thead>
+                <tr>
+                    <th aut-sort="key: job_history_job.name">Job</th>
+                    <th aut-sort="key: job_history_job.job_source_host.name">Source Node</th>
+                    <th aut-sort="key: job_history_job.job_virtual_machine.name">Virtual Machine</th>
+                    <th aut-sort="key: start_date_time" >Start Time</th>
+                    <th aut-sort="key: end_date_time">End Time</th>
+                    <th aut-sort="key: schedule_date_time">Scheduled Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr repeat.for="history of $displayData">
+                    <td>${history.job_history_job.name}</td>
+                    <td>${history.job_history_job.job_source_host.name}</td>
+                    <td>${history.job_history_job.job_virtual_machine.name}</td>
+                    <td>${history.start_date_time}</td>
+                    <td>${history.end_date_time}</td>
+                    <td>${history.schedule_date_time}</td>
+                    <td>${history.result}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</template>

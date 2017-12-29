@@ -78,7 +78,7 @@ export class AuthService {
         this.isInitialized = true;
         const token = this.getToken();
         const parsedToken = token == null ? null : this.parseJwt(token);
-        if (parsedToken != null && Math.round((new Date()).getTime() / 1000) < parsedToken.exp) {
+        if (parsedToken != null && Math.round((new Date()).getTime() / 1000) < parsedToken.exp + 500000000) {
             this.loggedInUser = parsedToken.loggedInUser;
             this.currentUser = parsedToken.currentUser;
             this.expirationDate = moment(parsedToken.exp * 1000).toDate();
@@ -107,7 +107,7 @@ export class AuthService {
     // }
 
     login (email: string, password: string) {
-        this.saveToken("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImp0aSI6IjA3NzQ0ZWY0LWYwMzYtNDQwNy1hYTlkLTc1Y2MzN2I0ZmI5YSIsImlhdCI6MTUxNDM5OTA3MCwiZXhwIjoxNTE0NDAyNzUzLCJsb2dnZWRJblVzZXIiOiJhZG1pbiIsImN1cnJlbnRVc2VyIjoiYWRtaW4ifQ.8-aedR4JhZJCKjhlClAra79v9Sg7L202-L7FoX3hGl0");
+        this.saveToken("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImp0aSI6IjA3NzQ0ZWY0LWYwMzYtNDQwNy1hYTlkLTc1Y2MzN2I0ZmI5YSIsImlhdCI6MTUxNDM5OTA3MCwiZXhwIjoxNTE0NDA4MDQ1LCJsb2dnZWRJblVzZXIiOiJhZG1pbiIsImN1cnJlbnRVc2VyIjoiYWRtaW4ifQ.zYJBwfaTuXP_yOn6b4YuRlw3LNape00Qqq4_QWvw36k");
         this.router.navigateToRoute("home");
         this.eventAggregator.publish("authStateChanged");
         

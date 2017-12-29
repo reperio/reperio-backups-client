@@ -9,8 +9,8 @@ export class JobService {
 
     constructor(private http: HttpClient) {}
 
-    public async get_jobs(node_id: string, order_by: string, order_direction: string): Promise<Job[]> {
-        const res = await this.http.fetch(`jobs?node_id=${node_id}&order_by=${order_by}&order_direction=${order_direction}`, {
+    public async get_jobs(): Promise<Job[]> {
+        const res = await this.http.fetch(`jobs`, {
             method: 'get'
         });
         if (res.status >= 400) {
@@ -19,7 +19,7 @@ export class JobService {
         return await res.json();
     }
 
-    public async update_job(id: number, job: Job): Promise<Job> {
+    public async update_job(id: string, job: Job): Promise<Job> {
         const body = {
             job: job
         };
@@ -31,6 +31,16 @@ export class JobService {
             throw new Error(`Status code ${res.status}`);
         }
         return await res.json();
+    }
+
+    public async delete_job(id: string): Promise<any> {
+        const res = await this.http.fetch(`jobs/${id}`, {
+            method: 'delete'
+        });
+        if (res.status >= 400) {
+            throw new Error(`Status code ${res.status}`);
+        }
+        return null;
     }
 
 

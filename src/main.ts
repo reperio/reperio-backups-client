@@ -12,6 +12,7 @@ export function configure(aurelia: Aurelia) {
   aurelia.use
     .standardConfiguration()
     .feature(PLATFORM.moduleName('resources/index'))
+      .plugin(PLATFORM.moduleName('au-table'))
       .plugin(PLATFORM.moduleName("aurelia-dialog"), config => {
         config.useDefaults();
         config.settings.lock = true;

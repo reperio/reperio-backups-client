@@ -1,17 +1,17 @@
 <template>
     <div class="r-page-content">
-        <h1 class="r-page-header">Jobs</h1>
+        <h1>Jobs</h1>
         <div class="r-filter-row row">
             <div class="col-xs-4">
-                    <select class="form-control r-node-selector" value.bind="filters[0].value">
-                        <option value="">All Nodes</option>
-                        <option model.bind="host.id" repeat.for="host of hosts" >${host.name}</option>
-                    </select>
+                <select class="form-control r-node-selector" value.bind="filters[0].value">
+                    <option value="">All Nodes</option>
+                    <option model.bind="host.id" repeat.for="host of hosts" >${host.name}</option>
+                </select>
             </div>
         </div>
         <div>
             <div class="r-table-header">
-                <h1 class="">Jobs</h1>
+                <h3>Jobs</h1>
             </div>
             <table class="table r-table" aurelia-table="data.bind: jobs; display-data.bind: $displayData; filters.bind: filters">
                     

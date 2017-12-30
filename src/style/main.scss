@@ -8,6 +8,38 @@ html, body {
 
 body {
   margin: 0 auto;
+  font-family: "Open Sans";
+	font-size: 14px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: 400;
+	line-height: 20px;
+}
+
+// h1 {
+//   font-family: Helvetica, sans-serif;
+//   font-size: 48px;
+//   color: $primary-color;
+// }
+
+h1 {
+  color: $primary-color;
+	font-family: "Open Sans";
+	font-size: 48px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: 500;
+  line-height: 26.4px;
+  margin-top: 0px;
+}
+h3 {
+  color: $primary-color;
+	font-family: "Open Sans";
+	font-size: 28px;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: 500;
+	line-height: 15.4px;
 }
 
 .r-banner {
@@ -90,6 +122,8 @@ body {
 
   .r-menu-header {
     border-bottom: 2px solid $nav-menu-border;
+    padding-bottom: 10px;
+    padding-top: 5px;
 
     .r-menu-header-text {
       text-align: left;
@@ -115,10 +149,10 @@ body {
   }
 
   .r-menu-item {
-    font-weight: bold;
     font-size: 2em;
     color: $primary-color;
     margin-left: 15px;
+    margin-top: 10px;
   }
 }
 
@@ -264,12 +298,6 @@ body {
   }
 }
 
-.r-page-header {
-    font-family: Helvetica, sans-serif;
-    font-size: 60px;
-    color: #4285C3;
-}
-
 .r-table {
     border-bottom: 1px solid #95989A;
     border-left: 1px solid #95989A;
@@ -291,10 +319,11 @@ body {
     margin-bottom: 0px;
     box-shadow: 1px 0px 6px #95989A;
 
-    h1 {
-      margin-top: 5px;
-      margin-left: 5px;
-      margin-bottom: 5px;
+    h3 {
+      color: white;
+      margin-top: 10px;
+      margin-left: 10px;
+      margin-bottom: 10px;
       display: inline-block;
     }
 
@@ -409,6 +438,7 @@ body {
 }
 
 .r-filter-row {
+  margin-top: 20px;
   margin-bottom:20px;
 }
 

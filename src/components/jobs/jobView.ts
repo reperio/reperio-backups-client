@@ -1,9 +1,10 @@
 import {autoinject} from 'aurelia-framework';
-
+import {DialogService} from 'aurelia-dialog';
 import {Host} from '../../models/host';
 import {HostService} from '../../services/hostService';
 import {Job} from '../../models/job';
 import {JobService} from '../../services/jobService';
+import {DeleteDialog} from '../dialogs/deleteDialog';
 
 @autoinject()
 export class JobView {
@@ -15,7 +16,7 @@ export class JobView {
         { value: '', keys: ['job_source_host.id'] }
     ];
 
-    constructor(private jobService: JobService, private hostService: HostService) {}
+    constructor(private dialogService: DialogService, private jobService: JobService, private hostService: HostService) {}
 
     async bind() {
         await this.load_jobs();
@@ -32,7 +33,11 @@ export class JobView {
     }
 
     async delete_job(id: string) {
-        await this.jobService.delete_job(id);
-        await this.load_jobs();
+        this.dialogService.open({viewModel: DeleteDialog, model: 'Are you sure you want to delete this job?', lock: false}).whenClosed(async (response) => {
+            if (!response.wasCancelled) {
+                await this.jobService.delete_job(id);
+                await this.load_jobs();
+            }
+        });
     }
 }

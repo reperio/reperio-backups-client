@@ -1,16 +1,29 @@
 <template>
     <require from="aurelia-dialog/ux-dialog"></require>
+    <require from="aurelia-dialog/ux-dialog-header"></require>
     <require from="aurelia-dialog/ux-dialog-body"></require>
     <require from="aurelia-dialog/ux-dialog-footer"></require>
 
-    <ux-dialog class="r-dialog">
+    <ux-dialog class="col-xs-12 r-dialog">
+        <!-- <ux-dialog-header clas="r-dialog-header">
+            <h1>Confirm</h1>
+        </ux-dialog-header>
         <ux-dialog-body>
-            <h3>Confirm Delete</h3>
-            <h5>${message}</h5>
+            <h5>Are you sure?</h5>
         </ux-dialog-body>
         <ux-dialog-footer>
             <button class="btn btn-default" type="button" click.delegate="dialogController.cancel()">Cancel</button>
             <button class="btn btn-danger" type="button" click.delegate="dialogController.ok()">Delete</button>
-        </ux-dialog-footer>
+        </ux-dialog-footer> -->
+        <div class="row">
+            <h1 class="r-dialog-header">Confirm</h1>
+        </div>
+        <div class="row r-dialog-body">
+            <span class="col-xs-10 col-xs-offset-1">Are you sure?</span>
+        </div>
+        <div class="row">
+            <button class="col-xs-3 col-xs-offset-2 btn btn-default" type="button" click.delegate="dialogController.cancel()">Cancel</button>
+            <button class="col-xs-3 col-xs-offset-2 btn btn-danger" type="button" click.delegate="dialogController.ok()">Delete</button>
+        </div>
     </ux-dialog>
 </template>

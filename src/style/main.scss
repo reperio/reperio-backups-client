@@ -334,4 +334,37 @@ body {
 .r-dialog {
     //bring the top of the modal below the top banner
     margin-top: 6em;
+    padding-top: 0px;
+    padding-bottom: 20px;
+    border-radius: 0px;
+    width: 300px;
+
+
+    .r-dialog-header {
+        background-color: #4285C3;
+        color: #FFFFFF;
+        margin-top: 0px;
+        padding: 10px;
+        padding-left: 25px;
+        font-size: 1.5em;
+    }
+
+    .r-dialog-body {
+        color: #4285C3;
+        font-family: Helvetica, sans-serif;
+        font-size: 2.5em;
+        margin-bottom: 10px;
+    }
+
+    .btn-default {
+        background-color: #4285C3;
+        color: #FFFFFF;
+        border-radius: 0px;
+    }
+
+    .btn-danger {
+        background-color: #DB0000;
+        color: #FFFFFF;
+        border-radius: 0px;
+    }
 }

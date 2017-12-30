@@ -1,0 +1,16 @@
+<template>
+    <require from="aurelia-dialog/ux-dialog"></require>
+    <require from="aurelia-dialog/ux-dialog-body"></require>
+    <require from="aurelia-dialog/ux-dialog-footer"></require>
+
+    <ux-dialog class="r-dialog">
+        <ux-dialog-body>
+            <h3>Confirm Delete</h3>
+            <h5>${message}</h5>
+        </ux-dialog-body>
+        <ux-dialog-footer>
+            <button class="btn btn-default" type="button" click.delegate="dialogController.cancel()">Cancel</button>
+            <button class="btn btn-danger" type="button" click.delegate="dialogController.ok()">Delete</button>
+        </ux-dialog-footer>
+    </ux-dialog>
+</template>

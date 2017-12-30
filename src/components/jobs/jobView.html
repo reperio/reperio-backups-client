@@ -1,0 +1,49 @@
+<template>
+    <div class="col-xs-10 col-xs-offset-1">
+        <h1 class="r-page-header">Jobs</h1>
+        <div class="row">
+            <select class="col-xs-3 r-node-selector" value.bind="filters[0].value">
+                <option value="">All Nodes</option>
+                <option model.bind="host.id" repeat.for="host of hosts" >${host.name}</option>
+            </select>
+        </div>
+        <table class="table r-table" aurelia-table="data.bind: jobs; display-data.bind: $displayData; filters.bind: filters">
+                <h1 class="col-xs-12 r-table-header">Jobs</h1>
+            <thead class="r-table-row">
+                <tr class="row">
+                    <th class="col-md-2" aut-sort="key: name">Job</th>
+                    <th class="col-md-2" aut-sort="key: job_source_host.name">Source</th>
+                    <th class="col-md-2" aut-sort="key: job_target_host.name">Target</th>
+                    <th class="col-md-2" aut-sort="key: job_virtual_machine.name">Virtual Machine</th>
+                    <th class="col-md-1" aut-sort="key: job_schedule.name">Schedule</th>
+                    <th class="col-md-1" aut-sort="key: last_execution">Last Execution</th>
+                    <th class="col-md-1" aut-sort="key: enabled">Enabled</th>
+                    <th class="col-md-1"></th>
+                </tr>
+            </thead>
+            <tbody  class="r-table-row">
+                <tr class="row" repeat.for="job of $displayData">
+                    <td class="col-md-2">${job.name}</td>
+                    <td class="col-md-2">${job.job_source_host.name}</td>
+                    <td class="col-md-2">${job.job_target_host.name}</td>
+                    <td class="col-md-2">In progress</th>
+                    <td class="col-md-1">${job.job_schedule.name}</td>
+                    <td class="col-md-1">${job.last_execution}</td>
+                    <td class="col-md-1">
+                        <label class="r-switch">
+                            <input type="checkbox" checked.bind="job.enabled" change.delegate="update_job(job.id, job)" />
+                            <span class="slider round">
+                                <span if.bind="job.enabled" class="slider-text-on">ON</span>
+                                <span if.bind="!job.enabled" class="slider-text-off">OFF</span>
+                            </span>
+                        </label>
+                    </td>
+                    <td class="col-md-1">
+                        <a href="javascript:void(0)"><span class="oi oi-pencil" title="Edit Job" aria-hidden="true"></span></a>
+                        <a href="javascript:void(0)" click.delegate="delete_job(job.id)"><span class="oi oi-circle-x" title="Delete Job" aria-hidden="true"></span></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</template>

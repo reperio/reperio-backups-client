@@ -278,7 +278,7 @@ body {
 }
 
 .r-table-header {
-    background-color: #4285C3;
+    background-color: $primary-color;
     border-top: 1px solid #95989A;
     border-left: 1px solid #95989A;
     border-right: 1px solid #95989A;
@@ -286,10 +286,24 @@ body {
     font-size: 32px;
     font-family: sans-serif;
     font-weight: bold;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     margin-bottom: 0px;
     box-shadow: 1px 0px 6px #95989A;
+
+    h1 {
+      margin-top: 5px;
+      margin-left: 5px;
+      margin-bottom: 5px;
+      display: inline-block;
+    }
+
+    
+}
+
+.r-node-selector {
+  margin-left: 0px;
+  padding: 5px;
 }
 
 .oi {
@@ -298,11 +312,11 @@ body {
     margin-right: 7px;
 
     &.oi-circle-x {
-        color: #DB0000;
+        color: $error;
     }
 
     &.oi-pencil {
-        color: #000000;
+        color: $dark1;
     }
 }
 
@@ -326,10 +340,7 @@ body {
     content: "\f161";
 }
 
-.r-node-selector {
-    margin-left: 15px;
-    padding: 5px;
-}
+
 
 .r-dialog {
     //bring the top of the modal below the top banner
@@ -367,4 +378,40 @@ body {
         color: #FFFFFF;
         border-radius: 0px;
     }
+
+}
+
+.r-job-history-status {
+  border-radius: 50px;
+  width: 20px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.r-job-history-pending {
+  background-color: $neutral
+}
+
+.r-job-history-active {
+  background-color: $warning
+}
+
+.r-job-history-success {
+  background-color: $success
+}
+
+.r-job-history-failed {
+  background-color: $error
+}
+
+.r-action-column {
+  white-space: nowrap;
+}
+
+.r-filter-row {
+  margin-bottom:20px;
+}
+
+.r-page-content {
+  min-width: 600px;
 }

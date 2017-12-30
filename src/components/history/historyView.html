@@ -21,7 +21,7 @@
                     <td>${history.start_date_time}</td>
                     <td>${history.end_date_time}</td>
                     <td>${history.schedule_date_time}</td>
-                    <td>${history.result}</td>
+                    <td><div class="r-job-history-status ${history.result === 0 ? 'r-job-history-pending' : ''} ${history.result === 1 ? 'r-job-history-active' : ''} ${history.result === 2 ? 'r-job-history-success' : ''} ${history.result === 3 ? 'r-job-history-failed' : ''}">&nbsp;</div></td>
                 </tr>
             </tbody>
         </table>

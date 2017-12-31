@@ -2,7 +2,7 @@ import {autoinject} from 'aurelia-framework';
 import {EventAggregator} from 'aurelia-event-aggregator';
 import {HttpClient, json} from 'aurelia-fetch-client';
 
-import {VirtualMachine} from '../models/virtualMachine';
+import {VirtualMachine} from '../models/virtual_machine';
 
 @autoinject()
 export class VirtualMachineService {

@@ -4,7 +4,7 @@ import {DialogController} from 'aurelia-dialog';
 import {Host} from '../../../models/host';
 import {HostService} from '../../../services/hostService';
 import {Job} from '../../../models/job';
-import {VirtualMachine} from '../../../models/virtualMachine';
+import {VirtualMachine} from '../../../models/virtual_machine';
 import {VirtualMachineService} from '../../../services/virtualMachineService';
 
 @autoinject()

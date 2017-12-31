@@ -1,0 +1,48 @@
+<template>
+    <require from="aurelia-dialog/ux-dialog"></require>
+    
+    <ux-dialog class="r-dialog r-job-dialog">
+        <div class="r-dialog-row r-no-margin">
+            <h1 class="r-dialog-header">Create a new Job</h1>
+        </div>
+        <div class="r-dialog-row r-no-margin">
+            <span class="r-dialog-body">Job Details</span>
+        </div>
+        <div class="r-dialog-row r-component-row">
+                <div class="r-dialog-label">Name</div>
+                <input class="r-dialog-control r-with-label" value.bind="job_name" />
+        </div>
+        <div class="r-dialog-row r-component-row">
+            <select class="form-control r-dialog-control" value.bind="selected_source_host" change.delegate="node_selected()">
+                <option model.bind="null">Source Node</option>
+                <option model.bind="host" repeat.for="host of hosts" >${host.name}</option>
+            </select>
+        </div>
+        <div class="r-dialog-row r-component-row">
+            <select disabled.bind="!can_select_virtual_machine" class="form-control r-dialog-control" value.bind="selected_virtual_machine" change.delegate="virtual_machine_selected()">
+                <option model.bind="null">Virtual Machine</option>
+                <option model.bind="vm" repeat.for="vm of virtual_machines" >${vm.name}</option>
+            </select>
+        </div>
+        <div class="r-dialog-row r-component-row">
+            <select class="form-control r-dialog-control" value.bind="selected_target_host">
+                <option model.bind="null">Source Node</option>
+                <option model.bind="host.id" repeat.for="host of hosts" >${host.name}</option>
+            </select>
+        </div>
+        <div class="r-dialog-row r-component-row">
+            <select disabled.bind="!can_select_source_location" class="form-control r-dialog-control" value.bind="selected_source_location" change.delegate="source_location_selected()">
+                <option model.bind="null">Source Location</option>
+                <option model.bind="path" repeat.for="path of zfs_filesystems" >${path}</option>
+            </select>
+        </div>
+        <div class="r-dialog-row r-component-row">
+            <div class="r-dialog-label">Target Location</div>
+            <input disabled.bind="!can_edit_target_location" class="r-dialog-control r-with-label" value.bind="selected_target_location" />
+        </div>
+        <div class="r-dialog-row r-no-margin r-dialog-footer">
+            <button class="btn btn-default r-left" type="button" click.delegate="dialogController.cancel()">Cancel</button>
+            <button class="btn btn-primary r-right" type="button" click.delegate="submit()">Continue</button>
+        </div>
+</ux-dialog>
+</template>

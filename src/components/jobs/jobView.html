@@ -9,6 +9,11 @@
                 </select>
             </div>
         </div>
+        <div class="row">
+            <div class="col-xs-1">
+                <button class="btn r-create-job-btn" click.delegate="create_job()">Create New</button>        
+            </div>
+        </div>
         <div>
             <div class="r-table-header">
                 <h3>Jobs</h1>
@@ -32,7 +37,7 @@
                         <td>${job.name}</td>
                         <td>${job.job_source_host.name}</td>
                         <td>${job.job_target_host.name}</td>
-                        <td>In progress</th>
+                        <td>${job.job_virtual_machine.name}</th>
                         <td>${job.job_schedule.name}</td>
                         <td>${job.last_execution}</td>
                         <td>

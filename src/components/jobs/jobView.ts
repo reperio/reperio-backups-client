@@ -5,6 +5,8 @@ import {HostService} from '../../services/hostService';
 import {Job} from '../../models/job';
 import {JobService} from '../../services/jobService';
 import {DeleteDialog} from '../dialogs/deleteDialog';
+import {JobCreateDetailsDialog} from './create/jobCreateDetailsDialog';
+import {JobScheduleDialog} from './create/jobCreateScheduleDialog';
 
 @autoinject()
 export class JobView {
@@ -37,6 +39,19 @@ export class JobView {
             if (!response.wasCancelled) {
                 await this.jobService.delete_job(id);
                 await this.load_jobs();
+            }
+        });
+    }
+
+    async create_job() {
+        this.dialogService.open({viewModel: JobCreateDetailsDialog, lock: false}).whenClosed(async (response) => {
+            if (!response.wasCancelled) {
+                let job = response.output;
+                this.dialogService.open({viewModel: JobScheduleDialog, model: job, lock: false}).whenClosed(async (response) => {
+                    if (!response.wasCancelled) {
+                        console.log(response.output);
+                    }
+                });
             }
         });
     }

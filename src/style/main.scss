@@ -389,6 +389,10 @@ h3 {
         width: 450px;
     }
 
+    &.r-job-retention-dialog {
+        width: 550px;
+    }
+
     .r-dialog-row {
         width: 100%;
         margin-bottom: 10px;
@@ -402,6 +406,20 @@ h3 {
 
         &.r-component-row {
             height: 40px;
+        }
+
+        &.r-dialog-half-row-left {
+            width: 50%;
+            margin-left: 0px;
+            margin-right: 0px;
+            float: left;
+        }
+
+        &.r-dialog-half-row-right {
+            width: 50%;
+            margin-left: 0px;
+            margin-right: 0px;
+            float: right;
         }
 
         .r-dialog-header {
@@ -431,7 +449,7 @@ h3 {
             color: #4285C3;
             font-size: 1.5em;
             margin-top: 15px;
-            margin-bottom: 30px;
+            margin-bottom: 15px;
             font-weight: bold;
             display: block;
         }

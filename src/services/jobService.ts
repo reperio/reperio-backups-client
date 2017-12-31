@@ -19,6 +19,20 @@ export class JobService {
         return await res.json();
     }
 
+    async create_job(job: Job): Promise<Job> {
+         const body = {
+            job: job
+        };
+        const res = await this.http.fetch(`jobs`, {
+            method: 'post',
+            body: json(body)
+        });
+        if (res.status >= 400) {
+            throw new Error(`Status code ${res.status}`);
+        }
+        return await res.json();
+    }
+
     public async update_job(id: string, job: Job): Promise<Job> {
         const body = {
             job: job

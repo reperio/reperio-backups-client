@@ -1,0 +1,66 @@
+<template>
+    <require from="aurelia-dialog/ux-dialog"></require>
+
+    <ux-dialog class="r-dialog r-job-retention-dialog">
+        <div class="r-dialog-row r-no-margin">
+            <h1 class="r-dialog-header">Create a new Job</h1>
+        </div>
+        <div class="r-dialog-row r-no-margin">
+            <span class="r-dialog-body">Retention</span>
+        </div>
+        <div class="r-dialog-row r-dialog-half-row-left">
+            <div class="r-dialog-row r-no-margin">
+                <span class="r-dialog-body">Source</span>
+            </div>
+            <div class="r-dialog-row r-component-row">
+                <div class="r-dialog-label">15 Min</div>
+                <input type="number" class="r-dialog-control r-with-label" value.bind="source.fifteen" />
+            </div>
+            <div class="r-dialog-row r-component-row">
+                <div class="r-dialog-label">Hourly</div>
+                <input type="number" class="r-dialog-control r-with-label" value.bind="source.hourly" />
+            </div>
+            <div class="r-dialog-row r-component-row">
+                <div class="r-dialog-label">Daily</div>
+                <input type="number" class="r-dialog-control r-with-label" value.bind="source.daily" />
+            </div>
+            <div class="r-dialog-row r-component-row">
+                <div class="r-dialog-label">Weekly</div>
+                <input type="number" class="r-dialog-control r-with-label" value.bind="source.weekly" />
+            </div>
+            <div class="r-dialog-row r-component-row">
+                <div class="r-dialog-label">Monthly</div>
+                <input type="number" class="r-dialog-control r-with-label" value.bind="source.monthly" />
+            </div>
+        </div>    
+        <div class="r-dialog-row r-dialog-half-row-right">
+                <div class="r-dialog-row r-no-margin">
+                    <span class="r-dialog-body">Target</span>
+                </div>
+            <div class="r-dialog-row r-component-row">
+                <div class="r-dialog-label">15 Min</div>
+                <input type="number" class="r-dialog-control r-with-label" value.bind="target.fifteen" />
+            </div>
+            <div class="r-dialog-row r-component-row">
+                <div class="r-dialog-label">Hourly</div>
+                <input type="number" class="r-dialog-control r-with-label" value.bind="target.hourly" />
+            </div>
+            <div class="r-dialog-row r-component-row">
+                <div class="r-dialog-label">Daily</div>
+                <input type="number" class="r-dialog-control r-with-label" value.bind="target.daily" />
+            </div>
+            <div class="r-dialog-row r-component-row">
+                <div class="r-dialog-label">Weekly</div>
+                <input type="number" class="r-dialog-control r-with-label" value.bind="target.weekly" />
+            </div>
+            <div class="r-dialog-row r-component-row">
+                <div class="r-dialog-label">Monthly</div>
+                <input type="number" class="r-dialog-control r-with-label" value.bind="target.monthly" />
+            </div>
+        </div>  
+        <div class="r-dialog-row r-no-margin r-dialog-footer">
+            <button class="btn btn-default r-left" type="button" click.delegate="back()">Back</button>
+            <button class="btn btn-primary r-right" type="button" click.delegate="submit()">Create</button>
+        </div>      
+    </ux-dialog>
+</template>

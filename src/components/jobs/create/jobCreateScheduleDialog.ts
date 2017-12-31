@@ -8,8 +8,6 @@ import {ScheduleService} from '../../../services/scheduleService';
 @autoinject()
 export class JobScheduleDialog {
     public job: Job;
-    public offset: number = 0;
-    public selected_schedule: Schedule;
     public schedules: any[];
 
     constructor(private dialogController: DialogController, private scheduleService: ScheduleService) { }
@@ -20,12 +18,11 @@ export class JobScheduleDialog {
     }
 
     submit() {
-        if (this.selected_schedule === null) {
+        if (this.job.schedule_id === null) {
             return;
         }
 
-        this.job.schedule_id = this.selected_schedule.id;
-        this.job.offset = this.offset;
+        console.log(this.job);
 
         this.dialogController.ok(this.job);
     }

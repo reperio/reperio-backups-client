@@ -42,7 +42,7 @@
                         <td>${job.last_execution}</td>
                         <td>
                             <label class="r-switch">
-                                <input type="checkbox" checked.bind="job.enabled" change.delegate="update_job(job.id, job)" />
+                                <input type="checkbox" checked.bind="job.enabled" change.delegate="update_job_enabled_status(job.id, job)" />
                                 <span class="slider round">
                                     <span if.bind="job.enabled" class="slider-text-on">ON</span>
                                     <span if.bind="!job.enabled" class="slider-text-off">OFF</span>
@@ -50,7 +50,7 @@
                             </label>
                         </td>
                         <td class="col-md-1 r-action-column">
-                            <a href="javascript:void(0)"><span class="oi oi-pencil" title="Edit Job" aria-hidden="true"></span></a>
+                            <a href="javascript:void(0)" click.delegate="edit_job(job)"><span class="oi oi-pencil" title="Edit Job" aria-hidden="true"></span></a>
                             <a href="javascript:void(0)" click.delegate="delete_job(job.id)"><span class="oi oi-circle-x" title="Delete Job" aria-hidden="true"></span></a>
                         </td>
                     </tr>

@@ -1,5 +1,6 @@
 import {autoinject} from 'aurelia-framework';
 import {DialogService} from 'aurelia-dialog';
+import $ from 'jquery';
 import {Host} from '../../models/host';
 import {HostService} from '../../services/hostService';
 import {Job} from '../../models/job';
@@ -7,7 +8,9 @@ import {JobService} from '../../services/jobService';
 import {DeleteDialog} from '../dialogs/deleteDialog';
 import {JobCreateDetailsDialog} from './create/jobCreateDetailsDialog';
 import {JobCreateRetentionDialog} from './create/jobCreateRetentionDialog';
+import {JobEditDialog} from './edit/jobEditDialog';
 import {JobScheduleDialog} from './create/jobCreateScheduleDialog';
+
 
 @autoinject()
 export class JobView {
@@ -30,9 +33,19 @@ export class JobView {
         this.jobs = await this.jobService.get_jobs();
     }
 
-    async update_job(id: string, job: Job) {
+    async update_job_enabled_status(id: string, job: Job) {
         await this.jobService.update_job(id, job);
         await this.load_jobs();
+    }
+
+    async edit_job(job){
+        this.dialogService.open({viewModel: JobEditDialog, model: $.extend( {}, job), lock: false}).whenClosed(async (response) => {
+            if (!response.wasCancelled) {
+                const updated_job = response.output;
+                await this.jobService.update_job(updated_job.id, updated_job);
+                await this.load_jobs();
+            }
+        });
     }
 
     async delete_job(id: string) {

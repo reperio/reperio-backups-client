@@ -394,6 +394,10 @@ h3 {
         width: 450px;
     }
 
+    &.r-job-edit-dialog {
+        width: 600px;
+    }
+
     &.r-job-retention-dialog {
         width: 550px;
     }
@@ -462,6 +466,7 @@ h3 {
         .r-dialog-footer {
             width: 80%;
             display: inline-block;
+            position: fixed;
         }
 
         .r-dialog-label {
@@ -476,6 +481,10 @@ h3 {
             margin-top: auto;
             margin-bottom: auto;
             line-height: 1.75em;
+
+            &.r-large-label {
+                width: 35%;
+            }
         }
 
         .r-dialog-control {
@@ -491,6 +500,11 @@ h3 {
 
             &.r-with-label {
                 width: 70%;
+                border-left: none;
+            }
+
+            &.r-with-large-label {
+                width: 55%;
                 border-left: none;
             }
         }

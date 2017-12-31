@@ -17,7 +17,7 @@ export class JobHistoryService {
         }
 
         const query_string = query.join('&');
-        const res = await this.http.fetch(`job_histories?${query}`, {
+        const res = await this.http.fetch(`job_histories?${query_string}`, {
             method: 'get',
         });
         if (res.status >= 400) {

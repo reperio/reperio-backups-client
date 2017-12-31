@@ -5,6 +5,9 @@ import {HostService} from '../../services/hostService';
 import {Job} from '../../models/job';
 import {JobService} from '../../services/jobService';
 import {DeleteDialog} from '../dialogs/deleteDialog';
+import {JobCreateDetailsDialog} from './create/jobCreateDetailsDialog';
+import {JobCreateRetentionDialog} from './create/jobCreateRetentionDialog';
+import {JobScheduleDialog} from './create/jobCreateScheduleDialog';
 
 @autoinject()
 export class JobView {
@@ -39,5 +42,47 @@ export class JobView {
                 await this.load_jobs();
             }
         });
+    }
+
+    async create_job(step_number: number, job: Job) {
+       if(step_number === 1) {
+           this.open_job_details_modal(job);
+       } else if (step_number === 2) {
+           this.open_job_schedule_modal(job);
+       } else if (step_number === 3) {
+           this.open_job_retention_modal(job);
+       }
+    }
+
+    async open_job_details_modal(job) {
+        this.dialogService.open({viewModel: JobCreateDetailsDialog, model: job, lock: false}).whenClosed(async (response) => {
+            if (!response.wasCancelled) {
+                return this.create_job(2, response.output);
+            }
+            return null;
+        });
+    }
+
+    async open_job_schedule_modal(job) {
+        this.dialogService.open({viewModel: JobScheduleDialog, model: job, lock: false}).whenClosed(async (response) => {
+            if (!response.wasCancelled) {
+                return this.create_job(3, response.output);
+            }
+            return this.create_job(1, response.output);
+        });
+    }
+
+    async open_job_retention_modal(job) {
+        this.dialogService.open({viewModel: JobCreateRetentionDialog, model: job, lock: false}).whenClosed(async (response) => {
+            if (!response.wasCancelled) {
+                return this.submit_job(job);
+            }
+            return this.create_job(2, response.output);
+        });
+    }
+
+    async submit_job(job) {
+        await this.jobService.create_job(job);
+        await this.load_jobs();
     }
 }

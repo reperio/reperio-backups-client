@@ -376,38 +376,162 @@ h3 {
     margin-top: 6em;
     padding-top: 0px;
     padding-bottom: 20px;
+    padding-left:0px;
+    padding-right:0px;
     border-radius: 0px;
     width: 300px;
 
-
-    .r-dialog-header {
-        background-color: #4285C3;
-        color: #FFFFFF;
-        margin-top: 0px;
-        padding: 10px;
-        padding-left: 25px;
-        font-size: 1.5em;
+    &.r-delete-confirmation {
+        width: 350px;
     }
 
-    .r-dialog-body {
-        color: #4285C3;
-        font-family: Helvetica, sans-serif;
-        font-size: 2.5em;
+    &.r-job-dialog {
+        width: 450px;
+    }
+
+    &.r-job-retention-dialog {
+        width: 550px;
+    }
+
+    .r-dialog-row {
+        width: 100%;
         margin-bottom: 10px;
-    }
+        margin-left: 5%;
+        margin-right: 5%;
+    
+        &.r-no-margin {
+            margin-left: 0px;
+            margin-right: 0px;
+        }
 
-    .btn-default {
-        background-color: #4285C3;
-        color: #FFFFFF;
-        border-radius: 0px;
-    }
+        &.r-component-row {
+            height: 40px;
+        }
 
-    .btn-danger {
-        background-color: #DB0000;
-        color: #FFFFFF;
-        border-radius: 0px;
-    }
+        &.r-dialog-half-row-left {
+            width: 50%;
+            margin-left: 0px;
+            margin-right: 0px;
+            float: left;
+        }
 
+        &.r-dialog-half-row-right {
+            width: 50%;
+            margin-left: 0px;
+            margin-right: 0px;
+            float: right;
+        }
+
+        .r-dialog-header {
+            background-color: #4285C3;
+            color: #FFFFFF;
+            margin-top: 0px;
+            margin-left: 0px;
+            padding: 10px;
+            padding-left: 25px;
+            font-size: 1.5em;
+            font-weight: bold;
+            width: 100%;
+        }
+    
+        .r-dialog-title {
+            color: #4285C3;
+            font-family: Helvetica, sans-serif;
+            font-size: 2.5em;
+            margin-top: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            display: block;
+        }
+
+        .r-dialog-body {
+            text-align: center;
+            color: #4285C3;
+            font-size: 1.5em;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            display: block;
+        }
+
+        .r-dialog-footer {
+            width: 80%;
+            display: inline-block;
+        }
+
+        .r-dialog-label {
+            background-color: #777777;
+            color: #FFFFFF;
+            font-size: 0.75em;
+            width: 20%;
+            height: 100%;
+            float: left;
+            padding-left: 10px;
+            padding-bottom: 2px;
+            margin-top: auto;
+            margin-bottom: auto;
+            line-height: 1.75em;
+        }
+
+        .r-dialog-control {
+            border-radius: 0px;
+            border: 1px solid #4285C3; 
+            width: 90%;
+            color: #95989A;
+            padding-top: 0px;
+            padding-bottom: 0px;
+            padding-left: 15px;
+            height: 100%;
+            font-weight: bold;
+
+            &.r-with-label {
+                width: 70%;
+                border-left: none;
+            }
+        }
+
+        .r-left-middle {
+            float: left;
+            margin-left: 20%;
+        }
+        
+        .r-right-middle {
+            float: right;
+            margin-right: 20%;
+        }
+
+        .r-left {
+            float: left;
+            margin-left: 5%;
+        }
+
+        .r-right {
+            float: right;
+            margin-right: 5%;
+        }
+
+        .btn {
+            width: 25%;
+        }
+
+        .btn-default {
+            background-color: #4285C3;
+            color: #FFFFFF;
+            border-radius: 0px; 
+        }
+    
+        .btn-danger {
+            background-color: #DB0000;
+            color: #FFFFFF;
+            border-radius: 0px;
+        }
+
+        .btn-primary {
+            background-color: #40BF62;
+            color: #FFFFFF;
+            border-radius: 0px;
+        }
+    }
 }
 
 .r-job-history-status {
@@ -445,3 +569,14 @@ h3 {
 .r-page-content {
   min-width: 600px;
 }
+
+.r-create-job-btn {
+    margin-bottom: 20px;
+    margin-left: 0px;
+    padding: 5px;
+
+    background-color: #4285C3;
+    color: #FFFFFF;
+    border-radius: 0px;
+}
+

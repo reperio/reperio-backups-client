@@ -22,8 +22,6 @@ export class JobScheduleDialog {
             return;
         }
 
-        console.log(this.job);
-
         this.dialogController.ok(this.job);
     }
     

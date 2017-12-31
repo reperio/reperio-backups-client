@@ -1,15 +1,53 @@
-import {autoinject} from 'aurelia-framework';
+import {autoinject, observable} from 'aurelia-framework';
 
 import {JobHistoryService} from '../../services/jobHistoryService';
+import {HostService} from '../../services/hostService';
+import {VirtualMachineService} from '../../services/virtualMachineService';
+import {Host} from '../../models/host';
+import {VirtualMachine} from '../../models/virtual_machine';
 
 @autoinject()
 export class JobHistoryView {
 
-    public historyEntries: any[];
+    public history_entries: any[];
+    public hosts: Host[];
+    public virtual_machines: VirtualMachine[];
 
-    constructor(private jobHistoryService: JobHistoryService) {}
+    @observable({ changeHandler: 'selected_host_changed' }) public selected_host;
+    @observable({ changeHandler: 'selected_virtual_machine_changed' }) public selected_virtual_machine;
+
+    constructor(private jobHistoryService: JobHistoryService, private hostService: HostService, private virtualMachineService: VirtualMachineService) {}
+
+    selected_host_changed(new_value, old_value) {
+        console.log('host changed');
+        console.log(new_value);
+        this.load_history_entries();
+        this.load_virtual_machines();
+    }
+
+    selected_virtual_machine_changed(new_value, old_value) {
+        console.log('vm changed');
+        console.log(new_value);
+        this.load_history_entries();
+    }
 
     async bind() {
-        this.historyEntries = await this.jobHistoryService.getJobHistories();
+        const history_promise = this.load_history_entries();
+        const hosts_promise = this.load_hosts();
+
+        await history_promise;
+        await hosts_promise;
+    }
+
+    async load_history_entries() {
+        this.history_entries = await this.jobHistoryService.getJobHistories(this.selected_host, this.selected_virtual_machine);
+    }
+
+    async load_hosts() {
+        this.hosts = await this.hostService.get_hosts();
+    }
+
+    async load_virtual_machines() {
+        this.virtual_machines = await this.virtualMachineService.getVirtualMachines(this.selected_host);
     }
 }

@@ -31,6 +31,7 @@ h1 {
 	font-weight: 500;
   line-height: 26.4px;
   margin-top: 0px;
+  margin-bottom: 40px;
 }
 h3 {
   color: $primary-color;
@@ -40,6 +41,10 @@ h3 {
 	font-variant: normal;
 	font-weight: 500;
 	line-height: 15.4px;
+}
+
+.form-control {
+  border-radius: 0px;
 }
 
 .r-banner {

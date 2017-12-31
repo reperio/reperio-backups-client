@@ -3,41 +3,46 @@
         <h1>Job History</h1>
         <div class="r-filter-row row">
             <div class="col-xs-4">
-                    <select class="form-control r-node-selector" value.bind="filters[0].value">
-                        <option value="">All Nodes</option>
-                        <option model.bind="host.id" repeat.for="host of hosts" >${host.name}</option>
-                    </select>
+                <select class="form-control r-node-selector" value.bind="selected_host">
+                    <option value="">All Hosts</option>
+                    <option model.bind="host.id" repeat.for="host of hosts" >${host.name}</option>
+                </select>
             </div>
             <div class="col-xs-4">
-                    <select class="form-control r-node-selector" value.bind="filters[0].value">
-                        <option value="">All Virtual Machines</option>
-                        <option model.bind="vm.id" repeat.for="vm of virtual_machines" >${host.name}</option>
-                    </select>
+                <select class="form-control r-node-selector" value.bind="selected_virtual_machine" disabled.bind="!(selected_host && virtual_machines.length > 0)">
+                    <option value="">All Virtual Machines</option>
+                    <option model.bind="vm.id" repeat.for="vm of virtual_machines" >${vm.name}</option>
+                </select>
             </div>
         </div>
-        <table class="table" aurelia-table="data.bind: historyEntries; display-data.bind: $displayData">
-            <thead>
-                <tr>
-                    <th aut-sort="key: job_history_job.name">Job</th>
-                    <th aut-sort="key: job_history_job.job_source_host.name">Source Node</th>
-                    <th aut-sort="key: job_history_job.job_virtual_machine.name">Virtual Machine</th>
-                    <th aut-sort="key: start_date_time" >Start Time</th>
-                    <th aut-sort="key: end_date_time">End Time</th>
-                    <th aut-sort="key: schedule_date_time">Scheduled Time</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr repeat.for="history of $displayData">
-                    <td>${history.job_history_job.name}</td>
-                    <td>${history.job_history_job.job_source_host.name}</td>
-                    <td>${history.job_history_job.job_virtual_machine.name}</td>
-                    <td>${history.start_date_time}</td>
-                    <td>${history.end_date_time}</td>
-                    <td>${history.schedule_date_time}</td>
-                    <td><div class="r-job-history-status ${history.result === 0 ? 'r-job-history-pending' : ''} ${history.result === 1 ? 'r-job-history-active' : ''} ${history.result === 2 ? 'r-job-history-success' : ''} ${history.result === 3 ? 'r-job-history-failed' : ''}">&nbsp;</div></td>
-                </tr>
-            </tbody>
-        </table>
+        <div>
+            <div class="r-table-header">
+                <h3>Job History</h1>
+            </div>
+            <table class="table r-table" aurelia-table="data.bind: history_entries; display-data.bind: $displayData">
+                <thead>
+                    <tr>
+                        <th aut-sort="key: job_history_job.name">Job</th>
+                        <th aut-sort="key: job_history_job.job_source_host.name">Source Node</th>
+                        <th aut-sort="key: job_history_job.job_virtual_machine.name">Virtual Machine</th>
+                        <th aut-sort="key: start_date_time" >Start Time</th>
+                        <th aut-sort="key: end_date_time">End Time</th>
+                        <th aut-sort="key: schedule_date_time">Scheduled Time</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr repeat.for="history of $displayData">
+                        <td>${history.job_history_job.name}</td>
+                        <td>${history.job_history_job.job_source_host.name}</td>
+                        <td>${history.job_history_job.job_virtual_machine.name}</td>
+                        <td>${history.start_date_time}</td>
+                        <td>${history.end_date_time}</td>
+                        <td>${history.schedule_date_time}</td>
+                        <td><div class="r-job-history-status ${history.result === 0 ? 'r-job-history-pending' : ''} ${history.result === 1 ? 'r-job-history-active' : ''} ${history.result === 2 ? 'r-job-history-success' : ''} ${history.result === 3 ? 'r-job-history-failed' : ''}">&nbsp;</div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </template>

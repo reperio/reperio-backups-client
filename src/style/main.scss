@@ -119,8 +119,6 @@ h3 {
   background-color: $nav-menu-background;
   height: 91em;
   width: 200px;
-  border-right: 1px solid $nav-menu-border;
-  border-left: 1px solid $nav-menu-border;
   float: left;
   position: fixed;
   z-index: 5;
@@ -154,10 +152,14 @@ h3 {
   }
 
   .r-menu-item {
-    font-size: 2em;
+    font-size: 1em;
     color: $primary-color;
-    margin-left: 15px;
-    margin-top: 10px;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+
+    &.r-menu-item-active {
+      background-color: #fff;
+    }
   }
 }
 
@@ -174,6 +176,12 @@ h3 {
 
     margin-top: 2em;
     text-align: center;
+    min-width: 300px;
+    width: 300px;
+    margin-right: 10px;
+    margin-left: 10px;
+    float:left;
+    padding: 5px;
 
     .r-status-card-header {
       border-bottom: 1px solid $nav-menu-border;
@@ -185,7 +193,8 @@ h3 {
       }
 
       .r-status-card-uuid {
-        font-size: 1em;
+        margin-top: 10px;
+        font-size: .8em;
         color: $nav-menu-border;
         font-weight: bold;
       }
@@ -596,6 +605,8 @@ h3 {
 }
 
 .r-page-content {
+  padding-top: 20px;
+  padding-left: 10px;
   min-width: 600px;
 }
 

@@ -6,20 +6,17 @@
                 <span>Reper.io Backups</span>
             </div>
         </div>
-        <div class="r-menu-item">
-            <span >Status</span>
+        <div class="r-menu-item ${activeRoute === 'home' ? 'r-menu-item-active' : ''}">
+            <span><a href="#/home">Home</a></span>
         </div>
-        <div class="r-menu-item">
-            <span>History</span>
+        <div class="r-menu-item ${activeRoute === 'history' ? 'r-menu-item-active' : ''}">
+            <span><a href="#/history">History</a></span>
         </div>
-        <div class="r-menu-item">
-            <span>Home</span>
-        </div>
-        <div class="r-menu-item">
+        <div class="r-menu-item ${activeRoute === 'jobs' ? 'r-menu-item-active' : ''}">
             <span><a href="#/jobs">Jobs</a></span>
         </div>
-        <div class="r-menu-item">
-            <span><a href="#/history">History</a></span>
+        <div class="r-menu-item ${activeRoute === 'vms' ? 'r-menu-item-active' : ''}">
+            <span><a href="#/vms">Virtual Machines</a></span>
         </div>
     </div>
 </template>

@@ -8,10 +8,16 @@ import {User} from "../../models/user";
 export class NavMenu {
     isLoggedIn: boolean = false;
     loggedInUser: User = null;
+    activeRoute: string;
 
     constructor(private eventAggregator: EventAggregator, private authService: AuthService, private router: Router) {
         eventAggregator.subscribe("authStateChanged", () => this.authStateChanged());
         this.authStateChanged();
+
+        eventAggregator.subscribe('router:navigation:success', () => {
+            console.log(this.router.currentInstruction.config.name);
+            this.activeRoute = this.router.currentInstruction.config.name;
+        })
     }
 
     authStateChanged() {

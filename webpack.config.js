@@ -22,22 +22,22 @@ const nodeModulesDir = path.resolve(__dirname, 'node_modules');
 const baseUrl = '/';
 
 const cssRules = [
-  { loader: 'css-loader' },
+  { loader: 'css-loader' }
 ];
 
-module.exports = ({production, server, extractCss, coverage} = {}) => ({
+module.exports = ({ production, server, extractCss, coverage } = {}) => ({
   resolve: {
     extensions: ['.ts', '.js'],
     modules: [srcDir, 'node_modules']
   },
   entry: {
     app: ['aurelia-bootstrapper'],
-      bluebird: ["bluebird"],
-      jquery: ["jquery"],
-      bootstrap: ['bootstrap/dist/js/bootstrap'],
-      lodash: ["lodash/lodash"],
-      moment: ["moment"],
-      toastr: ["toastr"]
+    bluebird: ["bluebird"],
+    jquery: ["jquery"],
+    bootstrap: ['bootstrap/dist/js/bootstrap'],
+    lodash: ["lodash/lodash"],
+    moment: ["moment"],
+    toastr: ["toastr"]
   },
   output: {
     path: outDir,
@@ -97,70 +97,70 @@ module.exports = ({production, server, extractCss, coverage} = {}) => ({
         include: srcDir, exclude: [/\.{spec,test}\.[jt]s$/i],
         enforce: 'post', options: { esModules: true },
       },
-      {
+        {
           test: require.resolve("jquery"),
           use: [{
-              loader: "expose-loader",
-              options: "$"
+            loader: "expose-loader",
+            options: "$"
           }]
-      },
-      {
+        },
+        {
           test: require.resolve("moment"),
           use: [{
-              loader: "expose-loader",
-              options: "moment"
+            loader: "expose-loader",
+            options: "moment"
           }]
-      })
+        })
     ]
   },
   plugins: [
     new ProvidePlugin({
-        $: "jquery",
-        jQuery: "jquery",
-        moment: "moment"
+      $: "jquery",
+      jQuery: "jquery",
+      moment: "moment"
     }),
     new AureliaPlugin(),
     new ProvidePlugin({
       'Promise': 'bluebird'
     }),
     new ModuleDependenciesPlugin({
-      'aurelia-testing': [ './compile-spy', './view-spy' ]
+      'aurelia-testing': ['./compile-spy', './view-spy']
     }),
     new TsConfigPathsPlugin(),
     new CheckerPlugin(),
-      ...(production ?
-          [new webpack.optimize.UglifyJsPlugin({
-              beautify: false,
-              sourceMap: true,
-              mangle: {
-                  except: [
-                      '$', 'webpackJsonp'
-                  ],
-                  screw_ie8: true,
-                  keep_fnames: true
-              },
-              comments: false
-          })] : []),
-      new HtmlWebpackPlugin({
-          template: 'index.ejs',
-          minify: production ? {
-              removeComments: true,
-              collapseWhitespace: true,
-              collapseInlineTagWhitespace: true,
-              collapseBooleanAttributes: true,
-              removeAttributeQuotes: true,
-              minifyCSS: false,
-              minifyJS: false,
-              removeScriptTypeAttributes: true,
-              removeStyleLinkTypeAttributes: true,
-              ignoreCustomFragments: [/\${.*?}/g]
-          } : undefined,
-          metadata: {
-              // available in index.ejs //
-              title, server, baseUrl
-          }
-      }),
-      //new BundleAnalyzerPlugin(),
+    ...(production ?
+      [new webpack.optimize.UglifyJsPlugin({
+        beautify: false,
+        sourceMap: true,
+        mangle: {
+          except: [
+            '$', 'webpackJsonp'
+          ],
+          screw_ie8: true,
+          keep_fnames: true
+        },
+        comments: false
+      })] : []),
+    new HtmlWebpackPlugin({
+      template: 'index.ejs',
+      minify: production ? {
+        removeComments: true,
+        collapseWhitespace: true,
+        collapseInlineTagWhitespace: true,
+        collapseBooleanAttributes: true,
+        removeAttributeQuotes: true,
+        minifyCSS: false,
+        minifyJS: false,
+        removeScriptTypeAttributes: true,
+        removeStyleLinkTypeAttributes: true,
+        ignoreCustomFragments: [/\${.*?}/g]
+      } : undefined,
+      metadata: {
+        // available in index.ejs //
+        title, server, baseUrl
+      }
+    }),
+    //new BundleAnalyzerPlugin(),
     ...when(extractCss, new ExtractTextPlugin({
       filename: production ? '[contenthash].css' : '[id].css',
       allChunks: true

@@ -12,6 +12,7 @@ export class JobHistoryView {
     public history_entries: any[];
     public hosts: Host[];
     public virtual_machines: VirtualMachine[];
+    public pageSize: number = 5;
 
     @observable({ changeHandler: 'selected_host_changed' }) public selected_host;
     @observable({ changeHandler: 'selected_virtual_machine_changed' }) public selected_virtual_machine;
@@ -40,7 +41,23 @@ export class JobHistoryView {
     }
 
     async load_history_entries() {
-        this.history_entries = await this.jobHistoryService.getJobHistories(this.selected_host, this.selected_virtual_machine);
+        const history_entries = await this.jobHistoryService.getJobHistories(this.selected_host, this.selected_virtual_machine);
+
+        history_entries.forEach((entry) => {
+            if (entry.source_result === 0) {
+                entry.source_result_name = 'Pending';
+            } else if (entry.source_result === 1) {
+                entry.source_result_name = 'Active';
+            } else if (entry.source_result === 2) {
+                entry.source_result_name = 'Success';
+            } else if (entry.source_result === 3) {
+                entry.source_result_name = 'Failed';
+            } else {
+                entry.source_result_name = 'Unknown';
+            }
+        });
+
+        this.history_entries = history_entries;
     }
 
     async load_hosts() {

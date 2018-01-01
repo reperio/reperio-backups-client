@@ -19,7 +19,8 @@ export function configure(aurelia: Aurelia) {
         config.settings.centerHorizontalOnly = true;
         config.settings.startingZIndex = 5;
       })
-      .plugin(PLATFORM.moduleName('au-table'));
+      .plugin(PLATFORM.moduleName('au-table'))
+      .globalResources(PLATFORM.moduleName('value_converters/sort'));
 
   // Uncomment the line below to enable animation.
   // aurelia.use.plugin(PLATFORM.moduleName('aurelia-animator-css'));

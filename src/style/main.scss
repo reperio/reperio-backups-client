@@ -624,3 +624,66 @@ h3 {
   font-weight: 1000;
   color: $primary-color;
 }
+
+.r-virtual-machine {
+  border: 1px solid $primary-color;
+  margin-bottom: 10px;
+  padding: 5px;
+  margin-left: 0px;
+  margin-right: 0px;
+
+  .r-virtual-machine-name {
+    font-size: 1.4em;
+    color: $primary-color;
+  }
+
+  .r-virtual-machine-host-name {
+    color: $dark1;
+    font-size: .8em;
+    font-weight: bold;
+    padding-left: 20px;
+  }
+
+  .r-virtual-machine-detail {
+    margin-left: 10px;
+    float: left;
+    height: 60px;
+  }
+
+  .r-virtual-machine-sync {
+    float: right;
+    height: 60px;
+  }
+
+  .r-virtual-machine-last-sync {
+    font-size: .8em;
+    font-weight: bold;
+    color: $dark2;
+  }
+
+  .r-virtual-machine-last-backup {
+    font-size: 1.4em;
+    font-weight: bold;
+    color: $dark2;
+    float: left;
+    margin-left: 40px;
+    height: 60px;
+  }
+
+  .r-virtual-machine-last-backup-status {
+    color: $success;
+  }
+
+  .r-virtual-machine-status {
+    height: 60px;
+    float: left;
+    span {
+      top: 15px;
+      font-size: 2em;
+    }
+
+    .oi-circle-check {
+      color: $success
+    }
+  }
+}

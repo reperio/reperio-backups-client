@@ -65,6 +65,6 @@ export class JobHistoryView {
     }
 
     async load_virtual_machines() {
-        this.virtual_machines = await this.virtualMachineService.getVirtualMachines(this.selected_host);
+        this.virtual_machines = await this.virtualMachineService.getVirtualMachines(this.selected_host, null);
     }
 }

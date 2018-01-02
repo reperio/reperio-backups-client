@@ -1,0 +1,98 @@
+<template>
+        <div class="r-page-content">
+            <h1>Virtual Machines</h1>
+            <div class="r-filter-row row">
+                <div class="col-xs-4">
+                    <select class="form-control r-node-selector" value.bind="selected_host">
+                        <option value="">All Hosts</option>
+                        <option model.bind="host.id" repeat.for="host of hosts | sort:'name':'ascending'" >${host.name}</option>
+                    </select>
+                </div>
+                <div class="col-xs-4">
+                    <input class="form-control" type="text" placeholder="Type to filter virtual machines" value.bind="filter & debounce">
+                </div>
+            </div>
+            <div>
+                <div class="r-virtual-machine row" repeat.for="virtual_machine of virtual_machines">
+                    <div class="r-virtual-machine-status">
+                        <span class="oi oi-circle-check" title="VM Status" aria-hidden="true"></span>
+                    </div>
+                    <div class="r-virtual-machine-detail">
+                        <div class="r-virtual-machine-name">${virtual_machine.name ? virtual_machine.name : '--No Name--'}</div>
+                        <div class="r-virtual-machine-host-name">${virtual_machine.virtual_machine_host.name}</div>
+                    </div>
+                    <div class="r-virtual-machine-last-backup">
+                        <span>Last Backup: <span class="r-virtual-machine-last-backup-status">STATUS</span> at ${virtual_machine.last_execution || 'N/A'}</span>
+                    </div>
+                    <div class="r-virtual-machine-sync">
+                        <label class="r-switch">
+                            <input type="checkbox" checked.bind="virtual_machine.enabled" change.delegate="set_virtual_machine_enabled_status(virtual_machine)" />
+                            <span class="slider round">
+                                <span if.bind="virtual_machine.enabled" class="slider-text-on">ON</span>
+                                <span if.bind="!virtual_machine.enabled" class="slider-text-off">OFF</span>
+                            </span>
+                        </label>
+                        <div>
+                            <span class="r-virtual-machine-last-sync">Last Sync: ${virtual_machine.last_sync}</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- <table class="table r-table" aurelia-table="data.bind: virtual_machines; display-data.bind: $displayData; current-page.bind: currentPage; page-size.bind: pageSize; total-items.bind: totalItems;">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th aut-sort="key: name; default: asc">Virtual Machine</th>
+                            <th aut-sort="key: name">Host</th>
+                            <th aut-sort="key: name">Virtual Machine</th>
+                            <th aut-sort="key: name" >Start Time</th>
+                            <th aut-sort="key: name">End Time</th>
+                            <th aut-sort="key: name">Scheduled Time</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template repeat.for="virtual_machine of $displayData">
+                            <tr>
+                                <td class="r-action-column">
+                                    <span class="oi oi-chevron-right" title="Expand VM" aria-hidden="true" click.delegate="virtual_machine.open = true" if.bind="!virtual_machine.open"></span>
+                                    <span class="oi oi-chevron-bottom" title="Expand VM" aria-hidden="true" click.delegate="virtual_machine.open = false" if.bind="virtual_machine.open"></span>
+                                </td>
+                                <td>${virtual_machine.name}</td>
+                                <td>${virtual_machine.name}</td>
+                                <td>${virtual_machine.name}</td>
+                                <td>${virtual_machine.name}</td>
+                                <td>${virtual_machine.name}</td>
+                                <td>${virtual_machine.name}</td>
+                                <td></td>
+                            </tr>
+                            <tr class="r-table-detail" if.bind="virtual_machine.open">
+                                <td colspan="8">
+                                    test
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-9">
+                        <aut-pagination current-page.bind="currentPage" page-size.bind="pageSize" total-items.bind="totalItems"
+                                                pagination-size.bind="5" boundary-links.bind="true"> </aut-pagination>
+                    </div>
+            
+                    <div class="col-md-3">
+                        <div class="form-inline">
+                            <div class="form-group pull-right">
+                                <label for="pageSize">Page Size: </label>
+                                <select value.bind="pageSize" id="pageSize" class="form-control">
+                                    <option model.bind="5">5</option>
+                                    <option model.bind="10">10</option>
+                                    <option model.bind="20">20</option>
+                                    <option model.bind="50">50</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+    </template>

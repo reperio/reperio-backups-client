@@ -13,24 +13,24 @@
                 <span class="r-dialog-body">Source</span>
             </div>
             <div class="r-dialog-row r-component-row">
-                <div class="r-dialog-label">15 Min</div>
-                <input type="number" class="r-dialog-control r-with-label" value.bind="source.fifteen" />
+                <div class="r-dialog-label r-large-label">15 Min</div>
+                <input disabled.bind="canEdit.quarter_hourly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.quarter_hourly == true ? 'r-disabled' : '' }" value.bind="source.fifteen" />
             </div>
             <div class="r-dialog-row r-component-row">
-                <div class="r-dialog-label">Hourly</div>
-                <input type="number" class="r-dialog-control r-with-label" value.bind="source.hourly" />
+                <div class="r-dialog-label r-large-label">Hourly</div>
+                <input disabled.bind="canEdit.hourly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.hourly == true ? 'r-disabled' : '' }" value.bind="source.hourly" />
             </div>
             <div class="r-dialog-row r-component-row">
-                <div class="r-dialog-label">Daily</div>
-                <input type="number" class="r-dialog-control r-with-label" value.bind="source.daily" />
+                <div class="r-dialog-label r-large-label">Daily</div>
+                <input disabled.bind="canEdit.daily" type="number" class="r-dialog-control r-with-large-label ${ canEdit.daily == true ? 'r-disabled' : '' }" value.bind="source.daily" />
             </div>
             <div class="r-dialog-row r-component-row">
-                <div class="r-dialog-label">Weekly</div>
-                <input type="number" class="r-dialog-control r-with-label" value.bind="source.weekly" />
+                <div class="r-dialog-label r-large-label">Weekly</div>
+                <input disabled.bind="canEdit.weekly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.weekly == true ? 'r-disabled' : '' }" value.bind="source.weekly" />
             </div>
             <div class="r-dialog-row r-component-row">
-                <div class="r-dialog-label">Monthly</div>
-                <input type="number" class="r-dialog-control r-with-label" value.bind="source.monthly" />
+                <div class="r-dialog-label r-large-label">Monthly</div>
+                <input disabled.bind="canEdit.monthly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.monthly == true ? 'r-disabled' : '' }" value.bind="source.monthly" />
             </div>
         </div>    
         <div class="r-dialog-row r-dialog-half-row-right">
@@ -38,24 +38,24 @@
                     <span class="r-dialog-body">Target</span>
                 </div>
             <div class="r-dialog-row r-component-row">
-                <div class="r-dialog-label">15 Min</div>
-                <input type="number" class="r-dialog-control r-with-label" value.bind="target.fifteen" />
+                <div class="r-dialog-label r-large-label">15 Min</div>
+                <input disabled.bind="canEdit.quarter_hourly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.quarter_hourly == true ? 'r-disabled' : '' }" value.bind="target.fifteen" />
             </div>
             <div class="r-dialog-row r-component-row">
-                <div class="r-dialog-label">Hourly</div>
-                <input type="number" class="r-dialog-control r-with-label" value.bind="target.hourly" />
+                <div class="r-dialog-label r-large-label">Hourly</div>
+                <input disabled.bind="canEdit.hourly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.hourly == true ? 'r-disabled' : '' }" value.bind="target.hourly" />
             </div>
             <div class="r-dialog-row r-component-row">
-                <div class="r-dialog-label">Daily</div>
-                <input type="number" class="r-dialog-control r-with-label" value.bind="target.daily" />
+                <div class="r-dialog-label r-large-label">Daily</div>
+                <input disabled.bind="canEdit.daily" type="number" class="r-dialog-control r-with-large-label ${ canEdit.daily == true ? 'r-disabled' : '' }" value.bind="target.daily" />
             </div>
             <div class="r-dialog-row r-component-row">
-                <div class="r-dialog-label">Weekly</div>
-                <input type="number" class="r-dialog-control r-with-label" value.bind="target.weekly" />
+                <div class="r-dialog-label r-large-label">Weekly</div>
+                <input disabled.bind="canEdit.weekly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.weekly == true ? 'r-disabled' : '' }" value.bind="target.weekly" />
             </div>
             <div class="r-dialog-row r-component-row">
-                <div class="r-dialog-label">Monthly</div>
-                <input type="number" class="r-dialog-control r-with-label" value.bind="target.monthly" />
+                <div class="r-dialog-label r-large-label">Monthly</div>
+                <input disabled.bind="canEdit.monthly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.monthly == true ? 'r-disabled' : '' }" value.bind="target.monthly" />
             </div>
         </div>  
         <div class="r-dialog-row r-no-margin r-dialog-footer">

@@ -9,6 +9,7 @@ export class JobCreateRetentionDialog {
     public job: Job;
     public source: any;
     public target: any;
+    public canEdit: any = {};
 
     constructor(private dialogController: DialogController) { }
 
@@ -19,13 +20,30 @@ export class JobCreateRetentionDialog {
             const source_retention = JSON.parse(this.job.source_retention).retentions;
             this.source = {};
             this.parse_retention_policies(source_retention, 1);
+        } else {
+            this.source = {
+                fifteen: 1,
+                hourly: 1,
+                daily: 1,
+                weekly: 1,
+                monthly: 1
+            };
         }
 
         if (this.job.target_retention !== null && this.job.target_retention !== '') {
             const target_retention = JSON.parse(this.job.target_retention).retentions;
             this.target = {};
             this.parse_retention_policies(target_retention, 2);
+        } else {
+            this.target = {
+                fifteen: 4,
+                hourly: 24,
+                daily: 7,
+                weekly: 4,
+                monthly: 12
+            };
         }
+        this.set_retention_values_disabled_status();
     }
 
     back() {
@@ -97,5 +115,15 @@ export class JobCreateRetentionDialog {
         } else if (destination == 2) {
             this.target = obj;
         }
+    }
+
+    set_retention_values_disabled_status() {
+        const policies = ['quarter_hourly', 'hourly', 'daily', 'weekly', 'monthly'];
+
+        const schedule_index = policies.indexOf(this.job.job_schedule.name);
+        policies.forEach(policy => {
+            const policy_index = policies.indexOf(policy);
+            this.canEdit[policy] = !(schedule_index <= policy_index);
+        });
     }
 }

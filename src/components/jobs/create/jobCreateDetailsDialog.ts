@@ -17,6 +17,8 @@ export class JobCreateDetailsDialog {
     public hosts: Host[];
     public selected_source_host: Host;
     public virtual_machines: any[];
+    public vm_brand: string;
+    public vm_name: string;
     public zfs_filesystems: string[] = [];
     
 
@@ -24,15 +26,34 @@ export class JobCreateDetailsDialog {
 
     async activate(job) {
         this.hosts = await this.hostService.get_hosts();
-        this.job = job;
         
-        if (this.job !== null) {
+        if (job !== null) {
+            this.job = job;
             this.virtual_machines = await this.virtualMachineService.get_virtual_machines_by_host_id(this.job.source_host_id);
             const vm_record = await this.virtualMachineService.get_virtual_machine_record(this.job.source_host_id, this.job.sdc_vm_id);
             this.parse_vm_record(vm_record);
             this.can_select_virtual_machine = true;
             this.can_select_source_location = true;
             this.can_edit_target_location = true;
+        } else {
+            this.job = {
+                id: null,
+                name: '',
+                schedule_id: null,
+                source_retention: null,
+                target_retention: null,
+                sdc_vm_id: null,
+                source_location: null,
+                target_location: null,
+                zfs_type: 1,
+                zfs_size: 1,
+                source_host_id:  null,
+                target_host_id: null,
+                last_execution: null,
+                last_schedule: null,
+                enabled: false,
+                offset: 0
+            };
         }
     }
 
@@ -55,13 +76,14 @@ export class JobCreateDetailsDialog {
             this.zfs_filesystems = [];
             this.can_edit_target_location = false;
             this.job.target_location = '';
+            this.vm_name = '';
             return;
         }
 
         this.zfs_filesystems = [];
 
         const vm_record = await this.virtualMachineService.get_virtual_machine_record(this.selected_source_host.sdc_id, this.job.sdc_vm_id);
-
+        this.vm_name = vm_record.alias;
         this.parse_vm_record(vm_record);
 
         this.can_select_source_location = true;
@@ -69,13 +91,16 @@ export class JobCreateDetailsDialog {
 
     async parse_vm_record(vm_record) {
         //parse the vm api record for the zfs_filesystem strings
+        this.vm_brand = vm_record.brand;
         if (vm_record.brand === 'kvm') {
-            this.zfs_filesystems.push(vm_record.zfs_filesystem);
             for(let i = 0; i< vm_record.disks.length; i++) {
                 this.zfs_filesystems.push(vm_record.disks[i].zfs_filesystem);
             }
         } else {
             this.zfs_filesystems.push(vm_record.zfs_filesystem);
+            for(let i = 0; i < vm_record.datasets.length; i++){
+                this.zfs_filesystems.push(vm_record.datasets[i]);
+            }
         }
     }
 
@@ -87,6 +112,13 @@ export class JobCreateDetailsDialog {
         }
 
         this.job.target_location = this.job.source_location;
+        if (this.vm_brand === 'kvm') {
+            const index = this.job.source_location.lastIndexOf('-');
+            this.job.name = this.vm_name + '-' + this.job.source_location.substr(index + 1);
+        } else {
+            const index = this.job.source_location.lastIndexOf('/');
+            this.job.name = this.vm_name + '-' + this.job.source_location;
+        }
         this.can_edit_target_location = true;
     }
 
@@ -97,7 +129,7 @@ export class JobCreateDetailsDialog {
         if (this.job.sdc_vm_id == null) {
             return;
         }
-        if (this.job.source_location == null) {
+        if (this.job.source_location == null || this.job.source_location === 'Dataset/ZVOL') {
             return;
         }
         if (this.job.target_location == null) {
@@ -124,7 +156,7 @@ export class JobCreateDetailsDialog {
             target_host_id: this.job.target_host_id || null,
             last_execution: null,
             last_schedule: null,
-            enabled: this.job.enabled || true,
+            enabled: this.job.enabled || false,
             offset: this.job.offset || 0
         };
 

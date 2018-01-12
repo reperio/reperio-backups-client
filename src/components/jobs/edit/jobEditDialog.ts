@@ -12,18 +12,29 @@ import {VirtualMachineService} from '../../../services/virtualMachineService';
 @autoinject()
 export class JobEditDialog {
     public job: Job;
-    public schedules: any[];
+    public schedules: Schedule[] = [];
     public hosts: any[];
+    public selected_schedule: Schedule;
     public selected_source_host: Host;
     public virtual_machines: VirtualMachine[];
     public source: any;
     public target: any;
+    public canEdit: any = {};
 
     constructor(private dialogController: DialogController, private hostService: HostService, private scheduleService: ScheduleService, private virtualMachineService: VirtualMachineService) { }
 
     async activate(job) {
         this.job = job;
-        this.schedules = await this.scheduleService.get_schedules();
+        const schedules = await this.scheduleService.get_schedules();
+        const schedule_names = ['quarter_hour', 'hourly', 'daily', 'weekly', 'monthly'];
+        schedule_names.forEach(name => {
+            schedules.forEach(schedule => {
+                if (schedule.name === name) {
+                    this.schedules.push(schedule);
+                }
+            });
+        });
+
         this.hosts = await this.hostService.get_hosts();
 
         for (let i = 0; i < this.hosts.length; i++) {
@@ -32,13 +43,13 @@ export class JobEditDialog {
             }
         }
 
-        this.virtual_machines = await this.virtualMachineService.get_virtual_machines_by_host_id(this.job.source_host_id);
-        const vm_record = await this.virtualMachineService.get_virtual_machine_record(this.job.source_host_id, this.job.sdc_vm_id);
-
         const source_retention = JSON.parse(this.job.source_retention).retentions;
         this.parse_retention_policies(source_retention, 1);
         const target_retention = JSON.parse(this.job.target_retention).retentions;
         this.parse_retention_policies(target_retention, 2);
+
+        this.selected_schedule = this.job.job_schedule;
+        this.can_edit_retention();
     }
 
     submit() {
@@ -108,5 +119,41 @@ export class JobEditDialog {
         } else if (destination == 2) {
             this.target = obj;
         }
+    }
+ 
+    set_default_retentions() {
+        this.schedules.forEach(schedule => {
+            if (this.job.schedule_id == schedule.id) {
+                this.selected_schedule = schedule;
+            }
+        });
+
+        this.can_edit_retention();
+
+        this.source = {
+            fifteen: 1,
+            hourly: 1,
+            daily: 1,
+            weekly: 1,
+            monthly: 1
+        };
+
+        this.target = {
+            fifteen: 4,
+            hourly: 24,
+            daily: 7,
+            weekly: 4,
+            monthly: 12
+        };
+    }
+
+    can_edit_retention() {
+        const policies = ['quarter_hourly', 'hourly', 'daily', 'weekly', 'monthly'];
+
+        const schedule_index = policies.indexOf(this.selected_schedule.name);
+        policies.forEach(policy => {
+            const policy_index = policies.indexOf(policy);
+            this.canEdit[policy] = !(schedule_index <= policy_index);
+        });
     }
 }

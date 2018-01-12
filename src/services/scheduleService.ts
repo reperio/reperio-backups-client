@@ -1,13 +1,13 @@
 import {autoinject} from 'aurelia-framework';
 import {HttpClient, json} from 'aurelia-fetch-client';
 
-import {Host} from '../models/host';
+import {Schedule} from '../models/schedule';
 
 @autoinject()
 export class ScheduleService {
     constructor(private http: HttpClient) { }
 
-    public async get_schedules(): Promise<Host[]> {
+    public async get_schedules(): Promise<Schedule[]> {
         const res = await this.http.fetch(`schedules`, {
             method: 'get'
         });

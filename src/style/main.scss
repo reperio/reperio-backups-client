@@ -523,6 +523,10 @@ h3 {
                 width: 55%;
                 border-left: none;
             }
+
+            &.r-disabled {
+              background-color: #eee;
+            }
         }
 
         .r-left-middle {

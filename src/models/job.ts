@@ -1,3 +1,7 @@
+import {Host} from './host';
+import {Schedule} from './schedule';
+import {VirtualMachine} from './virtual_machine';
+
 export class Job {
     id: string;
     name: string;
@@ -15,4 +19,9 @@ export class Job {
     last_schedule: Date;
     enabled: boolean;
     offset: number;
+
+    job_source_host?: Host;
+    job_target_host?: Host;
+    job_schedule?: Schedule;
+    job_virtual_machine?: VirtualMachine;
 }

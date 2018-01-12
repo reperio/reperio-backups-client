@@ -14,32 +14,20 @@
                     <input class="r-dialog-control r-with-label" value.bind="job.name" />
             </div>
             <div class="r-dialog-row r-component-row">
-                <select disabled class="form-control r-dialog-control" value.bind="selected_source_host" change.delegate="node_selected()">
-                    <option model.bind="null">Source Node</option>
-                    <option model.bind="host" repeat.for="host of hosts" >${host.name}</option>
-                </select>
+                <div class="r-dialog-label">Source Host</div>
+                <input disabled class="r-dialog-control r-with-label r-disabled" value.bind="job.job_source_host.name" />
             </div>
             <div class="r-dialog-row r-component-row">
-                <select disabled class="form-control r-dialog-control" value.bind="job.sdc_vm_id" change.delegate="virtual_machine_selected()">
-                    <option model.bind="null">Virtual Machine</option>
-                    <option model.bind="vm.sdc_id" repeat.for="vm of virtual_machines" >${vm.name}</option>
-                </select>
+                <div class="r-dialog-label">Virtual Machine</div>
+                <input disabled class="r-dialog-control r-with-label r-disabled" value.bind="job.job_virtual_machine.name" />
             </div>
             <div class="r-dialog-row r-component-row">
-                <select disabled class="form-control r-dialog-control" value.bind="job.target_host_id">
-                    <option model.bind="null">Source Node</option>
-                    <option model.bind="host.id" repeat.for="host of hosts" >${host.name}</option>
-                </select>
+                <div class="r-dialog-label">Target Host</div>
+                <input disabled class="r-dialog-control r-with-label r-disabled" value.bind="job.job_target_host.name" />
             </div>
             <div class="r-dialog-row r-component-row">
-                <select disabled class="form-control r-dialog-control" value.bind="job.source_location" change.delegate="source_location_selected()">
-                    <option model.bind="null">Source Location</option>
-                    <option model.bind="path" repeat.for="path of zfs_filesystems" >${path}</option>
-                </select>
-            </div>
-            <div class="r-dialog-row r-component-row">
-                <div class="r-dialog-label">Target Location</div>
-                <input disabled class="r-dialog-control r-with-label" value.bind="job.target_location" />
+                <div class="r-dialog-label">Source Location</div>
+                <input disabled class="r-dialog-control r-with-label r-disabled" value.bind="job.source_location" />
             </div>
             <div class="r-dialog-row r-component-row"></div>
             <div class="r-dialog-row r-component-row"></div>
@@ -49,7 +37,7 @@
                 <span class="r-dialog-body">Schedule and Retention</span>
             </div>
             <div class="r-dialog-row r-component-row">
-                <select class="form-control r-dialog-control" value.bind="job.schedule_id">
+                <select class="form-control r-dialog-control" value.bind="job.schedule_id" change.delegate="set_default_retentions()">
                     <option model.bind="null">Schedule</option>
                     <option model.bind="schedule.id" repeat.for="schedule of schedules" >${schedule.display_name}</option>
                 </select>
@@ -64,23 +52,23 @@
                 </div>
                 <div class="r-dialog-row r-component-row">
                     <div class="r-dialog-label r-large-label">15 Min</div>
-                    <input type="number" class="r-dialog-control r-with-large-label" value.bind="source.fifteen" />
+                    <input disabled.bind="canEdit.quarter_hourly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.quarter_hourly == true ? 'r-disabled' : '' }" value.bind="source.fifteen" />
                 </div>
                 <div class="r-dialog-row r-component-row">
                     <div class="r-dialog-label r-large-label">Hourly</div>
-                    <input type="number" class="r-dialog-control r-with-large-label" value.bind="source.hourly" />
+                    <input disabled.bind="canEdit.hourly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.hourly == true ? 'r-disabled' : '' }" value.bind="source.hourly" />
                 </div>
                 <div class="r-dialog-row r-component-row">
                     <div class="r-dialog-label r-large-label">Daily</div>
-                    <input type="number" class="r-dialog-control r-with-large-label" value.bind="source.daily" />
+                    <input disabled.bind="canEdit.daily" type="number" class="r-dialog-control r-with-large-label ${ canEdit.daily == true ? 'r-disabled' : '' }" value.bind="source.daily" />
                 </div>
                 <div class="r-dialog-row r-component-row">
                     <div class="r-dialog-label r-large-label">Weekly</div>
-                    <input type="number" class="r-dialog-control r-with-large-label" value.bind="source.weekly" />
+                    <input disabled.bind="canEdit.weekly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.weekly == true ? 'r-disabled' : '' }" value.bind="source.weekly" />
                 </div>
                 <div class="r-dialog-row r-component-row">
                     <div class="r-dialog-label r-large-label">Monthly</div>
-                    <input type="number" class="r-dialog-control r-with-large-label" value.bind="source.monthly" />
+                    <input disabled.bind="canEdit.monthly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.monthly == true ? 'r-disabled' : '' }" value.bind="source.monthly" />
                 </div>
             </div>    
             <div class="r-dialog-row r-dialog-half-row-right">
@@ -89,28 +77,28 @@
                     </div>
                 <div class="r-dialog-row r-component-row">
                     <div class="r-dialog-label r-large-label">15 Min</div>
-                    <input type="number" class="r-dialog-control r-with-large-label" value.bind="target.fifteen" />
+                    <input disabled.bind="canEdit.quarter_hourly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.quarter_hourly == true ? 'r-disabled' : '' }" value.bind="target.fifteen" />
                 </div>
                 <div class="r-dialog-row r-component-row">
                     <div class="r-dialog-label r-large-label">Hourly</div>
-                    <input type="number" class="r-dialog-control r-with-large-label" value.bind="target.hourly" />
+                    <input disabled.bind="canEdit.hourly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.hourly == true ? 'r-disabled' : '' }" value.bind="target.hourly" />
                 </div>
                 <div class="r-dialog-row r-component-row">
                     <div class="r-dialog-label r-large-label">Daily</div>
-                    <input type="number" class="r-dialog-control r-with-large-label" value.bind="target.daily" />
+                    <input disabled.bind="canEdit.daily" type="number" class="r-dialog-control r-with-large-label ${ canEdit.daily == true ? 'r-disabled' : '' }" value.bind="target.daily" />
                 </div>
                 <div class="r-dialog-row r-component-row">
                     <div class="r-dialog-label r-large-label">Weekly</div>
-                    <input type="number" class="r-dialog-control r-with-large-label" value.bind="target.weekly" />
+                    <input disabled.bind="canEdit.weekly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.weekly == true ? 'r-disabled' : '' }" value.bind="target.weekly" />
                 </div>
                 <div class="r-dialog-row r-component-row">
                     <div class="r-dialog-label r-large-label">Monthly</div>
-                    <input type="number" class="r-dialog-control r-with-large-label" value.bind="target.monthly" />
+                    <input disabled.bind="canEdit.monthly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.monthly == true ? 'r-disabled' : '' }" value.bind="target.monthly" />
                 </div>
             </div>  
         </div>
         <div class="r-dialog-row r-no-margin r-dialog-footer">
-            <button class="btn btn-default r-left" type="button" click.delegate="dialogController.cancel()">Cancel</button>
+            <button class="btn btn-default r-left" type="button" style="margin-top: 60px;" click.delegate="dialogController.cancel()">Cancel</button>
             <button class="btn btn-primary r-right" type="button" click.delegate="submit()">Save</button>
         </div>
     </ux-dialog>   

@@ -22,11 +22,11 @@ export class JobCreateRetentionDialog {
             this.parse_retention_policies(source_retention, 1);
         } else {
             this.source = {
-                fifteen: 1,
-                hourly: 1,
-                daily: 1,
-                weekly: 1,
-                monthly: 1
+                quarter_hourly: 0,
+                hourly: 0,
+                daily: 0,
+                weekly: 0,
+                monthly: 0
             };
         }
 
@@ -35,13 +35,16 @@ export class JobCreateRetentionDialog {
             this.target = {};
             this.parse_retention_policies(target_retention, 2);
         } else {
-            this.target = {
-                fifteen: 4,
-                hourly: 24,
-                daily: 7,
-                weekly: 4,
-                monthly: 12
-            };
+            const policies = ['quarter_hourly', 'hourly', 'daily', 'weekly', 'monthly'];
+            const retentions = [4, 24, 7, 4, 12];
+
+            this.target = {};
+
+            const schedule_index = policies.indexOf(this.job.job_schedule.name);
+            policies.forEach(policy => {
+                const policy_index = policies.indexOf(policy);
+                this.target[policy] = !(schedule_index <= policy_index) ? 0 : retentions[policy_index];
+            });
         }
         this.set_retention_values_disabled_status();
     }
@@ -66,7 +69,7 @@ export class JobCreateRetentionDialog {
                 {
                     interval: 'quarter_hourly',
                     offset: 5,
-                    retention: retention_values.fifteen
+                    retention: retention_values.quarter_hourly
                 },
                 {
                     interval: "hourly",

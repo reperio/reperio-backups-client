@@ -1,7 +1,9 @@
 import {autoinject, bindable} from 'aurelia-framework';
 import {DialogController} from 'aurelia-dialog';
+import * as toastr from 'toastr';
 
 import {Job} from '../../../models/job';
+import {JobService} from '../../../services/jobService';
 import {Schedule} from '../../../models/schedule';
 
 @autoinject()
@@ -11,7 +13,7 @@ export class JobCreateRetentionDialog {
     public target: any;
     public canEdit: any = {};
 
-    constructor(private dialogController: DialogController) { }
+    constructor(private dialogController: DialogController, private jobService: JobService) { }
 
     async activate(job) {
         this.job = job;
@@ -56,11 +58,20 @@ export class JobCreateRetentionDialog {
         this.dialogController.cancel(this.job);
     }
 
-    submit() {
+    async submit() {
         this.job.source_retention = this.build_retention_policy(this.source);
         this.job.target_retention = this.build_retention_policy(this.target);
-
-        this.dialogController.ok(this.job);
+        
+        try {
+            const result = await this.jobService.create_job(this.job);        
+            this.dialogController.ok(this.job);
+        } catch (err) {
+            const message: string = err.message;
+            const messages = message.split(',');
+            messages.forEach(message => {
+                toastr.error(message);
+            });
+        }
     }
     
     build_retention_policy(retention_values) {

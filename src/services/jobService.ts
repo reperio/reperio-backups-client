@@ -28,7 +28,7 @@ export class JobService {
             body: json(body)
         });
         if (res.status >= 400) {
-            throw new Error(`Status code ${res.status}`);
+            throw new Error(await res.json());
         }
         return await res.json();
     }

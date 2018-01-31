@@ -1,6 +1,7 @@
 import {autoinject} from 'aurelia-framework';
 import {DialogService} from 'aurelia-dialog';
-import $ from 'jquery';
+import * as toastr from 'toastr';
+import * as $ from 'jquery';
 import {Host} from '../../models/host';
 import {HostService} from '../../services/hostService';
 import {Job} from '../../models/job';
@@ -88,14 +89,11 @@ export class JobView {
     async open_job_retention_modal(job) {
         this.dialogService.open({viewModel: JobCreateRetentionDialog, model: job, lock: false}).whenClosed(async (response) => {
             if (!response.wasCancelled) {
-                return this.submit_job(job);
+                await this.load_jobs();
+                toastr.success(`Job "${response.output.name}" was created successfully`);
+                return;
             }
             return this.create_job(2, response.output);
         });
-    }
-
-    async submit_job(job) {
-        await this.jobService.create_job(job);
-        await this.load_jobs();
     }
 }

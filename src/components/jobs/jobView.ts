@@ -44,6 +44,7 @@ export class JobView {
             if (!response.wasCancelled) {
                 const updated_job = response.output;
                 await this.jobService.update_job(updated_job.id, updated_job);
+                toastr.success('Job updated');
                 await this.load_jobs();
             }
         });

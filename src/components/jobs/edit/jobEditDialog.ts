@@ -1,9 +1,11 @@
 import {autoinject, bindable} from 'aurelia-framework';
 import {DialogController} from 'aurelia-dialog';
+import * as toastr from 'toastr';
 
 import {Host} from '../../../models/host';
 import {HostService} from '../../../services/hostService';
 import {Job} from '../../../models/job';
+import {JobService} from '../../../services/jobService';
 import {Schedule} from '../../../models/schedule';
 import {ScheduleService} from '../../../services/scheduleService';
 import {VirtualMachine} from '../../../models/virtual_machine';
@@ -21,7 +23,7 @@ export class JobEditDialog {
     public target: any;
     public canEdit: any = {};
 
-    constructor(private dialogController: DialogController, private hostService: HostService, private scheduleService: ScheduleService, private virtualMachineService: VirtualMachineService) { }
+    constructor(private dialogController: DialogController, private hostService: HostService, private jobService: JobService, private scheduleService: ScheduleService, private virtualMachineService: VirtualMachineService) { }
 
     async activate(job) {
         this.job = job;
@@ -52,7 +54,7 @@ export class JobEditDialog {
         this.can_edit_retention();
     }
 
-    submit() {
+    async submit() {
         if (this.job.schedule_id === null) {
             return;
         }
@@ -60,7 +62,16 @@ export class JobEditDialog {
         this.job.source_retention = this.build_retention_policy(this.source);
         this.job.target_retention = this.build_retention_policy(this.target);
 
-        this.dialogController.ok(this.job);
+        try {
+            const result = await this.jobService.create_job(this.job);        
+            this.dialogController.ok(this.job);
+        } catch (err) {
+            const message: string = err.message;
+            const messages = message.split(',');
+            messages.forEach(message => {
+                toastr.error(message);
+            });
+        }
     }
     
 
@@ -69,7 +80,7 @@ export class JobEditDialog {
             retentions: [
                 {
                     interval: 'quarter_hourly',
-                    retention: retention_values.fifteen
+                    retention: retention_values.quarter_hourly
                 },
                 {
                     interval: "hourly",

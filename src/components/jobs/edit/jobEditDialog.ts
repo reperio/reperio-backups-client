@@ -69,27 +69,22 @@ export class JobEditDialog {
             retentions: [
                 {
                     interval: 'quarter_hourly',
-                    offset: 5,
                     retention: retention_values.fifteen
                 },
                 {
                     interval: "hourly",
-                    offset: 30,
                     retention: retention_values.hourly
                 },
                 {
                     interval: "daily",
-                    offset: 0,
                     retention: retention_values.daily
                 },
                 {
                     interval: "weekly",
-                    offset: 0,
                     retention: retention_values.weekly
                 },
                 {
                     interval: "monthly",
-                    offset: 0,
                     retention: retention_values.monthly
                 }
             ]
@@ -102,7 +97,7 @@ export class JobEditDialog {
         let obj: any = {};
         for (let i = 0; i < policies.length; i++) {
             if (policies[i].interval == 'quarter_hourly') {
-                obj.fifteen = policies[i].retention;
+                obj.quarter_hourly = policies[i].retention;
             } else if (policies[i].interval == 'hourly') {
                 obj.hourly = policies[i].retention;
             } else if (policies[i].interval == 'daily') {
@@ -131,20 +126,22 @@ export class JobEditDialog {
         this.can_edit_retention();
 
         this.source = {
-            fifteen: 1,
-            hourly: 1,
-            daily: 1,
-            weekly: 1,
-            monthly: 1
+            quarter_hourly: 0,
+            hourly: 0,
+            daily: 0,
+            weekly: 0,
+            monthly: 0
         };
 
-        this.target = {
-            fifteen: 4,
-            hourly: 24,
-            daily: 7,
-            weekly: 4,
-            monthly: 12
-        };
+        const policies = ['quarter_hourly', 'hourly', 'daily', 'weekly', 'monthly'];
+        const retentions = [4, 24, 7, 4, 12];
+
+        this.target = {};
+        const schedule_index = policies.indexOf(this.selected_schedule.name);
+        policies.forEach(policy => {
+            const policy_index = policies.indexOf(policy);
+            this.target[policy] = !(schedule_index <= policy_index) ? 0 : retentions[policy_index];
+        });
     }
 
     can_edit_retention() {

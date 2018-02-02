@@ -79,27 +79,22 @@ export class JobCreateRetentionDialog {
             retentions: [
                 {
                     interval: 'quarter_hourly',
-                    offset: 5,
                     retention: retention_values.quarter_hourly
                 },
                 {
                     interval: "hourly",
-                    offset: 30,
                     retention: retention_values.hourly
                 },
                 {
                     interval: "daily",
-                    offset: 0,
                     retention: retention_values.daily
                 },
                 {
                     interval: "weekly",
-                    offset: 0,
                     retention: retention_values.weekly
                 },
                 {
                     interval: "monthly",
-                    offset: 0,
                     retention: retention_values.monthly
                 }
             ]
@@ -112,7 +107,7 @@ export class JobCreateRetentionDialog {
         let obj: any = {};
         for (let i = 0; i < policies.length; i++) {
             if (policies[i].interval == 'quarter_hourly') {
-                obj.fifteen = policies[i].retention;
+                obj.quarter_hourly = policies[i].retention;
             } else if (policies[i].interval == 'hourly') {
                 obj.hourly = policies[i].retention;
             } else if (policies[i].interval == 'daily') {

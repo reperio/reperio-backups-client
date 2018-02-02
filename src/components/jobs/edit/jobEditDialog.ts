@@ -63,7 +63,7 @@ export class JobEditDialog {
         this.job.target_retention = this.build_retention_policy(this.target);
 
         try {
-            const result = await this.jobService.create_job(this.job);        
+            const result = await this.jobService.update_job(this.job.id, this.job);        
             this.dialogController.ok(this.job);
         } catch (err) {
             const message: string = err.message;

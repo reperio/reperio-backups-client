@@ -3,9 +3,15 @@
         <h1>Jobs</h1>
         <div class="r-filter-row row">
             <div class="col-xs-4">
-                <select class="form-control r-node-selector" value.bind="filters[0].value">
+                <select class="form-control r-node-selector" value.bind="filters[0].value" change.delegate="update_selected_host()">
                     <option value="">Source</option>
                     <option model.bind="host.id" repeat.for="host of hosts" >${host.name}</option>
+                </select>
+            </div>
+            <div class="col-xs-4">
+                <select class="form-control r-node-selector" value.bind="filters[1].value" change.delegate="update_sort_column()" disabled.bind="filters[0].value === ''">
+                    <option value="">Virtual Machine</option>
+                    <option model.bind="vm.id" repeat.for="vm of filtered_virtual_machines" >${vm.name!== '' ? vm.name : vm.id}</option>
                 </select>
             </div>
         </div>
@@ -18,14 +24,14 @@
             <div class="r-table-header">
                 <h3>Jobs</h1>
             </div>
-            <table class="table r-table" aurelia-table="data.bind: jobs; display-data.bind: $displayData; filters.bind: filters">
+            <table id="job_table" class="table r-table" aurelia-table="data.bind: jobs; display-data.bind: $displayData; filters.bind: filters" aurelia-table.ref="table">
                     
                 <thead class="r-table-row">
                     <tr class="row">
-                        <th aut-sort="key: name">Job</th>
+                        <th aut-sort="key: job_virtual_machine.name; default: asc" id="vm_header">Virtual Machine</th>
+                        <th aut-sort="key: name" id="job_header">Job</th>
                         <th aut-sort="key: job_source_host.name">Source</th>
                         <th aut-sort="key: job_target_host.name">Target</th>
-                        <th aut-sort="key: job_virtual_machine.name">Virtual Machine</th>
                         <th aut-sort="key: job_schedule.name">Schedule</th>
                         <th aut-sort="key: last_execution">Last Execution</th>
                         <th aut-sort="key: enabled">Enabled</th>
@@ -34,10 +40,10 @@
                 </thead>
                 <tbody  class="r-table-row">
                     <tr class="row" repeat.for="job of $displayData">
+                        <td>${job.job_virtual_machine.name}</th>
                         <td>${job.name}</td>
                         <td>${job.job_source_host.name}</td>
                         <td>${job.job_target_host.name}</td>
-                        <td>${job.job_virtual_machine.name}</th>
                         <td>${job.job_schedule.name}</td>
                         <td>${job.last_execution}</td>
                         <td>

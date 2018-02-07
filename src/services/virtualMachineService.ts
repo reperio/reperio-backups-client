@@ -28,7 +28,7 @@ export class VirtualMachineService {
         return await res.json();
     }
 
-    public async getVirtualMachines(selected_host:string, filter:string): Promise<any> {
+    public async getVirtualMachines(selected_host?:string, filter?:string): Promise<any> {
         const query = [];
         if (selected_host) {
             query.push(`host_id=${selected_host}`);

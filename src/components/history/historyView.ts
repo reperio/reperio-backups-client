@@ -12,7 +12,7 @@ export class JobHistoryView {
     public history_entries: any[];
     public hosts: Host[];
     public virtual_machines: VirtualMachine[];
-    public pageSize: number = 5;
+    public pageSize: number = 50;
 
     @observable({ changeHandler: 'selected_host_changed' }) public selected_host;
     @observable({ changeHandler: 'selected_virtual_machine_changed' }) public selected_virtual_machine;

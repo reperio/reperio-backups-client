@@ -1,11 +1,15 @@
 import {autoinject, bindable} from 'aurelia-framework';
 import {DialogController} from 'aurelia-dialog';
 
+import * as _ from 'lodash';
+
 import {Host} from '../../../models/host';
 import {HostService} from '../../../services/hostService';
 import {Job} from '../../../models/job';
 import {VirtualMachine} from '../../../models/virtual_machine';
 import {VirtualMachineService} from '../../../services/virtualMachineService';
+import {VirtualMachineDataset} from '../../../models/virtual_machine_dataset';
+import {VirtualMachineDatasetService} from '../../../services/virtualMachineDatasetService';
 
 @autoinject()
 export class JobCreateDetailsDialog {
@@ -16,13 +20,13 @@ export class JobCreateDetailsDialog {
     public job: Job;
     public hosts: Host[];
     public selected_source_host: Host;
-    public virtual_machines: any[];
+    public virtual_machines: VirtualMachine[];
     public vm_brand: string;
     public vm_name: string;
-    public zfs_filesystems: string[] = [];
+    public datasets: VirtualMachineDataset[] = [];
     
 
-    constructor(private dialogController: DialogController, private hostService: HostService, private virtualMachineService: VirtualMachineService) { }
+    constructor(private dialogController: DialogController, private hostService: HostService, private virtualMachineDatasetService: VirtualMachineDatasetService, private virtualMachineService: VirtualMachineService) { }
 
     async activate(job) {
         this.hosts = await this.hostService.get_hosts();
@@ -31,7 +35,7 @@ export class JobCreateDetailsDialog {
             this.job = job;
             this.virtual_machines = await this.virtualMachineService.get_virtual_machines_by_host_id(this.job.source_host_id);
             const vm_record = await this.virtualMachineService.get_virtual_machine_record(this.job.source_host_id, this.job.sdc_vm_id);
-            this.parse_vm_record(vm_record);
+            this.datasets = await this.virtualMachineDatasetService.get_datasets_by_virtual_machine_id(this.job.source_host_id, this.job.sdc_vm_id);
             this.can_select_virtual_machine = true;
             this.can_select_source_location = true;
             this.can_edit_target_location = true;
@@ -70,55 +74,41 @@ export class JobCreateDetailsDialog {
     }
 
     async virtual_machine_selected() {
+        this.datasets = [];
+
         if (this.job.sdc_vm_id === null) {
             this.job.source_location = null;
             this.can_select_source_location = false;
-            this.zfs_filesystems = [];
             this.can_edit_target_location = false;
             this.job.target_location = '';
             this.vm_name = '';
+            this.job.name = '';
             return;
         }
 
-        this.zfs_filesystems = [];
-
-        const vm_record = await this.virtualMachineService.get_virtual_machine_record(this.selected_source_host.sdc_id, this.job.sdc_vm_id);
-        this.vm_name = vm_record.alias;
-        this.parse_vm_record(vm_record);
-
+        this.datasets = await this.virtualMachineDatasetService.get_datasets_by_virtual_machine_id(this.job.source_host_id, this.job.sdc_vm_id);
+        console.log(JSON.stringify(this.datasets));
+        const vm = _.find(this.virtual_machines, virtual_machine => {
+            return virtual_machine.id === this.job.sdc_vm_id;
+        });
+        this.vm_name = vm.name;
         this.can_select_source_location = true;
-    }
-
-    async parse_vm_record(vm_record) {
-        //parse the vm api record for the zfs_filesystem strings
-        this.vm_brand = vm_record.brand;
-        if (vm_record.brand === 'kvm') {
-            for(let i = 0; i< vm_record.disks.length; i++) {
-                this.zfs_filesystems.push(vm_record.disks[i].zfs_filesystem);
-            }
-        } else {
-            this.zfs_filesystems.push(vm_record.zfs_filesystem);
-            for(let i = 0; i < vm_record.datasets.length; i++){
-                this.zfs_filesystems.push(vm_record.datasets[i]);
-            }
-        }
     }
 
     async source_location_selected() {
         if (this.job.source_location === null) {
             this.can_edit_target_location = false;
             this.job.target_location = '';
+            this.job.name = '';
             return;
         }
 
+        const selected_dataset = _.find(this.datasets, dataset => {
+            return this.job.source_location === dataset.location;
+        })
+
         this.job.target_location = this.job.source_location;
-        if (this.vm_brand === 'kvm') {
-            const index = this.job.source_location.lastIndexOf('-');
-            this.job.name = this.vm_name + '-' + this.job.source_location.substr(index + 1);
-        } else {
-            const index = this.job.source_location.lastIndexOf('/');
-            this.job.name = this.vm_name + '-' + this.job.source_location;
-        }
+        this.job.name = this.vm_name + '-' + selected_dataset.name;
         this.can_edit_target_location = true;
     }
 

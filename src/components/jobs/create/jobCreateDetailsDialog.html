@@ -17,7 +17,7 @@
         <div class="r-dialog-row r-component-row">
             <select disabled.bind="!can_select_virtual_machine" class="form-control r-dialog-control" value.bind="job.sdc_vm_id" change.delegate="virtual_machine_selected()">
                 <option model.bind="null">Virtual Machine</option>
-                <option model.bind="vm.sdc_id" repeat.for="vm of virtual_machines" >${vm.name}</option>
+                <option model.bind="vm.id" repeat.for="vm of virtual_machines" >${vm.name}</option>
             </select>
         </div>
         <div class="r-dialog-row r-component-row">
@@ -29,7 +29,7 @@
         <div class="r-dialog-row r-component-row">
             <select disabled.bind="!can_select_source_location" class="form-control r-dialog-control" value.bind="job.source_location" change.delegate="source_location_selected()">
                 <option model.bind="null">Dataset/ZVOL</option>
-                <option model.bind="path" repeat.for="path of zfs_filesystems" >${path}</option>
+                <option model.bind="dataset.location" repeat.for="dataset of datasets" >${dataset.name}</option>
             </select>
         </div>
         <div class="r-dialog-row r-component-row">

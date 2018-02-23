@@ -1,6 +1,10 @@
 @import 'imports';
 @import 'variables';
 
+.ag-theme-blue .ag-paging-panel {
+  color: black;
+}
+
 html, body {
   width: 100%;
   height: 100%;

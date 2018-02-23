@@ -1,7 +1,7 @@
 <template>
     <div class="r-page-content">
         <h1>Job History</h1>
-        <div class="r-filter-row row">
+        <!-- <div class="r-filter-row row">
             <div class="col-xs-4">
                 <select class="form-control r-node-selector" value.bind="selected_host">
                     <option value="">All Hosts</option>
@@ -80,6 +80,51 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
+        <ag-grid-aurelia #agGrid class="ag-theme-blue"
+                                 style="width: 100%; height: 800px;"
+                                 grid-options.bind="gridOptions"
+                                 column-defs.bind="columnDefs"
+                                 show-tool-panel.bind="showToolPanel"
+                                 row-data.bind="rowData"
+
+                                 enable-col-resize
+                                 enable-sorting
+                                 enable-filter
+                                 group-headers
+                                 suppress-row-click-selection
+                                 tool-panel-suppress-groups
+                                 tool-panel-suppress-values
+                                 row-height.bind="22"
+                                 row-selection="single"
+
+                                 model-updated.call="onModelUpdated()"
+                                 cell-clicked.call="onCellClicked($event)"
+                                 cell-double-clicked.call="onCellDoubleClicked($event)"
+                                 cell-context-menu.call="onCellContextMenu($event)"
+                                 cell-value-changed.call="onCellValueChanged($event)"
+                                 cell-focused.call="onCellFocused($event)"
+                                 row-selected.call="onRowSelected($event)"
+                                 selection-changed.call="onSelectionChanged()"
+                                 before-filter-changed.call="onBeforeFilterChanged()"
+                                 after-filter-changed.call="onAfterFilterChanged()"
+                                 filter-modified.call="onFilterModified()"
+                                 before-sort-changed.call="onBeforeSortChanged()"
+                                 after-sort-changed.call="onAfterSortChanged()"
+                                 virtual-row-removed.call="onVirtualRowRemoved($event)"
+                                 row-clicked.call="onRowClicked($event)"
+                                 ready.call="onReady($event)"
+
+                                 column-everything-changed.call="onColumnEvent($event)"
+                                 column-row-group-changed.call="onColumnEvent($event)"
+                                 column-value-changed.call="onColumnEvent($event)"
+                                 column-moved.call="onColumnEvent($event)"
+                                 column-visible.call="onColumnEvent($event)"
+                                 column-group-opened.call="onColumnEvent($event)"
+                                 column-resized.call="onColumnEvent($event)"
+                                 column-pinned-count-changed.call="onColumnEvent($event)">
+                </ag-grid-aurelia>
     </div>
+
+    
 </template>

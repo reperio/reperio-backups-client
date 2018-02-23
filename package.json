@@ -9,6 +9,8 @@
   "license": "MIT",
   "dependencies": {
     "@types/toastr": "^2.1.35",
+    "ag-grid": "^16.0.1",
+    "ag-grid-aurelia": "^16.0.0",
     "au-table": "^0.1.13",
     "aurelia-animator-css": "^1.0.2",
     "aurelia-bootstrap": "^0.1.20",

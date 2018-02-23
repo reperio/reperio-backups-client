@@ -13,6 +13,23 @@ export class JobCreateRetentionDialog {
     public target: any;
     public canEdit: any = {};
 
+    public formState: any = {
+        source: {
+            quarter_hourly: false,
+            hourly: false,
+            daily: false,
+            weekly: false,
+            monthly: false
+        },
+        target: {
+            quarter_hourly: false,
+            hourly: false,
+            daily: false,
+            weekly: false,
+            monthly: false
+        }
+    }
+
     constructor(private dialogController: DialogController, private jobService: JobService) { }
 
     async activate(job) {
@@ -49,6 +66,8 @@ export class JobCreateRetentionDialog {
             });
         }
         this.set_retention_values_disabled_status();
+
+        this.validateForm();
     }
 
     back() {
@@ -59,6 +78,10 @@ export class JobCreateRetentionDialog {
     }
 
     async submit() {
+        if (!this.validateForm()) {
+            return;
+        }
+
         this.job.source_retention = this.build_retention_policy(this.source);
         this.job.target_retention = this.build_retention_policy(this.target);
         
@@ -134,5 +157,71 @@ export class JobCreateRetentionDialog {
             const policy_index = policies.indexOf(policy);
             this.canEdit[policy] = !(schedule_index <= policy_index);
         });
+    }
+
+    validateForm() {
+        let error = false;
+        if (this.source.quarter_hourly === null || this.source.quarter_hourly === '') {
+            error = true;
+            this.formState.source.quarter_hourly = false;
+        } else {
+            this.formState.source.quarter_hourly = true;
+        }
+        if (this.source.hourly === null || this.source.hourly === '') {
+            error = true;
+            this.formState.source.hourly = false;
+        } else {
+            this.formState.source.hourly = true;
+        }
+        if (this.source.daily === null || this.source.daily === '') {
+            error = true;
+            this.formState.source.daily = false;
+        } else {
+            this.formState.source.daily = true;
+        }
+        if (this.source.weekly === null || this.source.weekly === '') {
+            error = true;
+            this.formState.source.weekly = false;
+        } else {
+            this.formState.source.weekly = true;
+        }
+        if (this.source.monthly === null || this.source.monthly === '') {
+            error = true;
+            this.formState.source.monthly = false;
+        } else {
+            this.formState.source.monthly = true;
+        }
+
+        if (this.target.quarter_hourly === null || this.target.quarter_hourly === '') {
+            error = true;
+            this.formState.target.quarter_hourly = false;
+        } else {
+            this.formState.target.quarter_hourly = true;
+        }
+        if (this.target.hourly === null || this.target.hourly === '') {
+            error = true;
+            this.formState.target.hourly = false;
+        } else {
+            this.formState.target.hourly = true;
+        }
+        if (this.target.daily === null || this.target.daily === '') {
+            error = true;
+            this.formState.target.daily = false;
+        } else {
+            this.formState.target.daily = true;
+        }
+        if (this.target.weekly === null || this.target.weekly === '') {
+            error = true;
+            this.formState.target.weekly = false;
+        } else {
+            this.formState.target.weekly = true;
+        }
+        if (this.target.monthly === null || this.target.monthly === '') {
+            error = true;
+            this.formState.target.monthly = false;
+        } else {
+            this.formState.target.monthly = true;
+        }
+        return !error;
     }
 }

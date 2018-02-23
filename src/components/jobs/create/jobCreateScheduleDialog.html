@@ -9,14 +9,14 @@
             <span class="r-dialog-body">Schedule</span>
         </div>
         <div class="r-dialog-row r-component-row">
-            <select class="form-control r-dialog-control" value.bind="job.schedule_id">
+            <select class="form-control r-dialog-control ${formState.schedule ? '' : 'r-error'}" value.bind="job.schedule_id" change.delegate="validateForm()">
                 <option model.bind="null">Schedule</option>
                 <option model.bind="schedule.id" repeat.for="schedule of schedules" >${schedule.display_name}</option>
             </select>
         </div>
         <div class="r-dialog-row r-component-row">
-            <div class="r-dialog-label">Offset</div>
-            <input type="number" class="r-dialog-control r-with-label" value.bind="job.offset" />
+            <div class="r-dialog-label"><span class="r-dialog-label-text">Offset</span></div>
+            <input type="number" class="r-dialog-control r-with-label ${formState.offset ? '' : 'r-error'}" value.bind="job.offset" change.delegate="validateForm()"/>
         </div>
         <div class="r-dialog-row r-no-margin r-dialog-footer">
             <button class="btn btn-default r-left" type="button" click.delegate="dialogController.cancel(job)">Back</button>

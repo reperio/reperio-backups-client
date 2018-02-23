@@ -1,7 +1,7 @@
 <template>
     <require from="aurelia-dialog/ux-dialog"></require>
     
-    <ux-dialog class="r-dialog r-job-dialog">
+    <ux-dialog class="r-dialog r-job-dialog" validation-errors.bind="formErrors">
         <div class="r-dialog-row r-no-margin">
             <h1 class="r-dialog-header">Create a new Job</h1>
         </div>
@@ -9,32 +9,32 @@
             <span class="r-dialog-body">Job Details</span>
         </div>
         <div class="r-dialog-row r-component-row">
-            <select class="form-control r-dialog-control" value.bind="selected_source_host" change.delegate="node_selected()">
+            <select class="form-control r-dialog-control ${formState.source_node ? '' : 'r-error'}" value.bind="selected_source_host" change.delegate="node_selected()" required>
                 <option model.bind="null">Source Node</option>
                 <option model.bind="host" repeat.for="host of hosts" >${host.name}</option>
             </select>
         </div>
         <div class="r-dialog-row r-component-row">
-            <select disabled.bind="!can_select_virtual_machine" class="form-control r-dialog-control" value.bind="job.sdc_vm_id" change.delegate="virtual_machine_selected()">
+            <select disabled.bind="!can_select_virtual_machine" class="form-control r-dialog-control ${formState.virtual_machine ? '' : 'r-error'}" value.bind="job.sdc_vm_id" change.delegate="virtual_machine_selected()">
                 <option model.bind="null">Virtual Machine</option>
                 <option model.bind="vm.id" repeat.for="vm of virtual_machines" >${vm.name}</option>
             </select>
         </div>
         <div class="r-dialog-row r-component-row">
-            <select class="form-control r-dialog-control" value.bind="job.target_host_id">
+            <select class="form-control r-dialog-control ${formState.target_node ? '' : 'r-error'}" value.bind="job.target_host_id" change.delegate="validateForm()">
                 <option model.bind="null">Target Node</option>
                 <option model.bind="host.id" repeat.for="host of hosts" >${host.name}</option>
             </select>
         </div>
         <div class="r-dialog-row r-component-row">
-            <select disabled.bind="!can_select_source_location" class="form-control r-dialog-control" value.bind="job.source_location" change.delegate="source_location_selected()">
+            <select disabled.bind="!can_select_source_location" class="form-control r-dialog-control ${formState.dataset ? '' : 'r-error'}" value.bind="job.source_location" change.delegate="source_location_selected()">
                 <option model.bind="null">Dataset/ZVOL</option>
                 <option model.bind="dataset.location" repeat.for="dataset of datasets" >${dataset.name}</option>
             </select>
         </div>
         <div class="r-dialog-row r-component-row">
-            <div class="r-dialog-label">Name</div>
-            <input class="r-dialog-control r-with-label" value.bind="job.name" />
+            <div class="r-dialog-label"><span class="r-dialog-label-text">Name</span></div>
+            <input class="${formState.job_name ? '' : 'r-error'} r-dialog-control r-with-label" value.bind="job.name" />
         </div>
         <div class="r-dialog-row r-no-margin r-dialog-footer">
             <button class="btn btn-default r-left" type="button" click.delegate="dialogController.cancel()">Cancel</button>

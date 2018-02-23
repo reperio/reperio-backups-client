@@ -11,6 +11,11 @@ export class JobScheduleDialog {
     public job: Job;
     public schedules: any[] = [];
 
+    public formState: any = {
+        schedule: false,
+        offset: false
+    };
+
     constructor(private dialogController: DialogController, private scheduleService: ScheduleService) { }
 
     async activate(job) {
@@ -25,10 +30,12 @@ export class JobScheduleDialog {
             });
         });
         this.old_schedule_id = this.job.schedule_id;
+
+        this.validateForm();
     }
 
     submit() {
-        if (this.job.schedule_id === null) {
+        if (!this.validateForm()) {
             return;
         }
 
@@ -44,5 +51,25 @@ export class JobScheduleDialog {
         });
         
         this.dialogController.ok(this.job);
+    }
+
+    validateForm() {
+        let error = false;
+
+        if (this.job.schedule_id === null) {
+            error = true;
+            this.formState.schedule = false;
+        } else {
+            this.formState.schedule = true;
+        }
+
+        if (this.job.offset === null) {
+            error = true;
+            this.formState.offset = false;
+        } else {
+            this.formState.offset = true;
+        }
+
+        return !error;
     }
 }

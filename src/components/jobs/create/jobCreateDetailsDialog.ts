@@ -1,15 +1,15 @@
-import {autoinject, bindable} from 'aurelia-framework';
-import {DialogController} from 'aurelia-dialog';
+import { autoinject, bindable } from 'aurelia-framework';
+import { DialogController } from 'aurelia-dialog';
 
 import * as _ from 'lodash';
 
-import {Host} from '../../../models/host';
-import {HostService} from '../../../services/hostService';
-import {Job} from '../../../models/job';
-import {VirtualMachine} from '../../../models/virtual_machine';
-import {VirtualMachineService} from '../../../services/virtualMachineService';
-import {VirtualMachineDataset} from '../../../models/virtual_machine_dataset';
-import {VirtualMachineDatasetService} from '../../../services/virtualMachineDatasetService';
+import { Host } from '../../../models/host';
+import { HostService } from '../../../services/hostService';
+import { Job } from '../../../models/job';
+import { VirtualMachine } from '../../../models/virtual_machine';
+import { VirtualMachineService } from '../../../services/virtualMachineService';
+import { VirtualMachineDataset } from '../../../models/virtual_machine_dataset';
+import { VirtualMachineDatasetService } from '../../../services/virtualMachineDatasetService';
 
 @autoinject()
 export class JobCreateDetailsDialog {
@@ -24,21 +24,32 @@ export class JobCreateDetailsDialog {
     public vm_brand: string;
     public vm_name: string;
     public datasets: VirtualMachineDataset[] = [];
-    
+    public formState: any = {
+        source_node: false,
+        virtual_machine: false,
+        target_node: false,
+        dataset: false,
+        job_name: false
+    };
 
     constructor(private dialogController: DialogController, private hostService: HostService, private virtualMachineDatasetService: VirtualMachineDatasetService, private virtualMachineService: VirtualMachineService) { }
 
     async activate(job) {
         this.hosts = await this.hostService.get_hosts();
-        
+
         if (job !== null) {
+            this.selected_source_host = _.find(this.hosts, host => {
+                return host.id === job.source_host_id;
+            });
+
+            this.virtual_machines = await this.virtualMachineService.get_virtual_machines_by_host_id(this.selected_source_host.sdc_id);
+            this.datasets = await this.virtualMachineDatasetService.get_datasets_by_virtual_machine_id(job.source_host_id, job.sdc_vm_id);
             this.job = job;
-            this.virtual_machines = await this.virtualMachineService.get_virtual_machines_by_host_id(this.job.source_host_id);
-            const vm_record = await this.virtualMachineService.get_virtual_machine_record(this.job.source_host_id, this.job.sdc_vm_id);
-            this.datasets = await this.virtualMachineDatasetService.get_datasets_by_virtual_machine_id(this.job.source_host_id, this.job.sdc_vm_id);
             this.can_select_virtual_machine = true;
             this.can_select_source_location = true;
             this.can_edit_target_location = true;
+
+            
         } else {
             this.job = {
                 id: null,
@@ -51,7 +62,7 @@ export class JobCreateDetailsDialog {
                 target_location: null,
                 zfs_type: 1,
                 zfs_size: 1,
-                source_host_id:  null,
+                source_host_id: null,
                 target_host_id: null,
                 last_execution: null,
                 last_schedule: null,
@@ -59,6 +70,8 @@ export class JobCreateDetailsDialog {
                 offset: 0
             };
         }
+
+        this.validateForm();
     }
 
     async node_selected() {
@@ -67,10 +80,12 @@ export class JobCreateDetailsDialog {
             this.job.source_host_id = null;
             return;
         }
-        
+
         this.job.source_host_id = this.selected_source_host.id;
         this.virtual_machines = await this.virtualMachineService.get_virtual_machines_by_host_id(this.selected_source_host.sdc_id);
         this.can_select_virtual_machine = true;
+
+        this.validateForm();
     }
 
     async virtual_machine_selected() {
@@ -93,6 +108,8 @@ export class JobCreateDetailsDialog {
         });
         this.vm_name = vm.name;
         this.can_select_source_location = true;
+
+        this.validateForm();
     }
 
     async source_location_selected() {
@@ -110,27 +127,15 @@ export class JobCreateDetailsDialog {
         this.job.target_location = this.job.source_location;
         this.job.name = this.vm_name + '-' + selected_dataset.name;
         this.can_edit_target_location = true;
+
+        this.validateForm();
     }
 
     submit() {
-        if (this.job.name === '') {
+        if (!this.validateForm()) {
             return;
         }
-        if (this.job.sdc_vm_id == null) {
-            return;
-        }
-        if (this.job.source_location == null || this.job.source_location === 'Dataset/ZVOL') {
-            return;
-        }
-        if (this.job.target_location == null) {
-            return;
-        }
-        if (this.job.source_host_id == null) {
-            return;
-        }
-        if (this.job.target_host_id == null) {
-            return;
-        }
+
         const job: Job = {
             id: this.job.id || null,
             name: this.job.name || null,
@@ -151,5 +156,43 @@ export class JobCreateDetailsDialog {
         };
 
         this.dialogController.ok(job);
+    }
+
+    validateForm() {
+        let error = false;
+        if (this.job.source_host_id === null) {
+            error = true;
+            this.formState.source_node = false;
+        } else {
+            this.formState.source_node = true;
+        }
+        if (this.job.sdc_vm_id === null) {
+            error = true;
+            this.formState.virtual_machine = false;
+        } else {
+            this.formState.virtual_machine = true;
+        }
+        if (this.job.target_host_id === null) {
+            error = true;
+            this.formState.target_node = false;
+        } else {
+            this.formState.target_node = true;
+        }
+        if (this.job.source_location === null) {
+            error = true;
+            this.formState.dataset = false;
+        } else {
+            this.formState.dataset = true;
+        }
+        if (this.job.name === null || !this.job.name || !this.job.name.trim()) {
+            error = true;
+            this.formState.job_name = false;
+        } else {
+            this.formState.job_name = true;
+        }
+
+        console.log(JSON.stringify(this.formState));
+
+        return !error;
     }
 }

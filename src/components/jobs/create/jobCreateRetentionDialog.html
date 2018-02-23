@@ -14,23 +14,23 @@
             </div>
             <div class="r-dialog-row r-component-row">
                 <div class="r-dialog-label r-large-label">15 Min</div>
-                <input disabled.bind="canEdit.quarter_hourly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.quarter_hourly == true ? 'r-disabled' : '' }" value.bind="source.quarter_hourly" />
+                <input disabled.bind="canEdit.quarter_hourly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.quarter_hourly == true ? 'r-disabled' : '' } ${formState.source.quarter_hourly ? '' : 'r-error'}" value.bind="source.quarter_hourly" change.delegate="validateForm()" />
             </div>
             <div class="r-dialog-row r-component-row">
                 <div class="r-dialog-label r-large-label">Hourly</div>
-                <input disabled.bind="canEdit.hourly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.hourly == true ? 'r-disabled' : '' }" value.bind="source.hourly" />
+                <input disabled.bind="canEdit.hourly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.hourly == true ? 'r-disabled' : '' } ${formState.source.hourly ? '' : 'r-error'}" value.bind="source.hourly" change.delegate="validateForm()" />
             </div>
             <div class="r-dialog-row r-component-row">
                 <div class="r-dialog-label r-large-label">Daily</div>
-                <input disabled.bind="canEdit.daily" type="number" class="r-dialog-control r-with-large-label ${ canEdit.daily == true ? 'r-disabled' : '' }" value.bind="source.daily" />
+                <input disabled.bind="canEdit.daily" type="number" class="r-dialog-control r-with-large-label ${ canEdit.daily == true ? 'r-disabled' : '' } ${formState.source.daily ? '' : 'r-error'}" value.bind="source.daily" change.delegate="validateForm()" />
             </div>
             <div class="r-dialog-row r-component-row">
                 <div class="r-dialog-label r-large-label">Weekly</div>
-                <input disabled.bind="canEdit.weekly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.weekly == true ? 'r-disabled' : '' }" value.bind="source.weekly" />
+                <input disabled.bind="canEdit.weekly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.weekly == true ? 'r-disabled' : '' } ${formState.source.weekly ? '' : 'r-error'}" value.bind="source.weekly" change.delegate="validateForm()" />
             </div>
             <div class="r-dialog-row r-component-row">
                 <div class="r-dialog-label r-large-label">Monthly</div>
-                <input disabled.bind="canEdit.monthly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.monthly == true ? 'r-disabled' : '' }" value.bind="source.monthly" />
+                <input disabled.bind="canEdit.monthly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.monthly == true ? 'r-disabled' : '' } ${formState.source.monthly ? '' : 'r-error'}" value.bind="source.monthly" change.delegate="validateForm()" />
             </div>
         </div>    
         <div class="r-dialog-row r-dialog-half-row-right">
@@ -39,23 +39,23 @@
                 </div>
             <div class="r-dialog-row r-component-row">
                 <div class="r-dialog-label r-large-label">15 Min</div>
-                <input disabled.bind="canEdit.quarter_hourly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.quarter_hourly == true ? 'r-disabled' : '' }" value.bind="target.quarter_hourly" />
+                <input disabled.bind="canEdit.quarter_hourly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.quarter_hourly == true ? 'r-disabled' : '' } ${formState.target.quarter_hourly ? '' : 'r-error'}" value.bind="target.quarter_hourly" change.delegate="validateForm()" />
             </div>
             <div class="r-dialog-row r-component-row">
                 <div class="r-dialog-label r-large-label">Hourly</div>
-                <input disabled.bind="canEdit.hourly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.hourly == true ? 'r-disabled' : '' }" value.bind="target.hourly" />
+                <input disabled.bind="canEdit.hourly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.hourly == true ? 'r-disabled' : '' } ${formState.target.hourly ? '' : 'r-error'}" value.bind="target.hourly" change.delegate="validateForm()" />
             </div>
             <div class="r-dialog-row r-component-row">
                 <div class="r-dialog-label r-large-label">Daily</div>
-                <input disabled.bind="canEdit.daily" type="number" class="r-dialog-control r-with-large-label ${ canEdit.daily == true ? 'r-disabled' : '' }" value.bind="target.daily" />
+                <input disabled.bind="canEdit.daily" type="number" class="r-dialog-control r-with-large-label ${ canEdit.daily == true ? 'r-disabled' : '' } ${formState.target.daily ? '' : 'r-error'}" value.bind="target.daily" change.delegate="validateForm()" />
             </div>
             <div class="r-dialog-row r-component-row">
                 <div class="r-dialog-label r-large-label">Weekly</div>
-                <input disabled.bind="canEdit.weekly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.weekly == true ? 'r-disabled' : '' }" value.bind="target.weekly" />
+                <input disabled.bind="canEdit.weekly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.weekly == true ? 'r-disabled' : '' } ${formState.target.weekly ? '' : 'r-error'}" value.bind="target.weekly" change.delegate="validateForm()" />
             </div>
             <div class="r-dialog-row r-component-row">
                 <div class="r-dialog-label r-large-label">Monthly</div>
-                <input disabled.bind="canEdit.monthly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.monthly == true ? 'r-disabled' : '' }" value.bind="target.monthly" />
+                <input disabled.bind="canEdit.monthly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.monthly == true ? 'r-disabled' : '' } ${formState.target.monthly ? '' : 'r-error'}" value.bind="target.monthly" change.delegate="validateForm()" />
             </div>
         </div>  
         <div class="r-dialog-row r-no-margin r-dialog-footer">

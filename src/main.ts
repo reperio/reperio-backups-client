@@ -13,6 +13,7 @@ export function configure(aurelia: Aurelia) {
     .standardConfiguration()
     .feature(PLATFORM.moduleName('resources/index'))
       .plugin(PLATFORM.moduleName('au-table'))
+      .plugin(PLATFORM.moduleName('ag-grid-aurelia'))
       .plugin(PLATFORM.moduleName("aurelia-dialog"), config => {
         config.useDefaults();
         config.settings.lock = true;

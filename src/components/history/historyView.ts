@@ -104,6 +104,7 @@ export class JobHistoryView {
         this.gridOptions.rowModelType = 'infinite';
         this.gridOptions.paginationPageSize = 100;
         this.gridOptions.paginationAutoPageSize = true;
+        this.gridOptions.unSortIcon = true;
         this.gridOptions.defaultColDef = {
             headerComponentParams : {
                 menuIcon: 'fa-bars',
@@ -191,21 +192,67 @@ export class JobHistoryView {
         this.columnDefs = [
             {
                 headerName: '#', width: 30, checkboxSelection: true, suppressSorting: true,
-                suppressMenu: true, pinned: true
+                suppressMenu: true, pinned: true,
             },
             {
                 headerName: 'Job',
-                field: 'job_history_job.name'
+                field: 'job_history_job.name',
+                filter:'agTextColumnFilter',
+                filterParams: {
+                    apply: true,
+                    filterOptions: ['startsWith']
+                }
             },
             {
                 headerName: "Source Node", 
-                field: "job_history_job.job_source_host.name"
+                field: "job_history_job.job_source_host.name",
+                filter:'agTextColumnFilter',
+                filterParams: {
+                    apply: true,
+                    filterOptions: ['startsWith']
+                }
             },
-            {headerName: "Virtual Machine", field: "job_history_job.job_virtual_machine.name", filter: 'text'},
-            {headerName: "Start Time", field: "start_date_time", filter: 'text'},
-            {headerName: "End Time", field: "end_date_time", filter: 'text'},
-            {headerName: "Scheduled Time", field: "schedule_date_time", filter: 'text'},
-            {headerName: "Status", field: "result", filter: 'text', cellRenderer: this.statusRenderer}
+            {
+                headerName: "Virtual Machine", 
+                field: "job_history_job.job_virtual_machine.name", 
+                filter:'agTextColumnFilter',
+                filterParams: {
+                    apply: true,
+                    filterOptions: ['startsWith']
+                }
+            },
+            {
+                headerName: "Start Time", 
+                field: "start_date_time", 
+                filter:'agTextColumnFilter',
+                filterParams: {
+                    apply: true,
+                    filterOptions: ['startsWith']
+                }
+            },
+            {
+                headerName: "End Time", 
+                field: "end_date_time", 
+                filter:'agTextColumnFilter',
+                filterParams: {
+                    apply: true,
+                    filterOptions: ['startsWith']
+                }
+            },
+            {
+                headerName: "Scheduled Time", 
+                field: "schedule_date_time", 
+                filter:'agTextColumnFilter',
+                filterParams: {
+                    apply: true,
+                    filterOptions: ['startsWith']
+                }
+            },
+            {
+                headerName: "Status", 
+                field: "result", 
+                filter: 'text', 
+                cellRenderer: this.statusRenderer}
                 
         ];
     }
@@ -284,7 +331,7 @@ export class JobHistoryView {
     }
 
     private statusRenderer(params) {
-        // <div class="r-job-history-status ${history.result === 0 ? 'r-job-history-pending' : ''} ${history.result === 1 ? 'r-job-history-active' : ''} ${history.result === 2 ? 'r-job-history-success' : ''} ${history.result === 3 ? 'r-job-history-failed' : ''}">&nbsp;</div>
+        
         const styles = {
             0: 'r-job-history-pending',
             1: 'r-job-history-active',

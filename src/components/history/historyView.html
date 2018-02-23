@@ -1,88 +1,8 @@
 <template>
     <div class="r-page-content">
         <h1>Job History</h1>
-        <!-- <div class="r-filter-row row">
-            <div class="col-xs-4">
-                <select class="form-control r-node-selector" value.bind="selected_host">
-                    <option value="">All Hosts</option>
-                    <option model.bind="host.id" repeat.for="host of hosts | sort:'name':'ascending'" >${host.name}</option>
-                </select>
-            </div>
-            <div class="col-xs-4">
-                <select class="form-control r-node-selector" value.bind="selected_virtual_machine" disabled.bind="!(selected_host && virtual_machines.length > 0)">
-                    <option value="">All Virtual Machines</option>
-                    <option model.bind="vm.id" repeat.for="vm of virtual_machines | sort:'name':'ascending'" >${vm.name}</option>
-                </select>
-            </div>
-        </div>
-        <div>
-            <div class="r-table-header">
-                <h3>Job History</h1>
-            </div>
-            <table class="table r-table" aurelia-table="data.bind: history_entries; display-data.bind: $displayData; current-page.bind: currentPage; page-size.bind: pageSize; total-items.bind: totalItems;">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th aut-sort="key: job_history_job.name">Job</th>
-                        <th aut-sort="key: job_history_job.job_source_host.name">Source Node</th>
-                        <th aut-sort="key: job_history_job.job_virtual_machine.name">Virtual Machine</th>
-                        <th aut-sort="key: start_date_time, default: desc" >Start Time</th>
-                        <th aut-sort="key: end_date_time">End Time</th>
-                        <th aut-sort="key: schedule_date_time; default: desc">Scheduled Time</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <template repeat.for="history of $displayData">
-                        <tr>
-                            <td class="r-action-column">
-                                <span class="oi oi-chevron-right" title="Expand Job History" aria-hidden="true" click.delegate="history.open = true" if.bind="!history.open"></span>
-                                <span class="oi oi-chevron-bottom" title="Expand Job History" aria-hidden="true" click.delegate="history.open = false" if.bind="history.open"></span>
-                            </td>
-                            <td>${history.job_history_job.name}</td>
-                            <td>${history.job_history_job.job_source_host.name}</td>
-                            <td>${history.job_history_job.job_virtual_machine.name}</td>
-                            <td>${history.start_date_time}</td>
-                            <td>${history.end_date_time}</td>
-                            <td>${history.schedule_date_time}</td>
-                            <td><div class="r-job-history-status ${history.result === 0 ? 'r-job-history-pending' : ''} ${history.result === 1 ? 'r-job-history-active' : ''} ${history.result === 2 ? 'r-job-history-success' : ''} ${history.result === 3 ? 'r-job-history-failed' : ''}">&nbsp;</div></td>
-                        </tr>
-                        <tr class="r-table-detail" if.bind="history.open">
-                            <td colspan="8">
-                                <div>
-                                    <label class="r-label">Source Result: </label>&nbsp;&nbsp;<span>${history.source_result_name} - ${history.source_message}</span>
-                                </div>
-                                <div>
-                                    <label class="r-label">Target Result: </label>&nbsp;&nbsp;<span>${history.target_result_name} - ${history.target_message}</span>
-                                </div>
-                            </td>
-                        </tr>
-                    </template>
-                </tbody>
-            </table>
-            <div class="row">
-                <div class="col-md-9">
-                    <aut-pagination current-page.bind="currentPage" page-size.bind="pageSize" total-items.bind="totalItems"
-                                            pagination-size.bind="50" boundary-links.bind="true"> </aut-pagination>
-                </div>
-        
-                <div class="col-md-3">
-                    <div class="form-inline">
-                        <div class="form-group pull-right">
-                            <label for="pageSize">Page Size: </label>
-                            <select value.bind="pageSize" id="pageSize" class="form-control">
-                                <option model.bind="5">5</option>
-                                <option model.bind="10">10</option>
-                                <option model.bind="20">20</option>
-                                <option model.bind="50">50</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
         <ag-grid-aurelia #agGrid class="ag-theme-blue"
-                                 style="width: 100%; height: 800px;"
+                                 style="height: 800px;"
                                  grid-options.bind="gridOptions"
                                  column-defs.bind="columnDefs"
                                  show-tool-panel.bind="showToolPanel"
@@ -91,10 +11,7 @@
                                  enable-col-resize
                                  enable-sorting
                                  enable-filter
-                                 group-headers
                                  suppress-row-click-selection
-                                 tool-panel-suppress-groups
-                                 tool-panel-suppress-values
                                  row-height.bind="30"
                                  row-selection="single"
 

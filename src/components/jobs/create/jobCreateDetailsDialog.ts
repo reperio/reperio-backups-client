@@ -45,6 +45,10 @@ export class JobCreateDetailsDialog {
             this.can_select_virtual_machine = true;
             this.can_select_source_location = true;
             this.can_edit_target_location = true;
+
+            this.selected_source_host = _.find(this.hosts, host => {
+                return host.id === this.job.source_host_id;
+            });
         } else {
             this.job = {
                 id: null,

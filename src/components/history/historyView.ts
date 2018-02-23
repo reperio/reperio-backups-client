@@ -194,7 +194,7 @@ export class JobHistoryView {
             {headerName: "Start Time", field: "start_date_time", filter: 'text'},
             {headerName: "End Time", field: "end_date_time", filter: 'text'},
             {headerName: "Scheduled Time", field: "schedule_date_time", filter: 'text'},
-            {headerName: "Status", field: "status", filter: 'text'}
+            {headerName: "Status", field: "result", filter: 'text', cellRenderer: this.statusRenderer}
                 
         ];
     }
@@ -285,6 +285,21 @@ export class JobHistoryView {
     // the method just prints the event name
     private onColumnEvent($event) {
         console.log('onColumnEvent: ' + $event);
+    }
+
+    private statusRenderer(params) {
+        // <div class="r-job-history-status ${history.result === 0 ? 'r-job-history-pending' : ''} ${history.result === 1 ? 'r-job-history-active' : ''} ${history.result === 2 ? 'r-job-history-success' : ''} ${history.result === 3 ? 'r-job-history-failed' : ''}">&nbsp;</div>
+        const styles = {
+            0: 'r-job-history-pending',
+            1: 'r-job-history-active',
+            2: 'r-job-history-success',
+            3: 'r-job-history-failed',
+        };
+
+        console.log(params);
+        
+        const template = `<div class='r-job-history-status ${styles[params.value]}'>&nbsp;</div>`;
+        return template;
     }
 
 }

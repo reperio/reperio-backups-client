@@ -38,17 +38,18 @@ export class JobCreateDetailsDialog {
         this.hosts = await this.hostService.get_hosts();
 
         if (job !== null) {
+            this.selected_source_host = _.find(this.hosts, host => {
+                return host.id === job.source_host_id;
+            });
+
+            this.virtual_machines = await this.virtualMachineService.get_virtual_machines_by_host_id(this.selected_source_host.sdc_id);
+            this.datasets = await this.virtualMachineDatasetService.get_datasets_by_virtual_machine_id(job.source_host_id, job.sdc_vm_id);
             this.job = job;
-            this.virtual_machines = await this.virtualMachineService.get_virtual_machines_by_host_id(this.job.source_host_id);
-            const vm_record = await this.virtualMachineService.get_virtual_machine_record(this.job.source_host_id, this.job.sdc_vm_id);
-            this.datasets = await this.virtualMachineDatasetService.get_datasets_by_virtual_machine_id(this.job.source_host_id, this.job.sdc_vm_id);
             this.can_select_virtual_machine = true;
             this.can_select_source_location = true;
             this.can_edit_target_location = true;
 
-            this.selected_source_host = _.find(this.hosts, host => {
-                return host.id === this.job.source_host_id;
-            });
+            
         } else {
             this.job = {
                 id: null,

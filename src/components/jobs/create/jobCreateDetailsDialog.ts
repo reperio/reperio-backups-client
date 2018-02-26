@@ -77,19 +77,31 @@ export class JobCreateDetailsDialog {
     async node_selected() {
         if (this.selected_source_host === null) {
             this.can_select_virtual_machine = false;
+            this.job.sdc_vm_id = null,
             this.job.source_host_id = null;
+            this.job.name = null;
+            this.job.source_location = null;
+            this.validateForm();
             return;
+        }
+
+        if (this.selected_source_host.id != this.job.source_host_id) {
+            this.job.sdc_vm_id = null;
+            this.job.name = null;
+            this.job.source_location = null;
         }
 
         this.job.source_host_id = this.selected_source_host.id;
         this.virtual_machines = await this.virtualMachineService.get_virtual_machines_by_host_id(this.selected_source_host.sdc_id);
         this.can_select_virtual_machine = true;
-
         this.validateForm();
     }
 
     async virtual_machine_selected() {
         this.datasets = [];
+
+        this.job.source_location = null;
+        this.job.name = null;
 
         if (this.job.sdc_vm_id === null) {
             this.job.source_location = null;
@@ -98,6 +110,7 @@ export class JobCreateDetailsDialog {
             this.job.target_location = '';
             this.vm_name = '';
             this.job.name = '';
+            this.validateForm();
             return;
         }
 
@@ -108,15 +121,16 @@ export class JobCreateDetailsDialog {
         });
         this.vm_name = vm.name;
         this.can_select_source_location = true;
-
         this.validateForm();
     }
 
     async source_location_selected() {
+
         if (this.job.source_location === null) {
             this.can_edit_target_location = false;
             this.job.target_location = '';
             this.job.name = '';
+            this.validateForm();
             return;
         }
 
@@ -127,7 +141,6 @@ export class JobCreateDetailsDialog {
         this.job.target_location = this.job.source_location;
         this.job.name = this.vm_name + '-' + selected_dataset.name;
         this.can_edit_target_location = true;
-
         this.validateForm();
     }
 

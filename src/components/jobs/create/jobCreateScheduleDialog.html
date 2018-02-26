@@ -16,7 +16,7 @@
         </div>
         <div class="r-dialog-row r-component-row">
             <div class="r-dialog-label"><span class="r-dialog-label-text">Offset</span></div>
-            <input type="number" class="r-dialog-control r-with-label ${formState.offset ? '' : 'r-error'}" value.bind="job.offset" change.delegate="validateForm()"/>
+            <input type="number" class="r-dialog-control r-with-label ${formState.offset ? '' : 'r-error'}" value.bind="job.offset" change.delegate="validateForm()" keyup.delegate="validateForm()"/>
         </div>
         <div class="r-dialog-row r-no-margin r-dialog-footer">
             <button class="btn btn-default r-left" type="button" click.delegate="dialogController.cancel(job)">Back</button>

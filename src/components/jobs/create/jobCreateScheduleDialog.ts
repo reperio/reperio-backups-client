@@ -64,7 +64,7 @@ export class JobScheduleDialog {
             this.formState.schedule = true;
         }
 
-        if (this.job.offset === null) {
+        if (!this.job.offset && this.job.offset !== 0) {
             error = true;
             this.formState.offset = false;
         } else {

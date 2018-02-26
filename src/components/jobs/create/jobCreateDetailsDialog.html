@@ -34,7 +34,7 @@
         </div>
         <div class="r-dialog-row r-component-row">
             <div class="r-dialog-label"><span class="r-dialog-label-text">Name</span></div>
-            <input class="${formState.job_name ? '' : 'r-error'} r-dialog-control r-with-label" value.bind="job.name" />
+            <input class="${formState.job_name ? '' : 'r-error'} r-dialog-control r-with-label" value.bind="job.name" change.delegate="validateForm()" keyup.delegate="validateForm()"/>
         </div>
         <div class="r-dialog-row r-no-margin r-dialog-footer">
             <button class="btn btn-default r-left" type="button" click.delegate="dialogController.cancel()">Cancel</button>

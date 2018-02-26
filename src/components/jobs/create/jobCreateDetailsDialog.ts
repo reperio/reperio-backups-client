@@ -31,6 +31,7 @@ export class JobCreateDetailsDialog {
         dataset: false,
         job_name: false
     };
+    public canContinue: boolean = false;
 
     constructor(private dialogController: DialogController, private hostService: HostService, private virtualMachineDatasetService: VirtualMachineDatasetService, private virtualMachineService: VirtualMachineService) { }
 
@@ -206,6 +207,7 @@ export class JobCreateDetailsDialog {
 
         console.log(JSON.stringify(this.formState));
 
+        this.canContinue = !error;
         return !error;
     }
 }

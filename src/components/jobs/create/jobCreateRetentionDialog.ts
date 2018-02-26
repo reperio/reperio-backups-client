@@ -12,6 +12,7 @@ export class JobCreateRetentionDialog {
     public source: any;
     public target: any;
     public canEdit: any = {};
+    public canCreate: boolean = false;
 
     public formState: any = {
         source: {
@@ -222,6 +223,8 @@ export class JobCreateRetentionDialog {
         } else {
             this.formState.target.monthly = true;
         }
+
+        this.canCreate = !error;
         return !error;
     }
 }

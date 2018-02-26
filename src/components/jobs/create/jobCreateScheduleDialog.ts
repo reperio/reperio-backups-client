@@ -10,6 +10,7 @@ export class JobScheduleDialog {
     public old_schedule_id: string;
     public job: Job;
     public schedules: any[] = [];
+    public canContinue: boolean = false;
 
     public formState: any = {
         schedule: false,
@@ -70,6 +71,7 @@ export class JobScheduleDialog {
             this.formState.offset = true;
         }
 
+        this.canContinue = !error;
         return !error;
     }
 }

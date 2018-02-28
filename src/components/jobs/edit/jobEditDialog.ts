@@ -22,6 +22,26 @@ export class JobEditDialog {
     public source: any;
     public target: any;
     public canEdit: any = {};
+    public canSave: boolean = false;
+    public formState = {
+        job_name: false,
+        schedule: false,
+        offset: false,
+        source: {
+            quarter_hourly: false,
+            hourly: false,
+            daily: false,
+            weekly: false,
+            monthly: false
+        },
+        target: {
+            quarter_hourly: false,
+            hourly: false,
+            daily: false,
+            weekly: false,
+            monthly: false
+        }
+    };
 
     constructor(private dialogController: DialogController, private hostService: HostService, private jobService: JobService, private scheduleService: ScheduleService, private virtualMachineService: VirtualMachineService) { }
 
@@ -52,10 +72,16 @@ export class JobEditDialog {
 
         this.selected_schedule = this.job.job_schedule;
         this.can_edit_retention();
+
+        this.validateForm();
     }
 
     async submit() {
         if (this.job.schedule_id === null) {
+            return;
+        }
+
+        if (!this.validateForm()) {
             return;
         }
         
@@ -153,6 +179,8 @@ export class JobEditDialog {
             const policy_index = policies.indexOf(policy);
             this.target[policy] = !(schedule_index <= policy_index) ? 0 : retentions[policy_index];
         });
+
+        this.validateForm();
     }
 
     can_edit_retention() {
@@ -163,5 +191,93 @@ export class JobEditDialog {
             const policy_index = policies.indexOf(policy);
             this.canEdit[policy] = !(schedule_index <= policy_index);
         });
+    }
+
+    validateForm() {
+        let error = false;
+
+        if (this.job.name === null || !this.job.name || !this.job.name.trim()) {
+            error = true;
+            this.formState.job_name = false;
+        } else {
+            this.formState.job_name = true;
+        }
+        if (this.job.schedule_id === null) {
+            error = true;
+            this.formState.schedule = false;
+        } else {
+            this.formState.schedule = true;
+        }
+        if (!this.job.offset && this.job.offset !== 0) {
+            error = true;
+            this.formState.offset = false;
+        } else {
+            this.formState.offset = true;
+        }
+
+        if (this.source.quarter_hourly === null || this.source.quarter_hourly === '') {
+            error = true;
+            this.formState.source.quarter_hourly = false;
+        } else {
+            this.formState.source.quarter_hourly = true;
+        }
+        if (this.source.hourly === null || this.source.hourly === '') {
+            error = true;
+            this.formState.source.hourly = false;
+        } else {
+            this.formState.source.hourly = true;
+        }
+        if (this.source.daily === null || this.source.daily === '') {
+            error = true;
+            this.formState.source.daily = false;
+        } else {
+            this.formState.source.daily = true;
+        }
+        if (this.source.weekly === null || this.source.weekly === '') {
+            error = true;
+            this.formState.source.weekly = false;
+        } else {
+            this.formState.source.weekly = true;
+        }
+        if (this.source.monthly === null || this.source.monthly === '') {
+            error = true;
+            this.formState.source.monthly = false;
+        } else {
+            this.formState.source.monthly = true;
+        }
+
+        if (this.target.quarter_hourly === null || this.target.quarter_hourly === '') {
+            error = true;
+            this.formState.target.quarter_hourly = false;
+        } else {
+            this.formState.target.quarter_hourly = true;
+        }
+        if (this.target.hourly === null || this.target.hourly === '') {
+            error = true;
+            this.formState.target.hourly = false;
+        } else {
+            this.formState.target.hourly = true;
+        }
+        if (this.target.daily === null || this.target.daily === '') {
+            error = true;
+            this.formState.target.daily = false;
+        } else {
+            this.formState.target.daily = true;
+        }
+        if (this.target.weekly === null || this.target.weekly === '') {
+            error = true;
+            this.formState.target.weekly = false;
+        } else {
+            this.formState.target.weekly = true;
+        }
+        if (this.target.monthly === null || this.target.monthly === '') {
+            error = true;
+            this.formState.target.monthly = false;
+        } else {
+            this.formState.target.monthly = true;
+        }
+
+        this.canSave = !error;
+        return !error;
     }
 }

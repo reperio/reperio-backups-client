@@ -208,11 +208,49 @@ export class JobEditDialog {
         } else {
             this.formState.schedule = true;
         }
-        if (!this.job.offset && this.job.offset !== 0) {
+        if ((!this.job.offset && this.job.offset !== 0) || this.job.offset < 0) {
             error = true;
             this.formState.offset = false;
         } else {
-            this.formState.offset = true;
+            if (this.job.schedule_id) {
+                let job_schedule = null;
+                this.schedules.forEach(schedule => {
+                    console.log(this.job.schedule_id + ' - ' + schedule.id);
+                    if (this.job.schedule_id === schedule.id) {
+                        console.log('matched schedule');
+                        job_schedule = schedule;
+                    }
+                });
+
+                console.log(job_schedule);
+                let max_offset = 0;
+                switch (job_schedule.name) {
+                    case 'quarter_hour':
+                        max_offset = 15;
+                        break;
+                    case 'hourly':
+                        max_offset = 60;
+                        break;
+                    case 'daily':
+                        max_offset = 60 * 24;
+                        break;
+                    case 'weekly':
+                        max_offset = 60 * 24 * 7;
+                        break;
+                    case 'monthly':
+                        max_offset = 60 * 24 * 28;
+                        break;
+                }
+                console.log(max_offset);
+                if (this.job.offset < 0 || this.job.offset >= max_offset) {
+                    error = true;
+                    this.formState.offset = false;
+                } else {
+                    this.formState.offset = true;
+                }
+            } else {
+                this.formState.offset = true;
+            }
         }
 
         if (this.source.quarter_hourly === null || this.source.quarter_hourly === '') {

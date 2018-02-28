@@ -10,23 +10,23 @@
                 <span class="r-dialog-body">Job Details</span>
             </div>
             <div class="r-dialog-row r-component-row">
-                    <div class="r-dialog-label">Name</div>
-                    <input class="r-dialog-control r-with-label" value.bind="job.name" />
+                    <div class="r-dialog-label"><span class="r-dialog-label-text">Name</span></div>
+                    <input class="r-dialog-control r-with-label ${formState.job_name ? '' : 'r-error'}" value.bind="job.name" change.delegate="validateForm()" keyup.delegate="validateForm()" />
             </div>
             <div class="r-dialog-row r-component-row">
-                <div class="r-dialog-label">Source Host</div>
+                <div class="r-dialog-label"><span class="r-dialog-label-text">Source Host</span></div>
                 <input disabled class="r-dialog-control r-with-label r-disabled" value.bind="job.job_source_host.name" />
             </div>
             <div class="r-dialog-row r-component-row">
-                <div class="r-dialog-label">Virtual Machine</div>
+                <div class="r-dialog-label"><span class="r-dialog-label-text">Virtual Machine</span></div>
                 <input disabled class="r-dialog-control r-with-label r-disabled" value.bind="job.job_virtual_machine.name" />
             </div>
             <div class="r-dialog-row r-component-row">
-                <div class="r-dialog-label">Target Host</div>
+                <div class="r-dialog-label"><span class="r-dialog-label-text">Target Host</span></div>
                 <input disabled class="r-dialog-control r-with-label r-disabled" value.bind="job.job_target_host.name" />
             </div>
             <div class="r-dialog-row r-component-row">
-                <div class="r-dialog-label">Source Location</div>
+                <div class="r-dialog-label"><span class="r-dialog-label-text">Source Location</span></div>
                 <input disabled class="r-dialog-control r-with-label r-disabled" value.bind="job.source_location" />
             </div>
             <div class="r-dialog-row r-component-row"></div>
@@ -37,38 +37,38 @@
                 <span class="r-dialog-body">Schedule and Retention</span>
             </div>
             <div class="r-dialog-row r-component-row">
-                <select class="form-control r-dialog-control" value.bind="job.schedule_id" change.delegate="set_default_retentions()">
+                <select class="form-control r-dialog-control ${formState.schedule ? '' : 'r-error'}" value.bind="job.schedule_id" change.delegate="set_default_retentions()"  keyup.delegate="validateForm()">
                     <option model.bind="null">Schedule</option>
                     <option model.bind="schedule.id" repeat.for="schedule of schedules" >${schedule.display_name}</option>
                 </select>
             </div>
             <div class="r-dialog-row r-component-row">
-                <div class="r-dialog-label">Offset</div>
-                <input type="number" class="r-dialog-control r-with-label" value.bind="job.offset" />
+                <div class="r-dialog-label"><span class="r-dialog-label-text">Offset</span></div>
+                <input type="number" class="r-dialog-control r-with-label ${formState.offset ? '' : 'r-error'}" value.bind="job.offset" change.delegate="validateForm()" keyup.delegate="validateForm()" />
             </div>
             <div class="r-dialog-row r-dialog-half-row-left">
                 <div class="r-dialog-row r-no-margin">
                     <span class="r-dialog-body">Source</span>
                 </div>
                 <div class="r-dialog-row r-component-row">
-                    <div class="r-dialog-label r-large-label">15 Min</div>
-                    <input disabled.bind="canEdit.quarter_hourly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.quarter_hourly == true ? 'r-disabled' : '' }" value.bind="source.quarter_hourly" />
+                    <div class="r-dialog-label r-large-label"><span class="r-dialog-label-text">15 Min</span></div>
+                    <input disabled.bind="canEdit.quarter_hourly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.quarter_hourly == true ? 'r-disabled' : '' } ${formState.source.quarter_hourly ? '' : 'r-error'}" value.bind="source.quarter_hourly" change.delegate="validateForm()" keyup.delegate="validateForm()" />
                 </div>
                 <div class="r-dialog-row r-component-row">
-                    <div class="r-dialog-label r-large-label">Hourly</div>
-                    <input disabled.bind="canEdit.hourly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.hourly == true ? 'r-disabled' : '' }" value.bind="source.hourly" />
+                    <div class="r-dialog-label r-large-label"><span class="r-dialog-label-text">Hourly</span></div>
+                    <input disabled.bind="canEdit.hourly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.hourly == true ? 'r-disabled' : '' } ${formState.source.hourly ? '' : 'r-error'}" value.bind="source.hourly" change.delegate="validateForm()" keyup.delegate="validateForm()" />
                 </div>
                 <div class="r-dialog-row r-component-row">
-                    <div class="r-dialog-label r-large-label">Daily</div>
-                    <input disabled.bind="canEdit.daily" type="number" class="r-dialog-control r-with-large-label ${ canEdit.daily == true ? 'r-disabled' : '' }" value.bind="source.daily" />
+                    <div class="r-dialog-label r-large-label"><span class="r-dialog-label-text">Daily</span></div>
+                    <input disabled.bind="canEdit.daily" type="number" class="r-dialog-control r-with-large-label ${ canEdit.daily == true ? 'r-disabled' : '' } ${formState.source.daily ? '' : 'r-error'}" value.bind="source.daily" change.delegate="validateForm()" keyup.delegate="validateForm()" />
                 </div>
                 <div class="r-dialog-row r-component-row">
-                    <div class="r-dialog-label r-large-label">Weekly</div>
-                    <input disabled.bind="canEdit.weekly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.weekly == true ? 'r-disabled' : '' }" value.bind="source.weekly" />
+                    <div class="r-dialog-label r-large-label"><span class="r-dialog-label-text">Weekly</span></div>
+                    <input disabled.bind="canEdit.weekly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.weekly == true ? 'r-disabled' : '' } ${formState.source.weekly ? '' : 'r-error'}" value.bind="source.weekly" change.delegate="validateForm()" keyup.delegate="validateForm()" />
                 </div>
                 <div class="r-dialog-row r-component-row">
-                    <div class="r-dialog-label r-large-label">Monthly</div>
-                    <input disabled.bind="canEdit.monthly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.monthly == true ? 'r-disabled' : '' }" value.bind="source.monthly" />
+                    <div class="r-dialog-label r-large-label"><span class="r-dialog-label-text">Monthly</span></div>
+                    <input disabled.bind="canEdit.monthly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.monthly == true ? 'r-disabled' : '' } ${formState.source.monthly ? '' : 'r-error'}" value.bind="source.monthly" change.delegate="validateForm()" keyup.delegate="validateForm()" />
                 </div>
             </div>    
             <div class="r-dialog-row r-dialog-half-row-right">
@@ -76,30 +76,31 @@
                         <span class="r-dialog-body">Target</span>
                     </div>
                 <div class="r-dialog-row r-component-row">
-                    <div class="r-dialog-label r-large-label">15 Min</div>
-                    <input disabled.bind="canEdit.quarter_hourly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.quarter_hourly == true ? 'r-disabled' : '' }" value.bind="target.quarter_hourly" />
+                    <div class="r-dialog-label r-large-label"><span class="r-dialog-label-text">15 Min</span></div>
+                    <input disabled.bind="canEdit.quarter_hourly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.quarter_hourly == true ? 'r-disabled' : '' } ${formState.target.quarter_hourly ? '' : 'r-error'}" value.bind="target.quarter_hourly" change.delegate="validateForm()" keyup.delegate="validateForm()" />
                 </div>
                 <div class="r-dialog-row r-component-row">
-                    <div class="r-dialog-label r-large-label">Hourly</div>
-                    <input disabled.bind="canEdit.hourly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.hourly == true ? 'r-disabled' : '' }" value.bind="target.hourly" />
+                    <div class="r-dialog-label r-large-label"><span class="r-dialog-label-text">Hourly</span></div>
+                    <input disabled.bind="canEdit.hourly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.hourly == true ? 'r-disabled' : '' } ${formState.target.hourly ? '' : 'r-error'}" value.bind="target.hourly"  change.delegate="validateForm()" keyup.delegate="validateForm()"/>
                 </div>
                 <div class="r-dialog-row r-component-row">
-                    <div class="r-dialog-label r-large-label">Daily</div>
-                    <input disabled.bind="canEdit.daily" type="number" class="r-dialog-control r-with-large-label ${ canEdit.daily == true ? 'r-disabled' : '' }" value.bind="target.daily" />
+                    <div class="r-dialog-label r-large-label"><span class="r-dialog-label-text">Daily</span></div>
+                    <input disabled.bind="canEdit.daily" type="number" class="r-dialog-control r-with-large-label ${ canEdit.daily == true ? 'r-disabled' : '' } ${formState.target.daily ? '' : 'r-error'}" value.bind="target.daily" change.delegate="validateForm()" keyup.delegate="validateForm()" />
                 </div>
                 <div class="r-dialog-row r-component-row">
-                    <div class="r-dialog-label r-large-label">Weekly</div>
-                    <input disabled.bind="canEdit.weekly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.weekly == true ? 'r-disabled' : '' }" value.bind="target.weekly" />
+                    <div class="r-dialog-label r-large-label"><span class="r-dialog-label-text">Weekly</span></div>
+                    <input disabled.bind="canEdit.weekly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.weekly == true ? 'r-disabled' : '' } ${formState.target.weekly ? '' : 'r-error'}" value.bind="target.weekly" change.delegate="validateForm()" keyup.delegate="validateForm()" />
                 </div>
                 <div class="r-dialog-row r-component-row">
-                    <div class="r-dialog-label r-large-label">Monthly</div>
-                    <input disabled.bind="canEdit.monthly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.monthly == true ? 'r-disabled' : '' }" value.bind="target.monthly" />
+                    <div class="r-dialog-label r-large-label"><span class="r-dialog-label-text">Monthly</span></div>
+                    <input disabled.bind="canEdit.monthly" type="number" class="r-dialog-control r-with-large-label ${ canEdit.monthly == true ? 'r-disabled' : '' } ${formState.target.monthly ? '' : 'r-error'}" value.bind="target.monthly" change.delegate="validateForm()" keyup.delegate="validateForm()" />
                 </div>
             </div>  
         </div>
         <div class="r-dialog-row r-no-margin r-dialog-footer">
             <button class="btn btn-default r-left" type="button" style="margin-top: 60px;" click.delegate="dialogController.cancel()">Cancel</button>
-            <button class="btn btn-primary r-right" type="button" click.delegate="submit()">Save</button>
+            <button if.bind="canSave" class="btn btn-primary r-right" type="button" click.delegate="submit()">Save</button>
+            <button if.bind="!canSave" class="btn btn-primary-disabled r-right" disabled title="Please fill out the required fields" type="button">Save</button>
         </div>
     </ux-dialog>   
 </template>

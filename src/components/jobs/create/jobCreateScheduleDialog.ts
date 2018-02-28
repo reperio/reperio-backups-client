@@ -1,9 +1,9 @@
-import {autoinject, bindable} from 'aurelia-framework';
-import {DialogController} from 'aurelia-dialog';
+import { autoinject, bindable } from 'aurelia-framework';
+import { DialogController } from 'aurelia-dialog';
 
-import {Job} from '../../../models/job';
-import {Schedule} from '../../../models/schedule';
-import {ScheduleService} from '../../../services/scheduleService';
+import { Job } from '../../../models/job';
+import { Schedule } from '../../../models/schedule';
+import { ScheduleService } from '../../../services/scheduleService';
 
 @autoinject()
 export class JobScheduleDialog {
@@ -47,10 +47,11 @@ export class JobScheduleDialog {
 
         this.schedules.forEach(schedule => {
             if (this.job.schedule_id === schedule.id) {
+                console.log('found schedule');
                 this.job.job_schedule = schedule;
             }
         });
-        
+
         this.dialogController.ok(this.job);
     }
 
@@ -64,11 +65,50 @@ export class JobScheduleDialog {
             this.formState.schedule = true;
         }
 
-        if (!this.job.offset && this.job.offset !== 0) {
+        if ((!this.job.offset && this.job.offset !== 0) || this.job.offset < 0) {
             error = true;
             this.formState.offset = false;
         } else {
-            this.formState.offset = true;
+            if (this.job.schedule_id) {
+                let job_schedule = null;
+                this.schedules.forEach(schedule => {
+                    console.log(this.job.schedule_id + ' - ' + schedule.id);
+                    if (this.job.schedule_id === schedule.id) {
+                        console.log('matched schedule');
+                        job_schedule = schedule;
+                    }
+                });
+
+                console.log(job_schedule);
+                let max_offset = 0;
+                switch (job_schedule.name) {
+                    case 'quarter_hour':
+                        max_offset = 15;
+                        break;
+                    case 'hourly':
+                        max_offset = 60;
+                        break;
+                    case 'daily':
+                        max_offset = 60 * 24;
+                        break;
+                    case 'weekly':
+                        max_offset = 60 * 24 * 7;
+                        break;
+                    case 'monthly':
+                        max_offset = 60 * 24 * 28;
+                        break;
+                }
+                console.log(max_offset);
+                if (this.job.offset < 0 || this.job.offset >= max_offset) {
+                    error = true;
+                    this.formState.offset = false;
+                } else {
+                    this.formState.offset = true;
+                }
+            } else {
+                this.formState.offset = true;
+            }
+
         }
 
         this.canContinue = !error;

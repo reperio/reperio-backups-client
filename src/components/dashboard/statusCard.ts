@@ -5,23 +5,11 @@ import { Chart } from 'chart.js';
 @autoinject()
 export class StatusCard {
     @bindable node: any;
-    public ip_address: string = "";
     public vms_count: number = 0;
 
     constructor(private element: Element){ }
 
     attached() {
-        let addresses: string[] = [];
-        let nics = this.node.sysinfo["Network Interfaces"];
-
-        for(let nic in nics) {
-            if (nics[nic]["Link Status"] == "up") {
-                addresses.push(nics[nic]["ip4addr"]);
-            }
-        }
-
-        this.ip_address = addresses.join(", ");
-
         let virtual_machines = this.node.vms;
         for (let vm in virtual_machines) {
             this.vms_count += 1;
@@ -84,6 +72,9 @@ export class StatusCard {
             }
         });
 
+        const memory_percentage = this.node.sdc_id === 'n/a' ? 'n/a' : Math.round(((this.node.memory_total_bytes - (this.node.memory_total_bytes * this.node.reservation_ratio) - this.node.memory_provisionable_bytes) / this.node.memory_total_bytes) * 100) + '%';
+        const disk_percentage = this.node.sdc_id === 'n/a' ? 'n/a' : Math.round((this.node.disk_pool_alloc_bytes / this.node.disk_pool_size_bytes) * 100) + '%';
+
           // memory usage chart
           let memChartCanvas = this.element.getElementsByClassName("memChart");
           let memChart = new Chart(memChartCanvas[0], {
@@ -104,7 +95,7 @@ export class StatusCard {
             options: {
                 elements: {
                     center: {
-                        text: ['Mem', Math.round(((this.node.memory_total_bytes - (this.node.memory_total_bytes * this.node.reservation_ratio) - this.node.memory_provisionable_bytes) / this.node.memory_total_bytes) * 100) + '%'],
+                        text: ['Mem', memory_percentage],
                         color: '#95989A', //Default black
                         fontStyle: 'Helvetica', //Default Arial
                         sidePadding: 60 //Default 20 (as a percentage)
@@ -144,7 +135,7 @@ export class StatusCard {
             options: {
                 elements: {
                     center: {
-                        text: ['Disk', Math.round((this.node.disk_pool_alloc_bytes / this.node.disk_pool_size_bytes) * 100) + '%'],
+                        text: ['Disk', disk_percentage],
                         color: '#95989A', //Default black (Grey: #95989A)
                         fontStyle: 'Helvetica', //Default Arial
                         sidePadding: 60 //Default 20 (as a percentage)

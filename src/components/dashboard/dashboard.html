@@ -6,7 +6,7 @@
         </div>
         <div class="row">
             <div repeat.for="node of nodes">
-                <status-card node.bind="node"></status-card>
+                <a href="#/history?filter=source_node&value=${node.name}"><status-card node.bind="node"></status-card></a>
             </div>
         </div>
     </div>

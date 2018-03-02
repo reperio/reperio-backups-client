@@ -91,6 +91,7 @@ export class JobHistoryView {
     private rowCount: string;
     private api: GridApi;
     private columnApi: ColumnApi;
+    private query_params: any;
 
     constructor(private jobHistoryService: JobHistoryService) {
         // we pass an empty gridOptions in, so we can grab the api out
@@ -150,8 +151,21 @@ export class JobHistoryView {
             };
             this.api.setDatasource(dataSource);
             this.columnApi = this.gridOptions.columnApi;
-        }
 
+            if (this.query_params.filter === 'source_node') {
+                console.log('SETTING FILTER');
+                const source_node_filter_component = this.gridOptions.api.getFilterInstance('job_history_job.job_source_host.name');
+                source_node_filter_component.setModel({
+                    type: 'contains',
+                    filter: this.query_params.value
+                });
+                this.gridOptions.api.onFilterChanged();
+            }
+        }
+    }
+
+    activate(params, queryString, routeConfig) {
+        this.query_params = params;
     }
 
     async load_history_entries(gridParams) {

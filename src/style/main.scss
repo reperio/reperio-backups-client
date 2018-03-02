@@ -20,6 +20,13 @@ body {
 	line-height: 20px;
 }
 
+.ag-theme-blue .ag-header {
+  background-color: $primary-color;
+  color: white;
+  font: 400 14px "Helvetica Neue", sans-serif;
+}
+
+
 // h1 {
 //   font-family: Helvetica, sans-serif;
 //   font-size: 48px;

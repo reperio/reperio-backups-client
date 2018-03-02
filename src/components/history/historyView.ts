@@ -1,10 +1,6 @@
 import {autoinject, observable} from 'aurelia-framework';
 
 import {JobHistoryService} from '../../services/jobHistoryService';
-import {HostService} from '../../services/hostService';
-import {VirtualMachineService} from '../../services/virtualMachineService';
-import {Host} from '../../models/host';
-import {VirtualMachine} from '../../models/virtual_machine';
 
 
 import {GridOptions, GridApi, ColumnApi} from "ag-grid";
@@ -12,76 +8,6 @@ import HeaderComponent from "./headerComponent";
 import HeaderGroupComponent from "./headerGroupComponent";
 import DateComponent from "./dateComponent";
 import RefData from "./refData";
-// @autoinject()
-// export class JobHistoryView {
-
-//     public history_entries: any[];
-//     public hosts: Host[];
-//     public virtual_machines: VirtualMachine[];
-//     public pageSize: number = 50;
-
-//     private gridOptions: GridOptions;
-//     private showGrid: boolean;
-//     private rowData: any[];
-//     private columnDefs: any[];
-//     private rowCount: string;
-//     private api: GridApi;
-//     private columnApi: ColumnApi;
-
-//     @observable({ changeHandler: 'selected_host_changed' }) public selected_host;
-//     @observable({ changeHandler: 'selected_virtual_machine_changed' }) public selected_virtual_machine;
-
-//     constructor(private jobHistoryService: JobHistoryService, private hostService: HostService, private virtualMachineService: VirtualMachineService) {}
-
-//     selected_host_changed(new_value, old_value) {
-//         console.log('host changed');
-//         console.log(new_value);
-//         this.load_history_entries();
-//         this.load_virtual_machines();
-//     }
-
-//     selected_virtual_machine_changed(new_value, old_value) {
-//         console.log('vm changed');
-//         console.log(new_value);
-//         this.load_history_entries();
-//     }
-
-//     async bind() {
-//         const history_promise = this.load_history_entries();
-//         const hosts_promise = this.load_hosts();
-
-//         await history_promise;
-//         await hosts_promise;
-//     }
-
-//     async load_history_entries() {
-//         const history_entries = await this.jobHistoryService.getJobHistories(this.selected_host, this.selected_virtual_machine);
-
-//         history_entries.forEach((entry) => {
-//             if (entry.source_result === 0) {
-//                 entry.source_result_name = 'Pending';
-//             } else if (entry.source_result === 1) {
-//                 entry.source_result_name = 'Active';
-//             } else if (entry.source_result === 2) {
-//                 entry.source_result_name = 'Success';
-//             } else if (entry.source_result === 3) {
-//                 entry.source_result_name = 'Failed';
-//             } else {
-//                 entry.source_result_name = 'Unknown';
-//             }
-//         });
-
-//         this.history_entries = history_entries;
-//     }
-
-//     async load_hosts() {
-//         this.hosts = await this.hostService.get_hosts();
-//     }
-
-//     async load_virtual_machines() {
-//         this.virtual_machines = await this.virtualMachineService.getVirtualMachines(this.selected_host, null);
-//     }
-// }
 
 @autoinject()
 export class JobHistoryView {
@@ -132,20 +58,6 @@ export class JobHistoryView {
                 getRows: async (params) => {
                     const history_entries = await this.load_history_entries(params);
                     params.successCallback(history_entries.data, history_entries.count);
-                    // At this point in your code, you would call the server, using $http if in AngularJS 1.x.
-                    // To make the demo look real, wait for 500ms before returning
-                    // setTimeout(function() {
-                    //     // take a slice of the total rows
-                    //     var dataAfterSortingAndFiltering = sortAndFilter(data, params.sortModel, params.filterModel);
-                    //     var rowsThisPage = dataAfterSortingAndFiltering.slice(params.startRow, params.endRow);
-                    //     // if on or after the last page, work out the last row.
-                    //     var lastRow = -1;
-                    //     if (dataAfterSortingAndFiltering.length <= params.endRow) {
-                    //         lastRow = dataAfterSortingAndFiltering.length;
-                    //     }
-                    //     // call the success callback
-                    //     params.successCallback(rowsThisPage, lastRow);
-                    // }, 500);
                 }
             };
             this.api.setDatasource(dataSource);

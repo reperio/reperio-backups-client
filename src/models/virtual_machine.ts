@@ -6,4 +6,5 @@ export interface VirtualMachine {
     host_id: string;
     state: string;
     sdc_id: string;
+    type: string;
 }

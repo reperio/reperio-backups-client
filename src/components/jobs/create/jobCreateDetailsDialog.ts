@@ -21,8 +21,6 @@ export class JobCreateDetailsDialog {
     public hosts: Host[];
     public selected_source_host: Host;
     public virtual_machines: VirtualMachine[];
-    public vm_brand: string;
-    public vm_name: string;
     public datasets: VirtualMachineDataset[] = [];
     public formState: any = {
         source_node: false,
@@ -109,7 +107,6 @@ export class JobCreateDetailsDialog {
             this.can_select_source_location = false;
             this.can_edit_target_location = false;
             this.job.target_location = '';
-            this.vm_name = '';
             this.job.name = '';
             this.validateForm();
             return;
@@ -120,7 +117,6 @@ export class JobCreateDetailsDialog {
         const vm = _.find(this.virtual_machines, virtual_machine => {
             return virtual_machine.id === this.job.sdc_vm_id;
         });
-        this.vm_name = vm.name;
         this.can_select_source_location = true;
         this.validateForm();
     }
@@ -140,7 +136,12 @@ export class JobCreateDetailsDialog {
         })
 
         this.job.target_location = this.job.source_location;
-        this.job.name = this.vm_name + '-' + selected_dataset.name;
+        
+        const virtual_machine = _.find(this.virtual_machines, virtual_machine => {
+            return this.job.sdc_vm_id === virtual_machine.id;
+        });
+
+        this.job.name = this.generate_job_name(virtual_machine.name, virtual_machine.type, selected_dataset.name, selected_dataset.type);
         this.can_edit_target_location = true;
         this.validateForm();
     }
@@ -209,5 +210,25 @@ export class JobCreateDetailsDialog {
 
         this.canContinue = !error;
         return !error;
+    }
+
+    generate_job_name(vm_name: string, vm_type: string, dataset_name: string, dataset_type: string) {
+        if (vm_type === 'kvm') {
+            if (dataset_type === 'zvol') {
+                if (dataset_name === 'disk0') {
+                    return vm_name;
+                } else {
+                    return vm_name + '-' + dataset_name;
+                }
+            } else {
+                return vm_name + '-zfs-root';
+            }
+        } else {
+            if (dataset_type === 'root') {
+                return vm_name;
+            } else {
+                return vm_name + '-' + dataset_name;
+            }
+        }
     }
 }

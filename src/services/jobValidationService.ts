@@ -81,7 +81,7 @@ export class JobValidationService {
             this.formState.schedule = true;
         }
 
-        if ((!job.offset && job.offset !== 0) || job.offset < 0) {
+        if (job.offset == null || job.offset < 0) {
             this.formState.is_valid_state = false;
             this.formState.offset = false;
         } else {

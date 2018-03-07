@@ -141,24 +141,7 @@ export class JobCreateDetailsDialog {
             return this.job.sdc_vm_id === virtual_machine.id;
         });
 
-        if (virtual_machine.type === 'kvm') {
-            if (selected_dataset.type === 'zvol') {
-                if (selected_dataset.name === 'disk0') {
-                    this.job.name = virtual_machine.name;
-                } else {
-                    this.job.name = virtual_machine.name + '-' + selected_dataset.name;
-                }
-            } else {
-                this.job.name = virtual_machine.name + '-zfs-root';
-            }
-        } else {
-            if (selected_dataset.type === 'root') {
-                this.job.name = virtual_machine.name;
-            } else {
-                this.job.name = virtual_machine.name + '-' + selected_dataset.name;
-            }
-        }
-
+        this.job.name = this.generate_job_name(virtual_machine.name, virtual_machine.type, selected_dataset.name, selected_dataset.type);
         this.can_edit_target_location = true;
         this.validateForm();
     }
@@ -227,5 +210,25 @@ export class JobCreateDetailsDialog {
 
         this.canContinue = !error;
         return !error;
+    }
+
+    generate_job_name(vm_name: string, vm_type: string, dataset_name: string, dataset_type: string) {
+        if (vm_type === 'kvm') {
+            if (dataset_type === 'zvol') {
+                if (dataset_name === 'disk0') {
+                    return vm_name;
+                } else {
+                    return vm_name + '-' + dataset_name;
+                }
+            } else {
+                return vm_name + '-zfs-root';
+            }
+        } else {
+            if (dataset_type === 'root') {
+                return vm_name;
+            } else {
+                return vm_name + '-' + dataset_name;
+            }
+        }
     }
 }

@@ -129,9 +129,7 @@ export class JobHistoryView {
             var dataSource = {
                 rowCount: null, // behave as infinite scroll
                 getRows: async (params) => {
-                    console.log(params);
                     const history_entries = await this.load_history_entries(params);
-                    console.log(history_entries);
                     params.successCallback(history_entries.data, history_entries.count);
                     // At this point in your code, you would call the server, using $http if in AngularJS 1.x.
                     // To make the demo look real, wait for 500ms before returning
@@ -153,7 +151,6 @@ export class JobHistoryView {
             this.columnApi = this.gridOptions.columnApi;
 
             if (this.query_params.filter === 'source_node') {
-                console.log('SETTING FILTER');
                 const source_node_filter_component = this.gridOptions.api.getFilterInstance('job_history_job.job_source_host.name');
                 source_node_filter_component.setModel({
                     type: 'contains',
@@ -223,33 +220,26 @@ export class JobHistoryView {
     }
 
     private onModelUpdated() {
-        console.log('onModelUpdated');
         this.calculateRowCount();
     }
 
     private onReady() {
-        console.log('onReady');
         this.calculateRowCount();
     }
 
     private onCellClicked($event) {
-        console.log('onCellClicked: ' + $event.rowIndex + ' ' + $event.colDef.field);
     }
 
     private onCellValueChanged($event) {
-        console.log('onCellValueChanged: ' + $event.oldValue + ' to ' + $event.newValue);
     }
 
     private onCellDoubleClicked($event) {
-        console.log('onCellDoubleClicked: ' + $event.rowIndex + ' ' + $event.colDef.field);
     }
 
     private onCellContextMenu($event) {
-        console.log('onCellContextMenu: ' + $event.rowIndex + ' ' + $event.colDef.field);
     }
 
     private onCellFocused($event) {
-        console.log('onCellFocused: (' + $event.rowIndex + ',' + ($event.column ? $event.column.colId : '') + ')');
     }
 
     private onRowSelected($event) {
@@ -258,27 +248,21 @@ export class JobHistoryView {
     }
 
     private onSelectionChanged() {
-        console.log('selectionChanged');
     }
 
     private onBeforeFilterChanged() {
-        console.log('beforeFilterChanged');
     }
 
     private onAfterFilterChanged() {
-        console.log('afterFilterChanged');
     }
 
     private onFilterModified() {
-        console.log('onFilterModified');
     }
 
     private onBeforeSortChanged() {
-        console.log('onBeforeSortChanged');
     }
 
     private onAfterSortChanged() {
-        console.log('onAfterSortChanged');
     }
 
     private onVirtualRowRemoved($event) {
@@ -288,7 +272,6 @@ export class JobHistoryView {
     }
 
     private onRowClicked($event) {
-        console.log('onRowClicked: ' + $event.node.data.name);
     }
 
     private onQuickFilterChanged($event) {
@@ -298,7 +281,6 @@ export class JobHistoryView {
     // here we use one generic event to handle all the column type events.
     // the method just prints the event name
     private onColumnEvent($event) {
-        console.log('onColumnEvent: ' + $event);
     }
 
     private statusRenderer(params) {
@@ -309,8 +291,6 @@ export class JobHistoryView {
             2: 'r-job-history-success',
             3: 'r-job-history-failed',
         };
-
-        console.log(params);
         
         const template = `<div class='r-job-history-status ${styles[params.value]}'>&nbsp;</div>`;
         return template;

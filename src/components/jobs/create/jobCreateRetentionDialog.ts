@@ -4,6 +4,7 @@ import * as toastr from 'toastr';
 
 import {Job} from '../../../models/job';
 import {JobService} from '../../../services/jobService';
+import {JobValidationService} from '../../../services/jobValidationService';
 import {Schedule} from '../../../models/schedule';
 
 @autoinject()
@@ -12,26 +13,9 @@ export class JobCreateRetentionDialog {
     public source: any;
     public target: any;
     public canEdit: any = {};
-    public canCreate: boolean = false;
+    public formState: any = null;
 
-    public formState: any = {
-        source: {
-            quarter_hourly: false,
-            hourly: false,
-            daily: false,
-            weekly: false,
-            monthly: false
-        },
-        target: {
-            quarter_hourly: false,
-            hourly: false,
-            daily: false,
-            weekly: false,
-            monthly: false
-        }
-    }
-
-    constructor(private dialogController: DialogController, private jobService: JobService) { }
+    constructor(private dialogController: DialogController, private jobService: JobService, private jobValidationService: JobValidationService) { }
 
     async activate(job) {
         this.job = job;
@@ -79,7 +63,7 @@ export class JobCreateRetentionDialog {
     }
 
     async submit() {
-        if (!this.validateForm()) {
+        if (!this.formState.is_valid_state) {
             return;
         }
 
@@ -160,71 +144,8 @@ export class JobCreateRetentionDialog {
         });
     }
 
-    validateForm() {
-        let error = false;
-        if (this.source.quarter_hourly === null || this.source.quarter_hourly === '') {
-            error = true;
-            this.formState.source.quarter_hourly = false;
-        } else {
-            this.formState.source.quarter_hourly = true;
-        }
-        if (this.source.hourly === null || this.source.hourly === '') {
-            error = true;
-            this.formState.source.hourly = false;
-        } else {
-            this.formState.source.hourly = true;
-        }
-        if (this.source.daily === null || this.source.daily === '') {
-            error = true;
-            this.formState.source.daily = false;
-        } else {
-            this.formState.source.daily = true;
-        }
-        if (this.source.weekly === null || this.source.weekly === '') {
-            error = true;
-            this.formState.source.weekly = false;
-        } else {
-            this.formState.source.weekly = true;
-        }
-        if (this.source.monthly === null || this.source.monthly === '') {
-            error = true;
-            this.formState.source.monthly = false;
-        } else {
-            this.formState.source.monthly = true;
-        }
-
-        if (this.target.quarter_hourly === null || this.target.quarter_hourly === '') {
-            error = true;
-            this.formState.target.quarter_hourly = false;
-        } else {
-            this.formState.target.quarter_hourly = true;
-        }
-        if (this.target.hourly === null || this.target.hourly === '') {
-            error = true;
-            this.formState.target.hourly = false;
-        } else {
-            this.formState.target.hourly = true;
-        }
-        if (this.target.daily === null || this.target.daily === '') {
-            error = true;
-            this.formState.target.daily = false;
-        } else {
-            this.formState.target.daily = true;
-        }
-        if (this.target.weekly === null || this.target.weekly === '') {
-            error = true;
-            this.formState.target.weekly = false;
-        } else {
-            this.formState.target.weekly = true;
-        }
-        if (this.target.monthly === null || this.target.monthly === '') {
-            error = true;
-            this.formState.target.monthly = false;
-        } else {
-            this.formState.target.monthly = true;
-        }
-
-        this.canCreate = !error;
-        return !error;
+    async validateForm() {
+        this.formState = await this.jobValidationService.validate_job_retention(this.source, this.target);
+        return this.formState.is_valid_state;
     }
 }

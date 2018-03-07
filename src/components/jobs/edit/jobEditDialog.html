@@ -99,8 +99,8 @@
         </div>
         <div class="r-dialog-row r-no-margin r-dialog-footer">
             <button class="btn btn-default r-left" type="button" style="margin-top: 60px;" click.delegate="dialogController.cancel()">Cancel</button>
-            <button if.bind="canSave" class="btn btn-primary r-right" type="button" click.delegate="submit()">Save</button>
-            <button if.bind="!canSave" class="btn btn-primary-disabled r-right" disabled title="Please fill out the required fields" type="button">Save</button>
+            <button if.bind="formState.is_valid_state" class="btn btn-primary r-right" type="button" click.delegate="submit()">Save</button>
+            <button if.bind="!formState.is_valid_state" class="btn btn-primary-disabled r-right" disabled title="Please fill out the required fields" type="button">Save</button>
         </div>
     </ux-dialog>   
 </template>

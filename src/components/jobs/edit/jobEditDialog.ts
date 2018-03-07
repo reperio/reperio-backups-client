@@ -1,11 +1,13 @@
 import {autoinject, bindable} from 'aurelia-framework';
 import {DialogController} from 'aurelia-dialog';
 import * as toastr from 'toastr';
+import * as _ from 'lodash';
 
 import {Host} from '../../../models/host';
 import {HostService} from '../../../services/hostService';
 import {Job} from '../../../models/job';
 import {JobService} from '../../../services/jobService';
+import {JobValidationService} from '../../../services/jobValidationService';
 import {Schedule} from '../../../models/schedule';
 import {ScheduleService} from '../../../services/scheduleService';
 import {VirtualMachine} from '../../../models/virtual_machine';
@@ -22,28 +24,9 @@ export class JobEditDialog {
     public source: any;
     public target: any;
     public canEdit: any = {};
-    public canSave: boolean = false;
-    public formState = {
-        job_name: false,
-        schedule: false,
-        offset: false,
-        source: {
-            quarter_hourly: false,
-            hourly: false,
-            daily: false,
-            weekly: false,
-            monthly: false
-        },
-        target: {
-            quarter_hourly: false,
-            hourly: false,
-            daily: false,
-            weekly: false,
-            monthly: false
-        }
-    };
+    public formState: any = null;
 
-    constructor(private dialogController: DialogController, private hostService: HostService, private jobService: JobService, private scheduleService: ScheduleService, private virtualMachineService: VirtualMachineService) { }
+    constructor(private dialogController: DialogController, private hostService: HostService, private jobService: JobService, private jobValidationService: JobValidationService, private scheduleService: ScheduleService, private virtualMachineService: VirtualMachineService) { }
 
     async activate(job) {
         this.job = job;
@@ -81,7 +64,7 @@ export class JobEditDialog {
             return;
         }
 
-        if (!this.validateForm()) {
+        if (!this.formState.is_valid_state) {
             return;
         }
         
@@ -154,32 +137,31 @@ export class JobEditDialog {
     }
  
     set_default_retentions() {
-        this.schedules.forEach(schedule => {
-            if (this.job.schedule_id == schedule.id) {
-                this.selected_schedule = schedule;
-            }
-        });
+        if (this.job.schedule_id !== null) {
+            this.selected_schedule = _.find(this.schedules, schedule => {
+                return this.job.schedule_id === schedule.id;
+            });
 
-        this.can_edit_retention();
+            this.can_edit_retention();
 
-        this.source = {
-            quarter_hourly: 0,
-            hourly: 0,
-            daily: 0,
-            weekly: 0,
-            monthly: 0
-        };
+            this.source = {
+                quarter_hourly: 0,
+                hourly: 0,
+                daily: 0,
+                weekly: 0,
+                monthly: 0
+            };
 
-        const policies = ['quarter_hourly', 'hourly', 'daily', 'weekly', 'monthly'];
-        const retentions = [4, 24, 7, 4, 12];
+            const policies = ['quarter_hourly', 'hourly', 'daily', 'weekly', 'monthly'];
+            const retentions = [4, 24, 7, 4, 12];
 
-        this.target = {};
-        const schedule_index = policies.indexOf(this.selected_schedule.name);
-        policies.forEach(policy => {
-            const policy_index = policies.indexOf(policy);
-            this.target[policy] = !(schedule_index <= policy_index) ? 0 : retentions[policy_index];
-        });
-
+            this.target = {};
+            const schedule_index = policies.indexOf(this.selected_schedule.name);
+            policies.forEach(policy => {
+                const policy_index = policies.indexOf(policy);
+                this.target[policy] = !(schedule_index <= policy_index) ? 0 : retentions[policy_index];
+            });
+        }
         this.validateForm();
     }
 
@@ -193,129 +175,8 @@ export class JobEditDialog {
         });
     }
 
-    validateForm() {
-        let error = false;
-
-        if (this.job.name === null || !this.job.name || !this.job.name.trim()) {
-            error = true;
-            this.formState.job_name = false;
-        } else {
-            this.formState.job_name = true;
-        }
-        if (this.job.schedule_id === null) {
-            error = true;
-            this.formState.schedule = false;
-        } else {
-            this.formState.schedule = true;
-        }
-        if ((!this.job.offset && this.job.offset !== 0) || this.job.offset < 0) {
-            error = true;
-            this.formState.offset = false;
-        } else {
-            if (this.job.schedule_id) {
-                let job_schedule = null;
-                this.schedules.forEach(schedule => {
-                    console.log(this.job.schedule_id + ' - ' + schedule.id);
-                    if (this.job.schedule_id === schedule.id) {
-                        console.log('matched schedule');
-                        job_schedule = schedule;
-                    }
-                });
-
-                console.log(job_schedule);
-                let max_offset = 0;
-                switch (job_schedule.name) {
-                    case 'quarter_hour':
-                        max_offset = 15;
-                        break;
-                    case 'hourly':
-                        max_offset = 60;
-                        break;
-                    case 'daily':
-                        max_offset = 60 * 24;
-                        break;
-                    case 'weekly':
-                        max_offset = 60 * 24 * 7;
-                        break;
-                    case 'monthly':
-                        max_offset = 60 * 24 * 28;
-                        break;
-                }
-                console.log(max_offset);
-                if (this.job.offset < 0 || this.job.offset >= max_offset) {
-                    error = true;
-                    this.formState.offset = false;
-                } else {
-                    this.formState.offset = true;
-                }
-            } else {
-                this.formState.offset = true;
-            }
-        }
-
-        if (this.source.quarter_hourly === null || this.source.quarter_hourly === '') {
-            error = true;
-            this.formState.source.quarter_hourly = false;
-        } else {
-            this.formState.source.quarter_hourly = true;
-        }
-        if (this.source.hourly === null || this.source.hourly === '') {
-            error = true;
-            this.formState.source.hourly = false;
-        } else {
-            this.formState.source.hourly = true;
-        }
-        if (this.source.daily === null || this.source.daily === '') {
-            error = true;
-            this.formState.source.daily = false;
-        } else {
-            this.formState.source.daily = true;
-        }
-        if (this.source.weekly === null || this.source.weekly === '') {
-            error = true;
-            this.formState.source.weekly = false;
-        } else {
-            this.formState.source.weekly = true;
-        }
-        if (this.source.monthly === null || this.source.monthly === '') {
-            error = true;
-            this.formState.source.monthly = false;
-        } else {
-            this.formState.source.monthly = true;
-        }
-
-        if (this.target.quarter_hourly === null || this.target.quarter_hourly === '') {
-            error = true;
-            this.formState.target.quarter_hourly = false;
-        } else {
-            this.formState.target.quarter_hourly = true;
-        }
-        if (this.target.hourly === null || this.target.hourly === '') {
-            error = true;
-            this.formState.target.hourly = false;
-        } else {
-            this.formState.target.hourly = true;
-        }
-        if (this.target.daily === null || this.target.daily === '') {
-            error = true;
-            this.formState.target.daily = false;
-        } else {
-            this.formState.target.daily = true;
-        }
-        if (this.target.weekly === null || this.target.weekly === '') {
-            error = true;
-            this.formState.target.weekly = false;
-        } else {
-            this.formState.target.weekly = true;
-        }
-        if (this.target.monthly === null || this.target.monthly === '') {
-            error = true;
-            this.formState.target.monthly = false;
-        } else {
-            this.formState.target.monthly = true;
-        }
-
-        this.canSave = !error;
-        return !error;
+    async validateForm() {
+        this.formState = await this.jobValidationService.validate_job(this.job, this.source, this.target);
+        return this.formState.is_valid_state;
     }
 }

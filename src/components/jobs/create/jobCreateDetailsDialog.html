@@ -38,8 +38,8 @@
         </div>
         <div class="r-dialog-row r-no-margin r-dialog-footer">
             <button class="btn btn-default r-left" type="button" click.delegate="dialogController.cancel()">Cancel</button>
-            <button if.bind="canContinue" class="btn btn-primary r-right" type="button" click.delegate="submit()">Continue</button>
-            <button if.bind="!canContinue" class="btn btn-primary-disabled r-right" disabled title="Please fill out the required fields" type="button">Continue</button>
+            <button if.bind="formState.is_valid_state" class="btn btn-primary r-right" type="button" click.delegate="submit()">Continue</button>
+            <button if.bind="!formState.is_valid_state" class="btn btn-primary-disabled r-right" disabled title="Please fill out the required fields" type="button">Continue</button>
         </div>
     </ux-dialog>
 </template>

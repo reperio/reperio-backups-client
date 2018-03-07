@@ -1,23 +1,21 @@
-import {autoinject, bindable} from 'aurelia-framework';
-import {DialogController} from 'aurelia-dialog';
+import { autoinject, bindable } from 'aurelia-framework';
+import { DialogController } from 'aurelia-dialog';
+import * as _ from 'lodash';
 
-import {Job} from '../../../models/job';
-import {Schedule} from '../../../models/schedule';
-import {ScheduleService} from '../../../services/scheduleService';
+import { Job } from '../../../models/job';
+import {JobValidationService} from '../../../services/jobValidationService';
+import { Schedule } from '../../../models/schedule';
+import { ScheduleService } from '../../../services/scheduleService';
 
 @autoinject()
 export class JobScheduleDialog {
     public old_schedule_id: string;
     public job: Job;
     public schedules: any[] = [];
-    public canContinue: boolean = false;
 
-    public formState: any = {
-        schedule: false,
-        offset: false
-    };
+    public formState: any = null;
 
-    constructor(private dialogController: DialogController, private scheduleService: ScheduleService) { }
+    constructor(private dialogController: DialogController, private jobValidationService: JobValidationService, private scheduleService: ScheduleService) { }
 
     async activate(job) {
         this.job = job;
@@ -36,7 +34,7 @@ export class JobScheduleDialog {
     }
 
     submit() {
-        if (!this.validateForm()) {
+        if (!this.formState.is_valid_state) {
             return;
         }
 
@@ -45,33 +43,15 @@ export class JobScheduleDialog {
             this.job.target_retention = null;
         }
 
-        this.schedules.forEach(schedule => {
-            if (this.job.schedule_id === schedule.id) {
-                this.job.job_schedule = schedule;
-            }
+        this.job.job_schedule = _.find(this.schedules, schedule => {
+            return this.job.schedule_id === schedule.id;
         });
-        
+
         this.dialogController.ok(this.job);
     }
 
-    validateForm() {
-        let error = false;
-
-        if (this.job.schedule_id === null) {
-            error = true;
-            this.formState.schedule = false;
-        } else {
-            this.formState.schedule = true;
-        }
-
-        if (!this.job.offset && this.job.offset !== 0) {
-            error = true;
-            this.formState.offset = false;
-        } else {
-            this.formState.offset = true;
-        }
-
-        this.canContinue = !error;
-        return !error;
+    async validateForm() {
+       this.formState = await this.jobValidationService.validate_job_schedule(this.job);
+       return this.formState.is_valid_state;
     }
 }

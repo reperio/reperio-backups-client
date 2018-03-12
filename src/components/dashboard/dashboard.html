@@ -4,9 +4,10 @@
         <div class="row r-status-grid-header">
             <h1>Status</h1>
         </div>
+        <button class="btn r-create-job-btn" click.delegate="create_host()">Create New</button>
         <div class="row">
             <div repeat.for="node of nodes">
-                <a href="#/history?filter=source_node&value=${node.name}"><status-card node.bind="node"></status-card></a>
+                <a href="#/history?filter=source_node&value=${node.name}"><status-card node.bind="node" load-hosts.call="load_hosts()"></status-card></a>
             </div>
         </div>
     </div>

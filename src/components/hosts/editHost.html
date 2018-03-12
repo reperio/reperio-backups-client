@@ -1,0 +1,37 @@
+<template>
+    <require from="aurelia-dialog/ux-dialog"></require>
+
+    <ux-dialog class="r-dialog r-job-dialog">
+        <div class="r-dialog-row r-no-margin">
+            <h1 if.bind="host.id == null" class="r-dialog-header">Create a new Host</h1>
+            <h1 if.bind="host.id != null" class="r-dialog-header">Edit Host</h1>
+        </div>
+        <div class="r-dialog-row r-component-row">
+            <div class="r-dialog-label">
+                <span class="r-dialog-label-text">Hostname</span>
+            </div>
+            <input disabled.bind="host.sdc_id != null" class="${host.sdc_id != null ? 'r-disabled' : ''} ${formState.hostname ? '' : 'r-error'} r-dialog-control r-with-label" value.bind="host.name" change.delegate="validateForm()"
+                keyup.delegate="validateForm()" />
+        </div>
+        <div class="r-dialog-row r-component-row">
+            <div class="r-dialog-label">
+                <span class="r-dialog-label-text">IP Address</span>
+            </div>
+            <input disabled.bind="host.sdc_id != null" class="${host.sdc_id != null ? 'r-disabled' : ''} ${formState.ip_address ? '' : 'r-error'} r-dialog-control r-with-label" value.bind="host.ip_address" change.delegate="validateForm()"
+                keyup.delegate="validateForm()" />
+        </div>
+        <div class="r-dialog-row r-component-row">
+            <div class="r-dialog-label">
+                <span class="r-dialog-label-text">Port</span>
+            </div>
+            <input type="number" class="${formState.port ? '' : 'r-error'} r-dialog-control r-with-label" value.bind="host.port" change.delegate="validateForm()"
+                keyup.delegate="validateForm()" />
+        </div>
+        <div class="r-dialog-row r-no-margin r-dialog-footer">
+            <button class="btn btn-default r-left" type="button" click.delegate="dialogController.cancel()">Cancel</button>
+            <button if.bind="formState.validState" class="btn btn-primary r-right" type="button" click.delegate="submit()">Save</button>
+            <button if.bind="!formState.validState" class="btn btn-primary-disabled r-right" disabled title="Please fill out the required fields"
+                type="button">Save</button>
+        </div>
+    </ux-dialog>
+</template>

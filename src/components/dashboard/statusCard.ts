@@ -1,13 +1,20 @@
 import { autoinject, bindable, customElement, inject} from 'aurelia-framework';   
 import { Chart } from 'chart.js';
+import {DialogService} from 'aurelia-dialog';
+import * as toastr from 'toastr';
+
+import {DeleteDialog} from '../dialogs/deleteDialog';
+import {EditHostDialog} from '../hosts/editHost';
+import {HostService} from '../../services/hostService';
 
 @customElement("status-card")
 @autoinject()
 export class StatusCard {
     @bindable node: any;
+    @bindable loadHosts: () => void;
     public vms_count: number = 0;
 
-    constructor(private element: Element){ }
+    constructor(private dialogService: DialogService, private element: Element, private hostService: HostService){ }
 
     attached() {
         let virtual_machines = this.node.vms;
@@ -164,5 +171,26 @@ export class StatusCard {
             return Math.round((total_bytes / 1000000) * 100) / 100 + ' MB';
 
         return total_bytes + ' bytes';
+    }
+
+    public edit_host(host_id: number) {
+        this.dialogService.open({viewModel: EditHostDialog, model: host_id, lock: false}).whenClosed( async response => {
+            await this.loadHosts();
+        });
+    }
+
+    async delete_host(host_id) {
+        this.dialogService.open({viewModel: DeleteDialog, model: 'Are you sure you want to delete this host?', lock: false}).whenClosed(async (response) => {
+            if (!response.wasCancelled) {
+                try {
+                    await this.hostService.delete_host_by_id(host_id);
+                    toastr.success('Host deleted successfully');
+                } catch (err) {
+                    console.error(err);
+                    toastr.error('Failed to delete host');
+                }
+                await this.loadHosts();
+            }
+        });
     }
 }

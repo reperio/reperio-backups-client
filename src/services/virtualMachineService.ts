@@ -28,6 +28,16 @@ export class VirtualMachineService {
         return await res.json();
     }
 
+    public async get_virtual_machine_by_id(vm_id: string): Promise<any>{
+        const res = await this.http.fetch(`virtual_machines/${vm_id}`, {
+            method: 'get'
+        });
+        if (res.status >= 400) {
+            throw new Error(`Status code ${res.status}`);
+        }
+        return await res.json();
+    }
+
     public async getVirtualMachines(selected_host?:string, filter?:string): Promise<any> {
         const query = [];
         if (selected_host) {

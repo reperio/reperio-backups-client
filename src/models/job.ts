@@ -16,6 +16,7 @@ export class Job {
     source_host_id: string;
     target_host_id: string;
     last_execution: Date;
+    last_result: number;
     last_schedule: Date;
     enabled: boolean;
     offset: number;

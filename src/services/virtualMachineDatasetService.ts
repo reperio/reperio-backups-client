@@ -16,4 +16,18 @@ export class VirtualMachineDatasetService {
         }
         return await res.json();
     }
+
+    public async toggle_dataset_enabled_status(dataset: any): Promise<any>{
+        const body = {
+            dataset: dataset
+        };
+        const res = await this.http.fetch(`datasets`, {
+            method: 'put',
+            body: json(body)
+        });
+        if (res.status >= 400) {
+            throw new Error(`Status code ${res.status}`);
+        }
+        return await res.json();
+    }
 }

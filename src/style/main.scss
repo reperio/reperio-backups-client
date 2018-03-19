@@ -320,7 +320,8 @@ h3 {
     border-bottom: 1px solid #95989A;
     border-left: 1px solid #95989A;
     border-right: 1px solid #95989A;
-    box-shadow: 1px 3px 6px #95989A;
+    border-top: 1px solid #95989A;
+    //box-shadow: 1px 3px 6px #95989A;
 
     .r-table-detail td {
       padding-left: 60px;
@@ -329,6 +330,10 @@ h3 {
 
     .oi-chevron-bottom {
       width: 15px;
+    }
+
+    .td {
+      vertical-align: middle;
     }
 }
 
@@ -393,8 +398,6 @@ h3 {
 .aut-desc:before{
     content: "\f161";
 }
-
-
 
 .r-dialog {
     //bring the top of the modal below the top banner
@@ -710,5 +713,33 @@ h3 {
     .oi-circle-check {
       color: $success
     }
+    .oi-warning {
+      color: $warning;
+    }
+    .oi-circle-x {
+      color: $error
+    }
+    .oi-ban {
+      color: $neutral;
+    }
   }
+
+  .r-dataset-status {
+    .oi-circle-check {
+      color: $success
+    }
+    .oi-warning {
+      color: $warning;
+    }
+    .oi-circle-x {
+      color: $error
+    }
+    .oi-ban {
+      color: $neutral;
+    }
+  }
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
 }

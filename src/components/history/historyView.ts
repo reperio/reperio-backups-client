@@ -103,10 +103,6 @@ export class JobHistoryView {
     private createColumnDefs() {
         this.columnDefs = [
             {
-                headerName: '#', width: 30, checkboxSelection: true, suppressSorting: true,
-                suppressMenu: true, pinned: true,
-            },
-            {
                 headerName: 'Job',
                 field: 'job_history_job.name',
                 filter:'agTextColumnFilter',
@@ -164,7 +160,20 @@ export class JobHistoryView {
                 headerName: "Status", 
                 field: "result", 
                 filter: 'text', 
-                cellRenderer: this.statusRenderer}
+                cellRenderer: this.statusRenderer
+            },
+            {
+                headerName: "Source Snapshot", 
+                field: "job_history_snapshot.source_host_status", 
+                filter: 'text', 
+                cellRenderer: this.snapshotStatusRenderer
+            },
+            {
+                headerName: "Target Snapshot", 
+                field: "job_history_snapshot.target_host_status", 
+                filter: 'text', 
+                cellRenderer: this.snapshotStatusRenderer
+            }
                 
         ];
     }
@@ -255,5 +264,16 @@ export class JobHistoryView {
         return template;
     }
 
+    private snapshotStatusRenderer(params) {
+        const status_map = {
+            0: 'default',
+            1: 'created',
+            2: 'deleted',
+            3: 'failed',
+            4: 'receive_failed'
+        };
+
+        return status_map[params.value];
+    }
 }
 

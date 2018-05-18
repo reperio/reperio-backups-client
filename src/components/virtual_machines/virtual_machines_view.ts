@@ -57,35 +57,14 @@ export class JobHistoryView {
         this.virtual_machines = virtual_machines;
     }
 
-    async virtual_machine_toggle_expanded_status(vm_id, expand?: boolean) {
-        let virtual_machine: any = _.find(this.virtual_machines, vm => {
-            return vm_id === vm.id;
-        });
-
-        if (virtual_machine.expanded) {
-            virtual_machine.expanded = false;
-        } else {
-            await this.expand_vm(virtual_machine.id);
-        }
-    }
-
     async toggle_dataset_enabled_status(dataset: any, vm_id: string) {
         await this.virtualMachineDatasetService.toggle_dataset_enabled_status(dataset);
-        await this.expand_vm(vm_id);
         const vm = await this.virtualMachineService.get_virtual_machine_by_id(vm_id);
         console.log(vm.status);
         let virtual_machine: any = _.find(this.virtual_machines, virtual_machine => {
             return  virtual_machine.id === vm_id;
         });
         virtual_machine.status = vm.status;
-    }
-
-    async expand_vm(vm_id: string) {
-        const vm: any = _.find(this.virtual_machines, virtual_machine => {
-            return  virtual_machine.id === vm_id;
-        });
-        vm.expanded = true;
-        vm.datasets = await this.get_vm_datasets(vm);
     }
     
     async get_vm_datasets(virtual_machine) {

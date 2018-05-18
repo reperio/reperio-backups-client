@@ -14,15 +14,17 @@
         </div>
         <div>
             <div class="r-virtual-machine row" repeat.for="virtual_machine of virtual_machines">
-                <div class="r-virtual-machine-status">
-                    <span if.bind="virtual_machine.status === 'good'" class="oi oi-circle-check" title="VM Status" aria-hidden="true"></span>
-                    <span if.bind="virtual_machine.status === 'warn'" class="oi oi-warning" title="VM Status" aria-hidden="true"></span>
-                    <span if.bind="virtual_machine.status === 'bad'" class="oi oi-circle-x" title="VM Status" aria-hidden="true"></span>
-                    <span if.bind="virtual_machine.status === null" class="oi oi-ban" title="VM Status" aria-hidden="true"></span>
-                </div>
-                <div class="r-virtual-machine-detail">
-                    <div class="r-virtual-machine-name">${virtual_machine.name ? virtual_machine.name : '--No Name--'}</div>
-                    <div class="r-virtual-machine-host-name">${virtual_machine.virtual_machine_host.name}</div>
+                <div style="width: 15%;">
+                    <div class="r-virtual-machine-status">
+                        <span if.bind="virtual_machine.status === 'good'" class="oi oi-circle-check" title="VM Status" aria-hidden="true"></span>
+                        <span if.bind="virtual_machine.status === 'warn'" class="oi oi-warning" title="VM Status" aria-hidden="true"></span>
+                        <span if.bind="virtual_machine.status === 'bad'" class="oi oi-circle-x" title="VM Status" aria-hidden="true"></span>
+                        <span if.bind="virtual_machine.status === null" class="oi oi-ban" title="VM Status" aria-hidden="true"></span>
+                    </div>
+                    <div class="r-virtual-machine-detail">
+                        <div class="r-virtual-machine-name">${virtual_machine.name ? virtual_machine.name : '--No Name--'}</div>
+                        <div class="r-virtual-machine-host-name">${virtual_machine.virtual_machine_host.name}</div>
+                    </div>
                 </div>
                 <!-- <div class="r-virtual-machine-last-backup">
                     <span>Last Backup:
@@ -40,50 +42,39 @@
                             <span class="r-virtual-machine-last-sync">Last Sync: ${virtual_machine.last_sync}</span>
                         </div>
                     </div> -->
-                <br/>
-                <br/>
-                <br/>
                 <div>
-                    <div>
-                        <a href="javascript:void(0)" if.bind="!virtual_machine.expanded" click.delegate="virtual_machine_toggle_expanded_status(virtual_machine.id)">
-                            <span class="oi oi-chevron-right" title="Delete Job" aria-hidden="true"></span>
-                        </a>
-                        <a href="javascript:void(0)" if.bind="virtual_machine.expanded" click.delegate="virtual_machine_toggle_expanded_status(virtual_machine.id)">
-                            <span class="oi oi-chevron-bottom" title="Delete Job" aria-hidden="true"></span>
-                        </a>
-                    </div>
-                    <div if.bind="virtual_machine.expanded">
-                        <table class="table r-table">
-                            <thead class="r-table-row">
-                                <tr class="row">
-                                        <th>Status</th>
-                                    <th>Dataset</th>
-                                    <th>Last Backup</th>
-                                    <th>Enabled</th>
-                                </tr>
-                            </thead>
-                            <tbody class="r-table-row">
-                                <tr class="row" repeat.for="dataset of virtual_machine.datasets">
-                                    <td class="r-dataset-status">
-                                            <span if.bind="dataset.status === 'good'" class="oi oi-circle-check" title="Dataset Status" aria-hidden="true"></span>
-                                            <span if.bind="dataset.status === 'warn'" class="oi oi-warning" title="Dataset Status" aria-hidden="true"></span>
-                                            <span if.bind="dataset.status === 'bad'" class="oi oi-circle-x" title="Dataset Status" aria-hidden="true"></span>
-                                            <span if.bind="dataset.status === null" class="oi oi-ban" title="Dataset Status" aria-hidden="true"></span>
-                                    </td>
-                                    <td>${dataset.name}</td>
-                                    <td>${dataset.job.last_execution}</td>
-                                    <td><label class="r-switch">
-                                            <input type="checkbox" checked.bind="dataset.enabled" change.delegate="toggle_dataset_enabled_status(dataset, virtual_machine.id)"/>
-                                            <span class="slider round">
-                                                <span if.bind="dataset.enabled" class="slider-text-on">ON</span>
-                                                <span if.bind="!dataset.enabled" class="slider-text-off">OFF</span>
-                                            </span>
-                                        </label></td>
-                                </tr>
-                            </tbody>
-                        </table>
-        
-                    </div>
+                    <table class="table r-table r-dataset-table">
+                        <thead class="r-table-row">
+                            <tr class="row">
+                                <th>Dataset</th>
+                                <th>Status</th>
+                                <th>Last Backup</th>
+                                <th>Enabled</th>
+                            </tr>
+                        </thead>
+                        <tbody class="r-table-row">
+                            <tr class="row" repeat.for="dataset of virtual_machine.datasets">
+                                <td>${dataset.name}</td>
+                                <td class="r-dataset-status">
+                                    <span if.bind="dataset.status === 'good'" class="oi oi-circle-check" title="Dataset Status" aria-hidden="true"></span>
+                                    <span if.bind="dataset.status === 'warn'" class="oi oi-warning" title="Dataset Status" aria-hidden="true"></span>
+                                    <span if.bind="dataset.status === 'bad'" class="oi oi-circle-x" title="Dataset Status" aria-hidden="true"></span>
+                                    <span if.bind="dataset.status === null" class="oi oi-ban" title="Dataset Status" aria-hidden="true"></span>
+                                </td>
+                                <td>${dataset.job.last_execution}</td>
+                                <td>
+                                    <label class="r-switch">
+                                        <input type="checkbox" checked.bind="dataset.enabled" change.delegate="toggle_dataset_enabled_status(dataset, virtual_machine.id)"
+                                        />
+                                        <span class="slider round">
+                                            <span if.bind="dataset.enabled" class="slider-text-on">ON</span>
+                                            <span if.bind="!dataset.enabled" class="slider-text-off">OFF</span>
+                                        </span>
+                                    </label>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 

@@ -1,16 +1,16 @@
-import { autoinject, bindable } from 'aurelia-framework';
 import { DialogController } from 'aurelia-dialog';
-
+import { autoinject } from 'aurelia-framework';
 import * as _ from 'lodash';
-
 import { Host } from '../../../models/host';
-import { HostService } from '../../../services/hostService';
 import { Job } from '../../../models/job';
 import { VirtualMachine } from '../../../models/virtual_machine';
-import { VirtualMachineService } from '../../../services/virtualMachineService';
 import { VirtualMachineDataset } from '../../../models/virtual_machine_dataset';
+import { HostService } from '../../../services/hostService';
+import { JobValidationService } from '../../../services/jobValidationService';
 import { VirtualMachineDatasetService } from '../../../services/virtualMachineDatasetService';
-import {JobValidationService} from '../../../services/jobValidationService';
+import { VirtualMachineService } from '../../../services/virtualMachineService';
+
+
 
 @autoinject()
 export class JobCreateDetailsDialog {
@@ -60,7 +60,8 @@ export class JobCreateDetailsDialog {
                 last_execution: null,
                 last_schedule: null,
                 enabled: false,
-                offset: 0
+                offset: 0,
+                last_result: null
             };
         }
 
@@ -160,7 +161,8 @@ export class JobCreateDetailsDialog {
             last_execution: null,
             last_schedule: null,
             enabled: this.job.enabled || false,
-            offset: this.job.offset || 0
+            offset: this.job.offset || 0,
+            last_result: null
         };
 
         this.dialogController.ok(job);

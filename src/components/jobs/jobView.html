@@ -1,67 +1,50 @@
 <template>
     <div class="r-page-content">
         <h1>Jobs</h1>
-        <div class="r-filter-row row">
-            <div class="col-xs-4">
-                <select class="form-control r-node-selector" value.bind="filters[0].value" change.delegate="update_selected_host()">
-                    <option value="">Source</option>
-                    <option model.bind="host.id" repeat.for="host of hosts" >${host.name}</option>
-                </select>
-            </div>
-            <div class="col-xs-4">
-                <select class="form-control r-node-selector" value.bind="filters[1].value" change.delegate="update_sort_column()" disabled.bind="filters[0].value === ''">
-                    <option value="">Virtual Machine</option>
-                    <option model.bind="vm.id" repeat.for="vm of filtered_virtual_machines" >${vm.name!== '' ? vm.name : vm.id}</option>
-                </select>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-xs-1">
-                <button class="btn r-create-job-btn" click.delegate="create_job(1, null)">Create New</button>        
-            </div>
-        </div>
-        <div>
-            <div class="r-table-header">
-                <h3>Jobs</h1>
-            </div>
-            <table id="job_table" class="table r-table" aurelia-table="data.bind: jobs; display-data.bind: $displayData; filters.bind: filters" aurelia-table.ref="table">
-                    
-                <thead class="r-table-row">
-                    <tr class="row">
-                        <th aut-sort="key: job_virtual_machine.name; default: asc" id="vm_header">Virtual Machine</th>
-                        <th aut-sort="key: name" id="job_header">Job</th>
-                        <th aut-sort="key: job_source_host.name">Source</th>
-                        <th aut-sort="key: job_target_host.name">Target</th>
-                        <th aut-sort="key: job_schedule.name">Schedule</th>
-                        <th aut-sort="key: last_execution">Last Execution</th>
-                        <th aut-sort="key: enabled">Enabled</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody  class="r-table-row">
-                    <tr class="row" repeat.for="job of $displayData">
-                        <td>${job.job_virtual_machine.name}</th>
-                        <td>${job.name}</td>
-                        <td>${job.job_source_host.name}</td>
-                        <td>${job.job_target_host.name}</td>
-                        <td>${job.job_schedule.name}</td>
-                        <td>${job.last_execution}</td>
-                        <td>
-                            <label class="r-switch">
-                                <input type="checkbox" checked.bind="job.enabled" change.delegate="update_job_enabled_status(job.id, job)" />
-                                <span class="slider round">
-                                    <span if.bind="job.enabled" class="slider-text-on">ON</span>
-                                    <span if.bind="!job.enabled" class="slider-text-off">OFF</span>
-                                </span>
-                            </label>
-                        </td>
-                        <td class="col-md-1 r-action-column">
-                            <a href="javascript:void(0)" click.delegate="edit_job(job)"><span class="oi oi-pencil" title="Edit Job" aria-hidden="true"></span></a>
-                            <a href="javascript:void(0)" click.delegate="delete_job(job.id)"><span class="oi oi-circle-x" title="Delete Job" aria-hidden="true"></span></a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <ag-grid-aurelia #agGrid class="ag-theme-blue"
+                                 style="height: 800px;"
+                                 grid-options.bind="gridOptions"
+                                 column-defs.bind="columnDefs"
+                                 show-tool-panel.bind="showToolPanel"
+                                 row-data.bind="rowData"
+
+                                 enable-col-resize
+                                 enable-sorting
+                                 enable-filter
+                                 suppress-row-click-selection
+                                 row-height.bind="30"
+                                 row-selection="single"
+
+                                 model-updated.call="onModelUpdated()"
+                                 cell-clicked.call="onCellClicked($event)"
+                                 cell-double-clicked.call="onCellDoubleClicked($event)"
+                                 cell-context-menu.call="onCellContextMenu($event)"
+
+                                 cell-value-changed.call="onCellValueChanged($event)"
+                                 row-value-changed.call="onRowValueChanged($event)"
+                                 
+                                 cell-focused.call="onCellFocused($event)"
+                                 row-selected.call="onRowSelected($event)"
+                                 selection-changed.call="onSelectionChanged()"
+                                 before-filter-changed.call="onBeforeFilterChanged()"
+                                 after-filter-changed.call="onAfterFilterChanged()"
+                                 filter-modified.call="onFilterModified()"
+                                 before-sort-changed.call="onBeforeSortChanged()"
+                                 after-sort-changed.call="onAfterSortChanged()"
+                                 virtual-row-removed.call="onVirtualRowRemoved($event)"
+                                 row-clicked.call="onRowClicked($event)"
+                                 ready.call="onReady($event)"
+
+                                 column-everything-changed.call="onColumnEvent($event)"
+                                 column-row-group-changed.call="onColumnEvent($event)"
+                                 column-value-changed.call="onColumnEvent($event)"
+                                 column-moved.call="onColumnEvent($event)"
+                                 column-visible.call="onColumnEvent($event)"
+                                 column-group-opened.call="onColumnEvent($event)"
+                                 column-resized.call="onColumnEvent($event)"
+                                 column-pinned-count-changed.call="onColumnEvent($event)">
+                </ag-grid-aurelia>
     </div>
+
+    
 </template>

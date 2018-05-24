@@ -1,13 +1,10 @@
-import {autoinject, observable} from 'aurelia-framework';
+import { ColumnApi, GridApi, GridOptions } from "ag-grid";
+import { autoinject } from 'aurelia-framework';
+import { JobHistoryService } from '../../services/jobHistoryService';
+import DateComponent from "../shared/dateComponent";
 
-import {JobHistoryService} from '../../services/jobHistoryService';
 
 
-import {GridOptions, GridApi, ColumnApi} from "ag-grid";
-import HeaderComponent from "./headerComponent";
-import HeaderGroupComponent from "./headerGroupComponent";
-import DateComponent from "./dateComponent";
-import RefData from "./refData";
 
 @autoinject()
 export class JobHistoryView {

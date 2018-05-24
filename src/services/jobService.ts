@@ -1,17 +1,20 @@
-import {autoinject} from 'aurelia-framework';
-import {EventAggregator} from 'aurelia-event-aggregator';
-import {HttpClient, json} from 'aurelia-fetch-client';
+import { HttpClient, json } from 'aurelia-fetch-client';
+import { autoinject } from 'aurelia-framework';
+import { Job } from '../models/job';
 
-import {Job} from '../models/job';
 
 @autoinject()
 export class JobService {
 
     constructor(private http: HttpClient) {}
 
-    public async get_jobs(): Promise<Job[]> {
-        const res = await this.http.fetch(`jobs`, {
-            method: 'get'
+    public async get_jobs(gridParams: any): Promise<Job[]> {
+        const query = [];
+
+        const query_string = query.join('&');
+        const res = await this.http.fetch(`jobs/all`, {
+            method: 'post',
+            body: json(gridParams)
         });
         if (res.status >= 400) {
             throw new Error(`Status code ${res.status}`);

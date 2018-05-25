@@ -124,6 +124,15 @@ export class JobView {
                 }
             },
             {
+                headerName: 'Dataset Type',
+                field: 'dataset.type',
+                filter: 'agTextColumnFilter',
+                filterParams: {
+                    apply: true,
+                    filterOptions: ['startsWith']
+                }
+            },
+            {
                 headerName: "Schedule", 
                 field: "job_schedule.display_name", 
                 filter:'agTextColumnFilter',

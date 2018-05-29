@@ -1,5 +1,6 @@
 import { ColumnApi, GridApi, GridOptions } from "ag-grid";
 import { autoinject } from 'aurelia-framework';
+import { JobDetailsService } from '../../services/jobDetailsService';
 import { JobService } from '../../services/jobService';
 import DateComponent from "../shared/dateComponent";
 import SwitchComponent from "../shared/switchComponent";
@@ -14,7 +15,7 @@ export class JobView {
     private columnApi: ColumnApi;
     private query_params: any;
 
-    constructor(private jobService: JobService) {
+    constructor(private jobService: JobService, private jobDetailsService: JobDetailsService) {
         // we pass an empty gridOptions in, so we can grab the api out
         this.gridOptions = <GridOptions>{};
         this.createColumnDefs();
@@ -44,9 +45,9 @@ export class JobView {
             }
         };
         this.gridOptions.suppressClickEdit = true;
-        this.gridOptions.onCellValueChanged = async (params: any) => { //this is actually getting a job from the switch component
+        this.gridOptions.onCellValueChanged = async (params: any) => {
             delete params.last_result;
-            this.jobService.update_job(params.id, params);
+            this.jobService.update_job(params.job_id, params);
         };
 
         this.gridOptions.onGridReady = () => {
@@ -54,8 +55,8 @@ export class JobView {
             var dataSource = {
                 rowCount: null, // behave as infinite scroll
                 getRows: async (params) => {
-                    const jobs = await this.load_jobs(params);
-                    params.successCallback(jobs, jobs.length);
+                    const jobs: any = await this.load_jobs(params);
+                    params.successCallback(jobs.data, jobs.count);
                     this.api.sizeColumnsToFit()
                 }
             };
@@ -78,7 +79,7 @@ export class JobView {
     }
 
     async load_jobs(gridParams) {
-        const jobs = await this.jobService.get_jobs(gridParams);
+        const jobs = await this.jobDetailsService.getAllJobDetails(gridParams);
 
         return jobs;
     }
@@ -89,8 +90,9 @@ export class JobView {
         this.columnDefs = [
             {
                 headerName: 'Virtual Machine',
-                field: 'job_virtual_machine.name',
+                field: 'virtual_machine_name',
                 filter:'agTextColumnFilter',
+                sort: 'asc',
                 filterParams: {
                     apply: true,
                     filterOptions: ['startsWith']
@@ -98,7 +100,7 @@ export class JobView {
             },
             {
                 headerName: "Job", 
-                field: "name",
+                field: "job_name",
                 filter:'agTextColumnFilter',
                 filterParams: {
                     apply: true,
@@ -107,7 +109,7 @@ export class JobView {
             },
             {
                 headerName: "Source", 
-                field: "job_source_host.name", 
+                field: "source_host_name", 
                 filter:'agTextColumnFilter',
                 filterParams: {
                     apply: true,
@@ -116,7 +118,7 @@ export class JobView {
             },
             {
                 headerName: "Target", 
-                field: "job_target_host.name", 
+                field: "target_host_name", 
                 filter:'agTextColumnFilter',
                 filterParams: {
                     apply: true,
@@ -125,7 +127,7 @@ export class JobView {
             },
             {
                 headerName: 'Dataset Type',
-                field: 'dataset.type',
+                field: 'dataset_type',
                 filter: 'agTextColumnFilter',
                 filterParams: {
                     apply: true,
@@ -134,7 +136,7 @@ export class JobView {
             },
             {
                 headerName: "Schedule", 
-                field: "job_schedule.display_name", 
+                field: "schedule_name", 
                 filter:'agTextColumnFilter',
                 filterParams: {
                     apply: true,
@@ -153,7 +155,7 @@ export class JobView {
             {
                 headerName: "Enabled", 
                 field: "enabled", 
-                filter: 'text', 
+                filter: 'text',
                 cellRenderer: SwitchComponent
             }            
         ];
@@ -280,14 +282,6 @@ export class JobView {
         console.log(params);
     }
 }
-
-
-
-
-
-
-
-
 
 
 

@@ -1,9 +1,13 @@
 import { ColumnApi, GridApi, GridOptions } from "ag-grid";
+import { DialogService } from 'aurelia-dialog';
 import { autoinject } from 'aurelia-framework';
 import { JobDetailsService } from '../../services/jobDetailsService';
 import { JobService } from '../../services/jobService';
 import DateComponent from "../shared/dateComponent";
 import SwitchComponent from "../shared/switchComponent";
+import { JobCreateDetailsDialog } from './create/jobCreateDetailsDialog';
+import { JobCreateRetentionDialog } from './create/jobCreateRetentionDialog';
+import { JobScheduleDialog } from './create/jobCreateScheduleDialog';
 
 @autoinject()
 export class JobView {
@@ -14,8 +18,9 @@ export class JobView {
     private api: GridApi;
     private columnApi: ColumnApi;
     private query_params: any;
+    private dataSource: any;
 
-    constructor(private jobService: JobService, private jobDetailsService: JobDetailsService) {
+    constructor(private dialogService: DialogService, private jobService: JobService, private jobDetailsService: JobDetailsService) {
         // we pass an empty gridOptions in, so we can grab the api out
         this.gridOptions = <GridOptions>{};
         this.createColumnDefs();
@@ -47,12 +52,12 @@ export class JobView {
         this.gridOptions.suppressClickEdit = true;
         this.gridOptions.onCellValueChanged = async (params: any) => {
             delete params.last_result;
-            this.jobService.update_job(params.job_id, params);
+            this.jobService.update_job_enabled_status(params.job_id, params.enabled);
         };
 
         this.gridOptions.onGridReady = () => {
             this.api = this.gridOptions.api;
-            var dataSource = {
+            this.dataSource = {
                 rowCount: null, // behave as infinite scroll
                 getRows: async (params) => {
                     const jobs: any = await this.load_jobs(params);
@@ -60,7 +65,7 @@ export class JobView {
                     this.api.sizeColumnsToFit()
                 }
             };
-            this.api.setDatasource(dataSource);
+            this.api.setDatasource(this.dataSource);
             this.columnApi = this.gridOptions.columnApi;
 
             if (this.query_params.filter === 'source_node') {
@@ -215,12 +220,14 @@ export class JobView {
     }
 
     private onFilterModified() {
+        console.log('filter changed');
     }
 
     private onBeforeSortChanged() {
     }
 
     private onAfterSortChanged() {
+        console.log('sort changed');
     }
 
     private onVirtualRowRemoved($event) {
@@ -280,6 +287,45 @@ export class JobView {
 
     changeJobStatus(params: any) {
         console.log(params);
+    }
+
+    async create_job(step_number: number, job: any) {
+        if(step_number === 1) {
+            this.open_job_details_modal(job);
+        } else if (step_number === 2) {
+            this.open_job_schedule_modal(job);
+        } else if (step_number === 3) {
+            this.open_job_retention_modal(job);
+        }
+    }
+
+    async open_job_details_modal(job) {
+        this.dialogService.open({viewModel: JobCreateDetailsDialog, model: job, lock: false}).whenClosed(async (response) => {
+            if (!response.wasCancelled) {
+                return this.create_job(2, response.output);
+            }
+            return null;
+        });
+    }
+
+    async open_job_schedule_modal(job) {
+        this.dialogService.open({viewModel: JobScheduleDialog, model: job, lock: false}).whenClosed(async (response) => {
+            if (!response.wasCancelled) {
+                return this.create_job(3, response.output);
+            }
+            return this.create_job(1, response.output);
+        });
+    }
+
+    async open_job_retention_modal(job) {
+        this.dialogService.open({viewModel: JobCreateRetentionDialog, model: job, lock: false}).whenClosed(async (response) => {
+            if (!response.wasCancelled) {
+                this.api.setDatasource(this.dataSource);
+                toastr.success(`Job "${response.output.name}" was created successfully`);
+                return;
+            }
+            return this.create_job(2, response.output);
+        });
     }
 }
 

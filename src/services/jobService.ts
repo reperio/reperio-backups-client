@@ -50,6 +50,20 @@ export class JobService {
         return await res.json();
     }
 
+    public async update_job_enabled_status(id: string, enabled: boolean): Promise<Job> {
+        const body = {
+            enabled: enabled
+        };
+        const res = await this.http.fetch(`jobs/${id}/enabled`, {
+            method: 'put',
+            body: json(body)
+        });
+        if (res.status >= 400) {
+            throw new Error(`Status code ${res.status}`);
+        }
+        return await res.json();
+    }
+
     public async delete_job(id: string): Promise<any> {
         const res = await this.http.fetch(`jobs/${id}`, {
             method: 'delete'

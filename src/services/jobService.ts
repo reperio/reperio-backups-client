@@ -1,17 +1,20 @@
-import {autoinject} from 'aurelia-framework';
-import {EventAggregator} from 'aurelia-event-aggregator';
-import {HttpClient, json} from 'aurelia-fetch-client';
+import { HttpClient, json } from 'aurelia-fetch-client';
+import { autoinject } from 'aurelia-framework';
+import { Job } from '../models/job';
 
-import {Job} from '../models/job';
 
 @autoinject()
 export class JobService {
 
     constructor(private http: HttpClient) {}
 
-    public async get_jobs(): Promise<Job[]> {
-        const res = await this.http.fetch(`jobs`, {
-            method: 'get'
+    public async get_jobs(gridParams: any): Promise<Job[]> {
+        const query = [];
+
+        const query_string = query.join('&');
+        const res = await this.http.fetch(`jobs/all`, {
+            method: 'post',
+            body: json(gridParams)
         });
         if (res.status >= 400) {
             throw new Error(`Status code ${res.status}`);
@@ -47,6 +50,20 @@ export class JobService {
         return await res.json();
     }
 
+    public async update_job_enabled_status(id: string, enabled: boolean): Promise<Job> {
+        const body = {
+            enabled: enabled
+        };
+        const res = await this.http.fetch(`jobs/${id}/enabled`, {
+            method: 'put',
+            body: json(body)
+        });
+        if (res.status >= 400) {
+            throw new Error(`Status code ${res.status}`);
+        }
+        return await res.json();
+    }
+
     public async delete_job(id: string): Promise<any> {
         const res = await this.http.fetch(`jobs/${id}`, {
             method: 'delete'
@@ -57,5 +74,13 @@ export class JobService {
         return null;
     }
 
-
+    public async get_job(job_id: string): Promise<Job> {
+        const res = await this.http.fetch(`jobs/${job_id}`, {
+            method: 'get'
+        });
+        if (res.status >= 400) {
+            throw new Error(`Status code ${res.status}`);
+        }
+        return await res.json();
+    }
 }

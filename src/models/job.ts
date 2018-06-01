@@ -1,6 +1,6 @@
-import {Host} from './host';
-import {Schedule} from './schedule';
-import {VirtualMachine} from './virtual_machine';
+import { Host } from './host';
+import { Schedule } from './schedule';
+import { VirtualMachine } from './virtual_machine';
 
 export class Job {
     id: string;
@@ -11,12 +11,10 @@ export class Job {
     sdc_vm_id: string;
     source_location: string;
     target_location: string;
-    zfs_type: number;
     zfs_size: number;
     source_host_id: string;
     target_host_id: string;
     last_execution: Date;
-    last_result: number;
     last_schedule: Date;
     enabled: boolean;
     offset: number;

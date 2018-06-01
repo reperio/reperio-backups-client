@@ -53,15 +53,13 @@ export class JobCreateDetailsDialog {
                 sdc_vm_id: null,
                 source_location: null,
                 target_location: null,
-                zfs_type: 1,
                 zfs_size: 1,
                 source_host_id: null,
                 target_host_id: null,
                 last_execution: null,
                 last_schedule: null,
                 enabled: false,
-                offset: 0,
-                last_result: null
+                offset: 0
             };
         }
 
@@ -154,15 +152,13 @@ export class JobCreateDetailsDialog {
             sdc_vm_id: this.job.sdc_vm_id || null,
             source_location: this.job.source_location || null,
             target_location: this.job.target_location || null,
-            zfs_type: this.job.zfs_type || 1,
             zfs_size: this.job.zfs_size || 1,
             source_host_id: this.job.source_host_id || null,
             target_host_id: this.job.target_host_id || null,
             last_execution: null,
             last_schedule: null,
             enabled: this.job.enabled || false,
-            offset: this.job.offset || 0,
-            last_result: null
+            offset: this.job.offset || 0
         };
 
         this.dialogController.ok(job);

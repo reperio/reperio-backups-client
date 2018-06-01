@@ -1,109 +1,252 @@
-import {autoinject} from 'aurelia-framework';
-import {DialogService} from 'aurelia-dialog';
+import { ColumnApi, GridApi, GridOptions } from "ag-grid";
+import { DialogService } from 'aurelia-dialog';
+import { autoinject } from 'aurelia-framework';
 import * as toastr from 'toastr';
-import * as $ from 'jquery';
-import * as _ from 'lodash';
-import {Host} from '../../models/host';
-import {HostService} from '../../services/hostService';
-import {Job} from '../../models/job';
-import {JobService} from '../../services/jobService';
-import {DeleteDialog} from '../dialogs/deleteDialog';
-import {JobCreateDetailsDialog} from './create/jobCreateDetailsDialog';
-import {JobCreateRetentionDialog} from './create/jobCreateRetentionDialog';
-import {JobEditDialog} from './edit/jobEditDialog';
-import {JobScheduleDialog} from './create/jobCreateScheduleDialog';
-import {VirtualMachine} from '../../models/virtual_machine';
-import {VirtualMachineService} from '../../services/virtualMachineService';
+import { JobDetailsService } from '../../services/jobDetailsService';
+import { JobService } from '../../services/jobService';
+import { DeleteDialog } from '../dialogs/deleteDialog';
+import DateComponent from "../shared/dateComponent";
+import SwitchComponent from "../shared/switchComponent";
+import { JobCreateDetailsDialog } from './create/jobCreateDetailsDialog';
+import { JobCreateRetentionDialog } from './create/jobCreateRetentionDialog';
+import { JobScheduleDialog } from './create/jobCreateScheduleDialog';
+import { JobEditDialog } from "./edit/jobEditDialog";
 
 @autoinject()
 export class JobView {
-    public jobs: Job[];
-    public hosts: Host[];
-    public filtered_virtual_machines: VirtualMachine[];
-    public virtual_machines: VirtualMachine[];
-    public selected_host: Host;
-    public table: any;
-    public $displayData: any[];
+    private gridOptions: GridOptions;
+    private rowData: any[];
+    private columnDefs: any[];
+    private rowCount: string;
+    private api: GridApi;
+    private columnApi: ColumnApi;
+    private query_params: any;
+    private dataSource: any;
 
-    public filters: any[] = [
-        { value: '', keys: ['job_source_host.id'] },
-        { value: '', keys: ['job_virtual_machine.id'] }
-    ];
+    constructor(private element: Element, private deleteDialog: DeleteDialog, private dialogService: DialogService, private jobDetailsService: JobDetailsService, private jobEditDialog: JobEditDialog, private jobService: JobService) {
+        // we pass an empty gridOptions in, so we can grab the api out
+        this.gridOptions = <GridOptions>{};
+        this.createColumnDefs();
+        this.gridOptions.dateComponent = <any>DateComponent;
+        this.gridOptions.pagination = true;
+        this.gridOptions.enableServerSideSorting = true,
+        this.gridOptions.enableServerSideFilter = true,
+        this.gridOptions.rowModelType = 'infinite';
+        this.gridOptions.paginationPageSize = 100;
+        this.gridOptions.paginationAutoPageSize = true;
+        this.gridOptions.unSortIcon = true;
+        this.gridOptions.defaultColDef = {
+            headerComponentParams : {
+                menuIcon: 'fa-bars',
+                template:
+                '<div class="ag-cell-label-container" role="presentation">' +
+                '  <span ref="eMenu" class="ag-header-icon ag-header-cell-menu-button"></span>' +
+                '  <div ref="eLabel" class="ag-header-cell-label" role="presentation">' +
+                '    <span ref="eSortOrder" class="ag-header-icon ag-sort-order" ></span>' +
+                '    <span ref="eSortAsc" class="ag-header-icon ag-sort-ascending-icon" ></span>' +
+                '    <span ref="eSortDesc" class="ag-header-icon ag-sort-descending-icon" ></span>' +
+                '    <span ref="eSortNone" class="ag-header-icon ag-sort-none-icon" ></span>' +
+                '    <span ref="eText" class="ag-header-cell-text" role="columnheader"></span>' +
+                '    <span ref="eFilter" class="ag-header-icon ag-filter-icon"></span>' +
+                '  </div>' +
+                '</div>'
+            }
+        };
+        this.gridOptions.suppressClickEdit = true;
+        this.gridOptions.onCellValueChanged = async (params: any) => {
+            delete params.last_result;
+            this.jobService.update_job_enabled_status(params.job_id, params.enabled);
+        };
 
-    constructor(private dialogService: DialogService, private jobService: JobService, private hostService: HostService, private virtualMachineService: VirtualMachineService) { }
+        this.gridOptions.onGridReady = () => {
+            this.api = this.gridOptions.api;
+            this.dataSource = {
+                rowCount: null, // behave as infinite scroll
+                getRows: async (params) => {
+                    const jobs: any = await this.load_jobs(params);
+                    params.successCallback(jobs.data, jobs.count);
+                    this.api.sizeColumnsToFit()
+                }
+            };
+            this.api.setDatasource(this.dataSource);
+            this.columnApi = this.gridOptions.columnApi;
 
-    async bind() {
-        await this.load_jobs();
-        this.hosts = await this.hostService.get_hosts();
-        this.virtual_machines = await this.virtualMachineService.getVirtualMachines();
-        this.filtered_virtual_machines = this.virtual_machines;
-        
+            if (this.query_params.filter === 'source_node') {
+                const source_node_filter_component = this.gridOptions.api.getFilterInstance('job_history_job.job_source_host.name');
+                source_node_filter_component.setModel({
+                    type: 'contains',
+                    filter: this.query_params.value
+                });
+                this.gridOptions.api.onFilterChanged();
+            }
 
-        //data.bind: jobs; display-data.bind: $displayData; filters.bind: filters
-    }
-
-    async attached() {
-        console.log(this.table);
-    }
-
-    async load_jobs() {
-        this.jobs = await this.jobService.get_jobs();
-    }
-
-    async update_job_enabled_status(id: string, job: Job) {
-        await this.jobService.update_job(id, job);
-        await this.load_jobs();
-    }
-
-    async update_selected_host() {
-        this.hosts.forEach(host => {
-            if (host.id === this.filters[0].value) this.selected_host = host;
-        });
-        this.filters[1].value = '';
-        console.log(JSON.stringify(this.filters[0].value));
-        if (this.selected_host === null || typeof this.selected_host === 'undefined') {
-            console.log('no filter');
-            this.filtered_virtual_machines = this.virtual_machines;
-        } else {
-            console.log('filter');
-            this.filtered_virtual_machines = this.virtual_machines.filter(vm => {
-                return vm.host_id === this.selected_host.sdc_id;
-            });
+            this.add_action_handlers();
         }
-
-        this.filtered_virtual_machines.sort((a, b) => {
-            const a_value = a.name == '' ? a.id.toUpperCase() : a.name.toUpperCase();
-            const b_value = b.name == '' ? b.id.toUpperCase() : b.name.toUpperCase();
-
-            return a_value < b_value ? -1 : 1;
-        });
     }
 
-    update_sort_column() {
-        console.log(this.table);
-        if (this.filters[1].value !== ''){
-            this.table.sortKey = 'name';
-            $('#vm_header').removeClass('aut-asc');
-            $('#vm_header').removeClass('aut-desc');
-            $('#vm_header').addClass('aut-sortable');
-            $('#job_header').addClass('aut-asc');
-        } else {
-            $('#job_header').removeClass('aut-asc');
-            $('#job_header').removeClass('aut-desc');
-            $('#job_header').addClass('aut-sortable');
-            $('#vm_header').addClass('aut-asc');
-            this.table.sortKey = 'job_virtual_machine.name';
+    add_action_handlers() {
+        setInterval(() => {
+            const editElements: any = this.element.querySelectorAll('.edit-icon');
+            for(let i = 0; i < editElements.length; i++) {
+                editElements[i].onclick = (params) => {
+                    this.edit_job(params.srcElement.dataset.job_id);
+                };
+            }
+
+            const deleteElements: any = this.element.querySelectorAll('.delete-icon');
+            for(let i = 0; i < deleteElements.length; i++) {
+                deleteElements[i].onclick = (params) => {
+                    this.delete_job(params.srcElement.dataset.job_id);
+                };
+            }
+        }, 100);
+    }
+
+    activate(params, queryString, routeConfig) {
+        this.query_params = params;
+    }
+
+    async load_jobs(gridParams) {
+        const jobs = await this.jobDetailsService.getAllJobDetails(gridParams);
+
+        return jobs;
+    }
+
+    private createColumnDefs() {
+        this.columnDefs = [
+            {
+                headerName: 'Virtual Machine',
+                field: 'virtual_machine_name',
+                filter:'agTextColumnFilter',
+                sort: 'asc',
+                filterParams: {
+                    apply: true,
+                    filterOptions: ['startsWith']
+                }
+            },
+            {
+                headerName: "Job", 
+                field: "job_name",
+                filter:'agTextColumnFilter',
+                filterParams: {
+                    apply: true,
+                    filterOptions: ['startsWith']
+                }
+            },
+            {
+                headerName: "Source", 
+                field: "source_host_name", 
+                filter:'agTextColumnFilter',
+                filterParams: {
+                    apply: true,
+                    filterOptions: ['startsWith']
+                }
+            },
+            {
+                headerName: "Target", 
+                field: "target_host_name", 
+                filter:'agTextColumnFilter',
+                filterParams: {
+                    apply: true,
+                    filterOptions: ['startsWith']
+                }
+            },
+            {
+                headerName: 'Dataset Type',
+                field: 'dataset_type',
+                filter: 'agTextColumnFilter',
+                filterParams: {
+                    apply: true,
+                    filterOptions: ['startsWith']
+                }
+            },
+            {
+                headerName: "Schedule", 
+                field: "schedule_name", 
+                filter:'agTextColumnFilter',
+                filterParams: {
+                    apply: true,
+                    filterOptions: ['startsWith']
+                }
+            },
+            {
+                headerName: "Last Execution", 
+                field: "last_execution", 
+                filter:'agTextColumnFilter',
+                filterParams: {
+                    apply: true,
+                    filterOptions: ['startsWith']
+                }
+            },
+            {
+                headerName: "Enabled", 
+                field: "enabled", 
+                suppressMenu: true,
+                suppressSorting: true,
+                cellRenderer: SwitchComponent
+            },
+            {
+                headerName: '',
+                cellRenderer: this.actionsRenderer,
+                suppressMenu: true,
+                suppressSorting: true
+            }            
+        ];
+    }
+
+    private calculateRowCount() {
+        if (this.gridOptions.api && this.rowData) {
+            const model = this.gridOptions.api.getModel();
+            const totalRows = this.rowData.length;
+            const processedRows = model.getRowCount();
+            this.rowCount = processedRows.toLocaleString() + ' / ' + totalRows.toLocaleString();
         }
-        this.table.doSort(this.$displayData);
     }
 
-    async edit_job(job){
+    private onModelUpdated() {
+        this.calculateRowCount();
+    }
+
+    public onReady($event) {
+        this.calculateRowCount();
+    }
+
+
+    private onQuickFilterChanged($event) {
+        this.gridOptions.api.setQuickFilter($event.target.value);
+    }
+
+    private actionsRenderer(params) {
+        const template = `<a href="javascript:void(0)" class="edit-icon" click.delegate="$this.edit_job(job)"><span class="oi oi-pencil" data-job_id="${params.data.job_id}" title="Edit Job" aria-hidden="true"></span></a>
+                          <a href="javascript:void(0)" class="delete-icon" click.delegate="delete_job(job.id)"><span class="oi oi-circle-x" data-job_id="${params.data.job_id}" title="Delete Job" aria-hidden="true"></span></a>`;
+        return template;
+    }
+
+    private enabledRenderer(params) {
+        const template = `<div>
+                                <label class="r-switch">
+                                    <input type="checkbox" ${params.enabled ? 'checked' : ''} change.delegate="changeJobStatus(this)" />
+                                    <span class="slider round">
+                                         ${params.enabled ? '<span class="slider-text-on"></span>' : '<span class="slider-text-off">OFF</span>'} 
+                                    </span>
+                                </label>
+                            </div>`;
+        return template;
+    }
+
+    async edit_job(job_id){
+        const job = await this.jobService.get_job(job_id);
+
         this.dialogService.open({viewModel: JobEditDialog, model: $.extend( {}, job), lock: false}).whenClosed(async (response) => {
             if (!response.wasCancelled) {
                 const updated_job = response.output;
-                await this.jobService.update_job(updated_job.id, updated_job);
-                toastr.success('Job updated');
-                await this.load_jobs();
+                try {
+                    await this.jobService.update_job(updated_job.id, updated_job);
+                    toastr.success('Job updated successfully');
+                } catch (err) {
+                    toastr.error('Failed to update job');
+                }
+                this.api.setDatasource(this.dataSource);
             }
         });
     }
@@ -111,20 +254,26 @@ export class JobView {
     async delete_job(id: string) {
         this.dialogService.open({viewModel: DeleteDialog, model: 'Are you sure you want to delete this job?', lock: false}).whenClosed(async (response) => {
             if (!response.wasCancelled) {
-                await this.jobService.delete_job(id);
-                await this.load_jobs();
+                try {
+                    await this.jobService.delete_job(id);
+                    toastr.success('Job deleted successfully');
+                } catch (err) {
+                    toastr.error('Failed to delete job');
+                }
+                
+                this.api.setDatasource(this.dataSource);
             }
         });
     }
 
-    async create_job(step_number: number, job: Job) {
-       if(step_number === 1) {
-           this.open_job_details_modal(job);
-       } else if (step_number === 2) {
-           this.open_job_schedule_modal(job);
-       } else if (step_number === 3) {
-           this.open_job_retention_modal(job);
-       }
+    async create_job(step_number: number, job: any) {
+        if(step_number === 1) {
+            this.open_job_details_modal(job);
+        } else if (step_number === 2) {
+            this.open_job_schedule_modal(job);
+        } else if (step_number === 3) {
+            this.open_job_retention_modal(job);
+        }
     }
 
     async open_job_details_modal(job) {
@@ -148,8 +297,9 @@ export class JobView {
     async open_job_retention_modal(job) {
         this.dialogService.open({viewModel: JobCreateRetentionDialog, model: job, lock: false}).whenClosed(async (response) => {
             if (!response.wasCancelled) {
-                await this.load_jobs();
                 toastr.success(`Job "${response.output.name}" was created successfully`);
+                this.api.setDatasource(this.dataSource);
+                this.add_action_handlers();
                 return;
             }
             return this.create_job(2, response.output);

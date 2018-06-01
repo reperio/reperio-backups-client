@@ -129,6 +129,7 @@ export class JobHistoryView {
             {
                 headerName: "Start Time", 
                 field: "start_date_time", 
+                sort: 'desc',
                 filter:'agTextColumnFilter',
                 filterParams: {
                     apply: true,

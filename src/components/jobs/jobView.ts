@@ -1,13 +1,16 @@
 import { ColumnApi, GridApi, GridOptions } from "ag-grid";
 import { DialogService } from 'aurelia-dialog';
 import { autoinject } from 'aurelia-framework';
+import * as toastr from 'toastr';
 import { JobDetailsService } from '../../services/jobDetailsService';
 import { JobService } from '../../services/jobService';
+import { DeleteDialog } from '../dialogs/deleteDialog';
 import DateComponent from "../shared/dateComponent";
 import SwitchComponent from "../shared/switchComponent";
 import { JobCreateDetailsDialog } from './create/jobCreateDetailsDialog';
 import { JobCreateRetentionDialog } from './create/jobCreateRetentionDialog';
 import { JobScheduleDialog } from './create/jobCreateScheduleDialog';
+import { JobEditDialog } from "./edit/jobEditDialog";
 
 @autoinject()
 export class JobView {
@@ -20,7 +23,7 @@ export class JobView {
     private query_params: any;
     private dataSource: any;
 
-    constructor(private dialogService: DialogService, private jobService: JobService, private jobDetailsService: JobDetailsService) {
+    constructor(private element: Element, private deleteDialog: DeleteDialog, private dialogService: DialogService, private jobDetailsService: JobDetailsService, private jobEditDialog: JobEditDialog, private jobService: JobService) {
         // we pass an empty gridOptions in, so we can grab the api out
         this.gridOptions = <GridOptions>{};
         this.createColumnDefs();
@@ -76,7 +79,27 @@ export class JobView {
                 });
                 this.gridOptions.api.onFilterChanged();
             }
+
+            this.add_action_handlers();
         }
+    }
+
+    add_action_handlers() {
+        setTimeout(() => {
+            const editElements: any = this.element.querySelectorAll('.edit-icon');
+            for(let i = 0; i < editElements.length; i++) {
+                editElements[i].onclick = (params) => {
+                    this.edit_job(params.srcElement.dataset.job_id);
+                };
+            }
+
+            const deleteElements: any = this.element.querySelectorAll('.delete-icon');
+            for(let i = 0; i < deleteElements.length; i++) {
+                deleteElements[i].onclick = (params) => {
+                    this.delete_job(params.srcElement.dataset.job_id);
+                };
+            }
+        }, 500);
     }
 
     activate(params, queryString, routeConfig) {
@@ -88,8 +111,6 @@ export class JobView {
 
         return jobs;
     }
-
-
 
     private createColumnDefs() {
         this.columnDefs = [
@@ -160,8 +181,15 @@ export class JobView {
             {
                 headerName: "Enabled", 
                 field: "enabled", 
-                filter: 'text',
+                suppressMenu: true,
+                suppressSorting: true,
                 cellRenderer: SwitchComponent
+            },
+            {
+                headerName: '',
+                cellRenderer: this.actionsRenderer,
+                suppressMenu: true,
+                suppressSorting: true
             }            
         ];
     }
@@ -273,6 +301,12 @@ export class JobView {
         return status_map[params.value];
     }
 
+    private actionsRenderer(params) {
+        const template = `<a href="javascript:void(0)" class="edit-icon" click.delegate="$this.edit_job(job)"><span class="oi oi-pencil" data-job_id="${params.data.job_id}" title="Edit Job" aria-hidden="true"></span></a>
+                          <a href="javascript:void(0)" class="delete-icon" click.delegate="delete_job(job.id)"><span class="oi oi-circle-x" data-job_id="${params.data.job_id}" title="Delete Job" aria-hidden="true"></span></a>`;
+        return template;
+    }
+
     private enabledRenderer(params) {
         const template = `<div>
                                 <label class="r-switch">
@@ -285,8 +319,38 @@ export class JobView {
         return template;
     }
 
-    changeJobStatus(params: any) {
-        console.log(params);
+    async edit_job(job_id){
+        const job = await this.jobService.get_job(job_id);
+
+        this.dialogService.open({viewModel: JobEditDialog, model: $.extend( {}, job), lock: false}).whenClosed(async (response) => {
+            if (!response.wasCancelled) {
+                const updated_job = response.output;
+                try {
+                    await this.jobService.update_job(updated_job.id, updated_job);
+                    toastr.success('Job updated successfully');
+                } catch (err) {
+                    toastr.error('Failed to update job');
+                }
+                this.api.setDatasource(this.dataSource);
+                this.add_action_handlers();
+            }
+        });
+    }
+
+    async delete_job(id: string) {
+        this.dialogService.open({viewModel: DeleteDialog, model: 'Are you sure you want to delete this job?', lock: false}).whenClosed(async (response) => {
+            if (!response.wasCancelled) {
+                try {
+                    await this.jobService.delete_job(id);
+                    toastr.success('Job deleted successfully');
+                } catch (err) {
+                    toastr.error('Failed to delete job');
+                }
+                
+                this.api.setDatasource(this.dataSource);
+                this.add_action_handlers();
+            }
+        });
     }
 
     async create_job(step_number: number, job: any) {
@@ -320,8 +384,9 @@ export class JobView {
     async open_job_retention_modal(job) {
         this.dialogService.open({viewModel: JobCreateRetentionDialog, model: job, lock: false}).whenClosed(async (response) => {
             if (!response.wasCancelled) {
-                this.api.setDatasource(this.dataSource);
                 toastr.success(`Job "${response.output.name}" was created successfully`);
+                this.api.setDatasource(this.dataSource);
+                this.add_action_handlers();
                 return;
             }
             return this.create_job(2, response.output);

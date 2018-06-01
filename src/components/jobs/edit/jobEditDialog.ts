@@ -1,17 +1,17 @@
-import {autoinject, bindable} from 'aurelia-framework';
-import {DialogController} from 'aurelia-dialog';
-import * as toastr from 'toastr';
+import { DialogController } from 'aurelia-dialog';
+import { autoinject } from 'aurelia-framework';
 import * as _ from 'lodash';
+import * as toastr from 'toastr';
+import { Host } from '../../../models/host';
+import { Job } from '../../../models/job';
+import { Schedule } from '../../../models/schedule';
+import { VirtualMachine } from '../../../models/virtual_machine';
+import { HostService } from '../../../services/hostService';
+import { JobService } from '../../../services/jobService';
+import { JobValidationService } from '../../../services/jobValidationService';
+import { ScheduleService } from '../../../services/scheduleService';
+import { VirtualMachineService } from '../../../services/virtualMachineService';
 
-import {Host} from '../../../models/host';
-import {HostService} from '../../../services/hostService';
-import {Job} from '../../../models/job';
-import {JobService} from '../../../services/jobService';
-import {JobValidationService} from '../../../services/jobValidationService';
-import {Schedule} from '../../../models/schedule';
-import {ScheduleService} from '../../../services/scheduleService';
-import {VirtualMachine} from '../../../models/virtual_machine';
-import {VirtualMachineService} from '../../../services/virtualMachineService';
 
 @autoinject()
 export class JobEditDialog {

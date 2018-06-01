@@ -74,5 +74,13 @@ export class JobService {
         return null;
     }
 
-
+    public async get_job(job_id: string): Promise<Job> {
+        const res = await this.http.fetch(`jobs/${job_id}`, {
+            method: 'get'
+        });
+        if (res.status >= 400) {
+            throw new Error(`Status code ${res.status}`);
+        }
+        return await res.json();
+    }
 }

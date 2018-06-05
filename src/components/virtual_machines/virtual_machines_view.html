@@ -61,7 +61,7 @@
                                     <span if.bind="dataset.status === 'bad'" class="oi oi-circle-x" title="Dataset Status" aria-hidden="true"></span>
                                     <span if.bind="dataset.status === null" class="oi oi-ban" title="Dataset Status" aria-hidden="true"></span>
                                 </td>
-                                <td>${dataset.job.last_execution}</td>
+                                <td>${dataset.last_execution}</td>
                                 <td>
                                     <label class="r-switch">
                                         <input type="checkbox" checked.bind="dataset.enabled" change.delegate="toggle_dataset_enabled_status(dataset, virtual_machine.id)"

@@ -1,7 +1,7 @@
 <template>
     <require from="../hosts/editHost"></require>
 
-    <div class="r-status-card ${ node.status == 'good' ? 'r-status-good' : node.status == 'warning' ? 'r-status-warning' : node.status == 'bad' ? 'r-status-bad' : ''}">
+    <div class="r-status-card ${ node.status == 'good' ? 'r-status-good' : node.status == 'warn' ? 'r-status-warning' : node.status == 'bad' ? 'r-status-bad' : ''}">
         <div class="r-status-card-header">
             <div class="r-status-card-hostname">${node.name}</div>
             <div class="r-status-card-uuid">${node.sdc_id || 'n/a'}</div>

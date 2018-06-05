@@ -32,8 +32,8 @@ export class JobView {
         this.gridOptions.enableServerSideSorting = true,
         this.gridOptions.enableServerSideFilter = true,
         this.gridOptions.rowModelType = 'infinite';
-        this.gridOptions.paginationPageSize = 100;
-        this.gridOptions.paginationAutoPageSize = true;
+        this.gridOptions.paginationPageSize = 25;
+        this.gridOptions.paginationAutoPageSize = false;
         this.gridOptions.unSortIcon = true;
         this.gridOptions.defaultColDef = {
             headerComponentParams : {
@@ -217,6 +217,9 @@ export class JobView {
     }
 
     private actionsRenderer(params) {
+        if (params.data === null || typeof params.data === 'undefined' || params.data.job_id === null) {
+            return '';
+        }
         const template = `<a href="javascript:void(0)" class="edit-icon" click.delegate="$this.edit_job(job)"><span class="oi oi-pencil" data-job_id="${params.data.job_id}" title="Edit Job" aria-hidden="true"></span></a>
                           <a href="javascript:void(0)" class="delete-icon" click.delegate="delete_job(job.id)"><span class="oi oi-circle-x" data-job_id="${params.data.job_id}" title="Delete Job" aria-hidden="true"></span></a>`;
         return template;

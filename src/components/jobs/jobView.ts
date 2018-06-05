@@ -2,8 +2,10 @@ import { ColumnApi, GridApi, GridOptions } from "ag-grid";
 import { DialogService } from 'aurelia-dialog';
 import { autoinject } from 'aurelia-framework';
 import * as toastr from 'toastr';
+import { HostService } from '../../services/hostService';
 import { JobDetailsService } from '../../services/jobDetailsService';
 import { JobService } from '../../services/jobService';
+import { VirtualMachineService } from '../../services/virtualMachineService';
 import { DeleteDialog } from '../dialogs/deleteDialog';
 import DateComponent from "../shared/dateComponent";
 import SwitchComponent from "../shared/switchComponent";
@@ -22,8 +24,13 @@ export class JobView {
     private columnApi: ColumnApi;
     private query_params: any;
     private dataSource: any;
+    private hosts: any[];
+    private virtual_machines: any[];
+    private filtered_virtual_machines: any[];
+    private selected_host_name: any;
+    private selected_virtual_machine_name: any;
 
-    constructor(private element: Element, private deleteDialog: DeleteDialog, private dialogService: DialogService, private jobDetailsService: JobDetailsService, private jobEditDialog: JobEditDialog, private jobService: JobService) {
+    constructor(private element: Element, private deleteDialog: DeleteDialog, private dialogService: DialogService, public hostService: HostService, private jobDetailsService: JobDetailsService, private jobEditDialog: JobEditDialog, private jobService: JobService, private virtualMachineService: VirtualMachineService) {
         // we pass an empty gridOptions in, so we can grab the api out
         this.gridOptions = <GridOptions>{};
         this.createColumnDefs();
@@ -82,6 +89,12 @@ export class JobView {
 
             this.add_action_handlers();
         }
+    }
+
+    async bind() {
+        this.hosts = await this.hostService.get_hosts();
+        this.virtual_machines = await this.virtualMachineService.getVirtualMachines();
+        this.filtered_virtual_machines = this.virtual_machines;
     }
 
     add_action_handlers() {
@@ -307,5 +320,38 @@ export class JobView {
             }
             return this.create_job(2, response.output);
         });
+    }
+
+    async update_selected_host() {
+        const source_node_filter_component = this.gridOptions.api.getFilterInstance('source_host_name');
+        source_node_filter_component.setModel({
+            type: 'contains',
+            filter: this.selected_host_name
+        });
+        this.api.setDatasource(this.dataSource);
+
+        let selected_host = null;
+        for (let i = 0; i < this.hosts.length; i++) {
+            if (this.hosts[i].name === this.selected_host_name) {
+                selected_host = this.hosts[i];
+            }
+        }
+
+        if (this.selected_host_name === null || typeof this.selected_host_name === 'undefined') {
+            this.filtered_virtual_machines = this.virtual_machines;
+        } else {
+            this.filtered_virtual_machines = this.virtual_machines.filter(vm => {
+                return vm.host_id === selected_host.sdc_id;
+            });
+        }
+    }
+
+    async update_selected_virtual_machine() {
+        const virtual_machine_filter_component = this.gridOptions.api.getFilterInstance('virtual_machine_name');
+        virtual_machine_filter_component.setModel({
+            type: 'contains',
+            filter: this.selected_virtual_machine_name
+        });
+        this.api.setDatasource(this.dataSource);
     }
 }

@@ -1,6 +1,20 @@
 <template>
     <div class="r-page-content">
         <h1>Jobs</h1>
+        <div class="r-filter-row row">
+            <div class="col-xs-4">
+                <select class="form-control r-node-selector" value.bind="selected_host_name" change.delegate="update_selected_host()">
+                    <option value="">Source</option>
+                    <option model.bind="host.name" repeat.for="host of hosts" >${host.name}</option>
+                </select>
+            </div>
+            <div class="col-xs-4">
+                <select class="form-control r-node-selector" value.bind="selected_virtual_machine_name" change.delegate="update_selected_virtual_machine()" disabled.bind="filters[0].value === ''">
+                    <option value="">Virtual Machine</option>
+                    <option model.bind="vm.name" repeat.for="vm of filtered_virtual_machines" >${vm.name!== '' ? vm.name : vm.id}</option>
+                </select>
+            </div>
+        </div>
         <div class="row">
             <div class="col-xs-1">
                 <button class="btn r-create-job-btn" click.delegate="create_job(1, null)">Create New</button>        

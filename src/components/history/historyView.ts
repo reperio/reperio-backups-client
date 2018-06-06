@@ -61,7 +61,7 @@ export class JobHistoryView {
             this.columnApi = this.gridOptions.columnApi;
 
             if (this.query_params.filter === 'source_node') {
-                const source_node_filter_component = this.gridOptions.api.getFilterInstance('job_history_job.job_source_host.name');
+                const source_node_filter_component = this.gridOptions.api.getFilterInstance('source_node_name');
                 source_node_filter_component.setModel({
                     type: 'contains',
                     filter: this.query_params.value

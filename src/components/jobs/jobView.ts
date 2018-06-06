@@ -345,6 +345,8 @@ export class JobView {
                     return vm.host_id === selected_host.sdc_id;
                 });
             }
+        } else {
+            this.filtered_virtual_machines = this.virtual_machines;
         }
     }
 

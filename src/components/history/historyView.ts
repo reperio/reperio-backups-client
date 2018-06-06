@@ -25,8 +25,7 @@ export class JobHistoryView {
         this.gridOptions.enableServerSideSorting = true,
         this.gridOptions.enableServerSideFilter = true,
         this.gridOptions.rowModelType = 'infinite';
-        this.gridOptions.paginationPageSize = 100;
-        this.gridOptions.paginationAutoPageSize = true;
+        this.gridOptions.paginationPageSize = 25;
         this.gridOptions.unSortIcon = true;
         this.gridOptions.defaultColDef = {
             headerComponentParams : {
@@ -55,6 +54,7 @@ export class JobHistoryView {
                 getRows: async (params) => {
                     const history_entries = await this.load_history_entries(params);
                     params.successCallback(history_entries.data, history_entries.count);
+                    this.api.sizeColumnsToFit()
                 }
             };
             this.api.setDatasource(dataSource);
@@ -101,7 +101,7 @@ export class JobHistoryView {
         this.columnDefs = [
             {
                 headerName: 'Job',
-                field: 'job_history_job.name',
+                field: 'job_name',
                 filter:'agTextColumnFilter',
                 filterParams: {
                     apply: true,
@@ -110,7 +110,7 @@ export class JobHistoryView {
             },
             {
                 headerName: "Source Node", 
-                field: "job_history_job.job_source_host.name",
+                field: "source_node_name",
                 filter:'agTextColumnFilter',
                 filterParams: {
                     apply: true,
@@ -119,7 +119,7 @@ export class JobHistoryView {
             },
             {
                 headerName: "Virtual Machine", 
-                field: "job_history_job.job_virtual_machine.name", 
+                field: "virtual_machine_name", 
                 filter:'agTextColumnFilter',
                 filterParams: {
                     apply: true,
@@ -162,13 +162,13 @@ export class JobHistoryView {
             },
             {
                 headerName: "Source Snapshot", 
-                field: "job_history_snapshot.source_host_status", 
+                field: "source_host_status", 
                 filter: 'text', 
                 cellRenderer: this.snapshotStatusRenderer
             },
             {
                 headerName: "Target Snapshot", 
-                field: "job_history_snapshot.target_host_status", 
+                field: "target_host_status", 
                 filter: 'text', 
                 cellRenderer: this.snapshotStatusRenderer
             }

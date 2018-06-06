@@ -337,12 +337,14 @@ export class JobView {
             }
         }
 
-        if (this.selected_host_name === null || typeof this.selected_host_name === 'undefined') {
-            this.filtered_virtual_machines = this.virtual_machines;
-        } else {
-            this.filtered_virtual_machines = this.virtual_machines.filter(vm => {
-                return vm.host_id === selected_host.sdc_id;
-            });
+        if (selected_host !== null) {
+            if (this.selected_host_name === null || typeof this.selected_host_name === 'undefined') {
+                this.filtered_virtual_machines = this.virtual_machines;
+            } else {
+                this.filtered_virtual_machines = this.virtual_machines.filter(vm => {
+                    return vm.host_id === selected_host.sdc_id;
+                });
+            }
         }
     }
 

@@ -1,9 +1,9 @@
-import { autoinject, bindable } from 'aurelia-framework';
 import { DialogController } from 'aurelia-dialog';
+import { autoinject } from 'aurelia-framework';
 import * as toastr from 'toastr';
+import { Host } from '../../models/host';
+import { HostService } from '../../services/hostService';
 
-import {Host} from '../../models/host';
-import {HostService} from '../../services/hostService';
 
 @autoinject()
 export class EditHostDialog {
@@ -23,7 +23,10 @@ export class EditHostDialog {
                 name: '',
                 ip_address: '',
                 port: await this.hostService.get_default_host_port(),
-                sdc_id: null
+                sdc_id: null,
+                max_total_jobs: 0,
+                max_backup_jobs: 0,
+                max_retention_jobs: 0
             }
         }
 

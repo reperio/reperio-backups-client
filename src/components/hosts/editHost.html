@@ -27,6 +27,27 @@
             <input type="number" class="${formState.port ? '' : 'r-error'} r-dialog-control r-with-label" value.bind="host.port" change.delegate="validateForm()"
                 keyup.delegate="validateForm()" />
         </div>
+        <div class="r-dialog-row r-component-row">
+            <div class="r-dialog-label">
+                <span class="r-dialog-label-text">Max Total Jobs</span>
+            </div>
+            <input type="number" class="${formState.port ? '' : 'r-error'} r-dialog-control r-with-label" value.bind="host.max_total_jobs" change.delegate="validateForm()"
+                keyup.delegate="validateForm()" />
+        </div>
+        <div class="r-dialog-row r-component-row">
+            <div class="r-dialog-label">
+                <span class="r-dialog-label-text">Max Backup Jobs</span>
+            </div>
+            <input type="number" class="${formState.port ? '' : 'r-error'} r-dialog-control r-with-label" value.bind="host.max_backup_jobs" change.delegate="validateForm()"
+                keyup.delegate="validateForm()" />
+        </div>
+        <div class="r-dialog-row r-component-row">
+            <div class="r-dialog-label">
+                <span class="r-dialog-label-text">Max Retention Jobs</span>
+            </div>
+            <input type="number" class="${formState.port ? '' : 'r-error'} r-dialog-control r-with-label" value.bind="host.max_retention_jobs" change.delegate="validateForm()"
+                keyup.delegate="validateForm()" />
+        </div>
         <div class="r-dialog-row r-no-margin r-dialog-footer">
             <button class="btn btn-default r-left" type="button" click.delegate="dialogController.cancel()">Cancel</button>
             <button if.bind="formState.validState" class="btn btn-primary r-right" type="button" click.delegate="submit()">Save</button>
